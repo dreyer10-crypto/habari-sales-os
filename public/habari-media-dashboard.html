@@ -293,7 +293,7 @@ function leaderboard(kind){
 
 /* ---- gate ---- */
 function unlock(){document.getElementById('gate').style.display='none';document.getElementById('app').style.display='block';try{sessionStorage.setItem('habari_mgr_ok','1');}catch(e){}initControls();render();}
-function tryGate(){if(document.getElementById('gateInput').value===PASSCODE){unlock();}else{document.getElementById('gateErr').textContent='Incorrect access code.';document.getElementById('gateInput').select();}}
+function tryGate(){if((document.getElementById('gateInput').value||'').trim().toLowerCase()===PASSCODE.toLowerCase()){unlock();}else{document.getElementById('gateErr').textContent='Incorrect access code.';document.getElementById('gateInput').select();}}
 document.getElementById('gateBtn').onclick=tryGate;
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')tryGate();});
 document.getElementById('lockBtn').onclick=()=>{try{sessionStorage.removeItem('habari_mgr_ok');}catch(e){}location.reload();};

@@ -36,6 +36,22 @@ Leads shout ──▶ Leads (per rep, per month) ──▶ Proposal sent ──�
 The manager dashboard reads the same store and adds a Leads KPI + funnel stage, a Rolled-over KPI,
 and a **Roll-overs** table listing each carried client, its from→to month, and the evidence supplied.
 
+## Sales competition — best closing ratio
+
+A built-in incentive layer ranks all sales staff by **closing ratio = Won ÷ (Won + Lost)**, with a
+**weekly** and a **monthly** prize.
+
+- **Tracker → 🏆 Competition tab:** reps see the live weekly and monthly leaderboards (rank, closing
+  ratio, W·L, won value), the current leader, and the prize on offer.
+- **Manager dashboard → Sales competition:** the same leaderboards, plus the manager sets the
+  **weekly prize**, **monthly prize**, and a **“qualify at N decided”** threshold (default 2 — stops a
+  lone 1-for-1 = 100% from taking the prize). Prize settings persist to the shared store, so the
+  tracker shows whatever the manager set.
+- **How the window works:** a proposal counts once it's marked **Won** or **Lost**; the app stamps a
+  `decidedAt` date at that moment and buckets it into the week (Mon–Sun) or calendar month it was
+  decided in. Ranked by ratio, then wins, then won value. (Older records without `decidedAt` fall
+  back to their last-follow / sent date.)
+
 ---
 
 ## Files
@@ -45,8 +61,8 @@ The deployable site is in [`public/`](public/):
 | File | Purpose |
 |---|---|
 | `index.html` | Landing page — "Tools & Scope" walk-through, embeds the tracker & dashboards |
-| `habari-proposal-tracker.html` | **Proposal Tracker** — Leads Shout intake (CG LEADS import), pipeline, follow-ups, roll-overs, lead pool, agreement generator |
-| `habari-media-dashboard.html` | **Manager Dashboard** — leads, funnel, hit rate, roll-overs, escalation ladder (access code: `habari2026`) |
+| `habari-proposal-tracker.html` | **Proposal Tracker** — Leads Shout intake (CG LEADS import), pipeline, follow-ups, roll-overs, 🏆 competition leaderboards, lead pool, agreement generator |
+| `habari-media-dashboard.html` | **Manager Dashboard** — leads, funnel, hit rate, roll-overs, sales competition (+ prize config), escalation ladder (access code: `habari2026`) |
 | `habari-operating-dashboard.html` | **Sales Operating Dashboard** — the rep's desk: report generator, raise-a-booking, top-sheet library, rate card |
 | `campaign-report.html` | Live campaign report (embeds the R25,000 Network Special) |
 | `_headers` | `X-Robots-Tag: noindex, nofollow` applied to every page |

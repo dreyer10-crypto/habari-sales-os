@@ -209,6 +209,28 @@
   .lead-list .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
   @media(max-width:900px){.lead-grid{grid-template-columns:1fr}}
 
+  /* competition */
+  .comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:8px}
+  .comp-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .comp-head{padding:16px 18px;border-bottom:1px solid var(--line);background:var(--panel2)}
+  .comp-head .k{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .comp-head .t{font-family:'Fraunces',serif;color:var(--cream);font-size:19px;font-weight:600;margin-top:3px}
+  .comp-head .p{color:var(--muted);font-size:12px;margin-top:4px}
+  .comp-head .prize{display:inline-block;margin-top:9px;background:rgba(212,162,76,.12);border:1px solid rgba(212,162,76,.35);color:var(--gold);font-weight:700;font-size:12px;padding:5px 10px;border-radius:8px}
+  .comp-table{width:100%;border-collapse:collapse}
+  .comp-table th{text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;padding:10px 14px;border-bottom:1px solid var(--line)}
+  .comp-table td{padding:11px 14px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+  .comp-table tr:last-child td{border-bottom:none}
+  .comp-table td.num,.comp-table th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .comp-table tr.win{background:rgba(212,162,76,.07)}
+  .rk{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:700;background:var(--panel2);color:var(--muted);border:1px solid var(--line)}
+  .rk.g{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+  .rep-n{font-weight:700;color:var(--cream)}
+  .ratio{font-family:'Fraunces',serif;font-weight:600}
+  .ratio.hi{color:var(--green)}.ratio.mid{color:var(--gold)}.ratio.lo{color:var(--red)}
+  .noq{font-size:10px;color:var(--muted);display:block;margin-top:2px}
+  @media(max-width:900px){.comp-grid{grid-template-columns:1fr}}
+
   /* agreement document (print-faithful, on-screen white page) */
   .bk-preview{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.35)}
   .ag-empty{color:#999;text-align:center;padding:80px 30px;font-size:14px;background:#fff}
@@ -247,6 +269,7 @@
     <div class="tabnav">
       <button id="tab-tracker" class="tab on" onclick="showTab('tracker')">Tracker</button>
       <button id="tab-leads" class="tab" onclick="showTab('leads')">Leads Shout</button>
+      <button id="tab-competition" class="tab" onclick="showTab('competition')">🏆 Competition</button>
       <button id="tab-booking" class="tab" onclick="showTab('booking')">New Booking</button>
       <a class="tab" href="habari-media-dashboard.html" style="text-decoration:none;color:var(--muted)" title="Manager access required">Manager Dashboard ↗</a>
     </div>
@@ -347,6 +370,21 @@
       </div>
     </div>
   </div><!-- /view-leads -->
+
+  <!-- ============ COMPETITION TAB ============ -->
+  <div id="view-competition" style="display:none">
+    <div class="shout-head">
+      <div class="t">🏆 Sales Competition — best closing ratio</div>
+      <div class="d">Every closed proposal counts. Your <b style="color:var(--gold)">closing ratio</b> = deals <b>Won ÷ (Won + Lost)</b> in the period. Top qualifying rep each <b>week</b> and each <b>month</b> takes the prize. Keep sending proposals and closing them — mark each Won or Lost in the tracker and the board updates live.</div>
+    </div>
+    <div class="comp-grid">
+      <div id="compWeek"></div>
+      <div id="compMonth"></div>
+    </div>
+    <div class="footnote">
+      <b>How it's scored:</b> a rep appears once they have a Won or Lost decision dated in the period. Ranked by closing ratio, then wins, then won value. A rep needs at least <b id="compMin">2</b> decided deals to qualify for the prize (guards against a lone 1-for-1 = 100%). Prizes are set by the sales manager on the dashboard.
+    </div>
+  </div><!-- /view-competition -->
 
   <!-- ============ NEW BOOKING TAB ============ -->
   <div id="view-booking" style="display:none">
@@ -467,13 +505,14 @@ const SIG='\n\nWarm regards,\n\nDreyer Hoffman\nSales Manager\nHabari Media\ntel
 
 // ---- tab switching ----
 function showTab(t){
-  ['dashboard','tracker','leads','booking'].forEach(v=>{
+  ['dashboard','tracker','leads','competition','booking'].forEach(v=>{
     const el=document.getElementById('view-'+v);if(el)el.style.display=(v===t)?'block':'none';
     const tb=document.getElementById('tab-'+v);if(tb)tb.classList.toggle('on',v===t);
   });
-  const titles={tracker:'Proposal Tracker',leads:'Leads Shout',booking:'New Booking'};
+  const titles={tracker:'Proposal Tracker',leads:'Leads Shout',competition:'Sales Competition',booking:'New Booking'};
   document.getElementById('pageTitle').textContent=titles[t]||'Proposal Tracker';
   if(t==='leads')renderLeads();
+  if(t==='competition')renderCompetition();
 }
 
 // ---- lead-health helpers ----
@@ -493,6 +532,69 @@ function monthLabel(d){return MONTHS[d.getMonth()]+' '+d.getFullYear();}
 function currentMonth(){return monthLabel(new Date());}
 function nextMonthLabel(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+1);return monthLabel(d);}
 function normMonth(s){return (s||'').trim().toUpperCase();}
+
+// ---- competition helpers (best closing ratio · weekly + monthly) ----
+const COMPKEY='habari_competition_v1';
+const COMP_DEFAULT={weekly:'R500 Sportsman’s Warehouse voucher',monthly:'R2,000 + Top Closer trophy',minDecided:2};
+function loadComp(){try{const r=JSON.parse(localStorage.getItem(COMPKEY));if(r)return Object.assign({},COMP_DEFAULT,r);}catch(e){}return Object.assign({},COMP_DEFAULT);}
+function weekMonday(d){const x=new Date(d);x.setHours(0,0,0,0);const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);return x;}
+function isoThisWeek(n){const m=weekMonday(new Date());m.setDate(m.getDate()+n);return m.toISOString().slice(0,10);}
+// when a proposal was decided (won/lost); falls back for older records without decidedAt
+function decidedDate(p){return p.decidedAt||p.lastFollow||p.sent||'';}
+function periodBounds(kind){
+  const now=new Date();now.setHours(0,0,0,0);
+  if(kind==='week'){const s=weekMonday(now);const e=new Date(s);e.setDate(e.getDate()+6);return {start:s,end:e};}
+  return {start:new Date(now.getFullYear(),now.getMonth(),1),end:new Date(now.getFullYear(),now.getMonth()+1,0)};
+}
+function inPeriod(p,b){const d=decidedDate(p);if(!d)return false;const dt=new Date(d+'T00:00:00');return dt>=b.start&&dt<=b.end;}
+function periodLabel(kind,b){
+  const f=d=>d.toLocaleDateString('en-ZA',{day:'2-digit',month:'short'});
+  return kind==='week'?('Week of '+f(b.start)+' – '+f(b.end)):b.start.toLocaleDateString('en-ZA',{month:'long',year:'numeric'});
+}
+// leaderboard: every rep with a won/lost decision in the period, ranked by closing ratio
+function leaderboard(kind){
+  const b=periodBounds(kind), reps={};
+  DATA.forEach(p=>{
+    if(!['won','lost'].includes(p.status)||!inPeriod(p,b))return;
+    const r=p.rep||'(unassigned)';
+    const t=reps[r]||(reps[r]={rep:r,w:0,l:0,wonVal:0});
+    if(p.status==='won'){t.w++;t.wonVal+=Number(p.val)||0;}else t.l++;
+  });
+  const rows=Object.values(reps).map(t=>({...t,decided:t.w+t.l,ratio:(t.w+t.l)?t.w/(t.w+t.l):0}));
+  rows.sort((a,b2)=>b2.ratio-a.ratio||b2.w-a.w||b2.wonVal-a.wonVal||a.rep.localeCompare(b2.rep));
+  return {bounds:b,rows};
+}
+function ratioClass(pct){return pct>=50?'hi':(pct>=25?'mid':'lo');}
+function renderCompetition(){
+  const comp=loadComp(), min=Math.max(1,parseInt(comp.minDecided)||2);
+  const mEl=document.getElementById('compMin');if(mEl)mEl.textContent=min;
+  document.getElementById('compWeek').innerHTML=compCard('week','This week',comp.weekly,min);
+  document.getElementById('compMonth').innerHTML=compCard('month','This month',comp.monthly,min);
+}
+function compCard(kind,label,prize,min){
+  const {bounds,rows}=leaderboard(kind);
+  const leader=rows.find(r=>r.decided>=min);
+  const body=rows.length?rows.map((r,i)=>{
+    const pct=Math.round(r.ratio*100), q=r.decided>=min, isLeader=leader&&r.rep===leader.rep;
+    return `<tr class="${isLeader?'win':''}">
+      <td><span class="rk ${isLeader?'g':''}">${isLeader?'🏆':(i+1)}</span></td>
+      <td><span class="rep-n">${esc(r.rep)}</span>${q?'':'<span class="noq">needs '+(min-r.decided)+' more decided to qualify</span>'}</td>
+      <td class="num"><span class="ratio ${ratioClass(pct)}">${pct}%</span></td>
+      <td class="num">${r.w}W · ${r.l}L</td>
+      <td class="num">${fmtR(r.wonVal)}</td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="5"><div class="empty" style="padding:26px">No closed deals ${kind==='week'?'this week':'this month'} yet — mark proposals Won or Lost to get on the board.</div></td></tr>`;
+  return `<div class="comp-card">
+    <div class="comp-head">
+      <div class="k">${kind==='week'?'Weekly prize':'Monthly prize'}</div>
+      <div class="t">${label} · best closing ratio</div>
+      <div class="p">${periodLabel(kind,bounds)}${leader?' · leader: <b style="color:var(--gold)">'+esc(leader.rep)+'</b>':''}</div>
+      <div class="prize">🎁 ${esc(prize||'—')}</div>
+    </div>
+    <table class="comp-table"><thead><tr><th></th><th>Rep</th><th class="num">Closing ratio</th><th class="num">W · L</th><th class="num">Won value</th></tr></thead>
+    <tbody>${body}</tbody></table>
+  </div>`;
+}
 
 
 // ---- new booking: build the agreement document ----
@@ -570,6 +672,14 @@ const SEED=[
   {id:10, client:'BMW SA', contact:'Karen Smit', email:'karen.smit@bmw.co.za', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Car Magazine', pkg:'', val:120000, sent:'', lag:5, status:'lead', leadMonth:currentMonth(), source:'shout', notes:'Shout lead — motoring. Awaiting rate confirmation before proposal.'},
   // ---- rolled over: evidence supplied that the client returns next month ----
   {id:11, client:'Momentum Corporate', contact:'Lerato Mokoena', email:'lerato@momentum.co.za', rep:'Sipho Dlamini', manager:'Robbie Nichols', pub:'Getaway', pkg:'', val:52000, sent:'', lag:5, status:'lead', leadMonth:nextMonthLabel(), source:'shout', rolled:true, rolloverFrom:currentMonth(), rolloverTo:nextMonthLabel(), rolloverAt:today(), rolloverEvidence:'Signed media schedule for Q3 received; budget confirmed by client for next month. Email 2026-07-10 on file.', notes:'Rolled from this month — client confirmed spend next month.'},
+  // ---- decided deals feeding the competition leaderboard (this week + this month) ----
+  {id:12, client:'Kalahari Group', contact:'', email:'', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'DPS', val:59000, sent:isoBack(9), lag:5, status:'won', decidedAt:isoThisWeek(0), leadMonth:currentMonth(), notes:'Closed this week.'},
+  {id:13, client:'Kress Tools', contact:'', email:'', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'SA Rugby Magazine', pkg:'Full Page', val:41000, sent:isoBack(12), lag:5, status:'won', decidedAt:isoThisWeek(1), leadMonth:currentMonth(), notes:'Closed this week.'},
+  {id:14, client:'Union Vault', contact:'', email:'', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'SA Rugby Magazine', pkg:'DPS', val:62000, sent:isoBack(8), lag:5, status:'won', decidedAt:isoThisWeek(1), leadMonth:currentMonth(), notes:'Closed this week.'},
+  {id:15, client:'Crown National', contact:'', email:'', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'Getaway', pkg:'Half Page', val:28000, sent:isoBack(10), lag:5, status:'lost', decidedAt:isoThisWeek(2), leadMonth:currentMonth(), notes:'Went with a competitor title.'},
+  {id:16, client:'Decofurn', contact:'', email:'', rep:'Sipho Dlamini', manager:'Robbie Nichols', pub:'Car Magazine', pkg:'DPS', val:48000, sent:isoBack(11), lag:5, status:'lost', decidedAt:isoThisWeek(0), leadMonth:currentMonth(), notes:'Budget pulled.'},
+  {id:17, client:'Nutritech', contact:'', email:'', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'Full Page', val:37000, sent:isoBack(20), lag:5, status:'won', decidedAt:isoThisWeek(-8), leadMonth:currentMonth(), notes:'Closed earlier this month.'},
+  {id:18, client:'Sportsmans Warehouse', contact:'', email:'', rep:'Sipho Dlamini', manager:'Robbie Nichols', pub:'SA Rugby Magazine', pkg:'DPS', val:70000, sent:isoBack(24), lag:5, status:'won', decidedAt:isoThisWeek(-10), leadMonth:currentMonth(), notes:'Closed earlier this month.'},
 ];
 
 function isoBack(days){const d=new Date();d.setDate(d.getDate()-days);return d.toISOString().slice(0,10);}
@@ -976,10 +1086,18 @@ function save(){
     leadMonth:normMonth(document.getElementById('f_month').value)||currentMonth(),
     source:document.getElementById('f_source').value.trim()
   };
+  // stamp when a deal is decided (won/lost) — drives the competition leaderboard.
+  const prev=id?DATA.find(x=>x.id==id):null;
+  if(['won','lost'].includes(status)){
+    obj.decidedAt=(prev&&prev.decidedAt&&['won','lost'].includes(prev.status))?prev.decidedAt:today();
+  }else{
+    obj.decidedAt='';   // reverted to open → clear
+  }
   if(id){const p=DATA.find(x=>x.id==id);Object.assign(p,obj);}
   else{obj.id=Date.now();DATA.push(obj);}
   persist();closeModal();render();
   if(document.getElementById('view-leads').style.display!=='none')renderLeads();
+  if(document.getElementById('view-competition').style.display!=='none')renderCompetition();
 }
 function del(){
   const id=document.getElementById('editId').value;
@@ -991,8 +1109,8 @@ function setFilter(btn){
   btn.classList.add('on');render();
 }
 function exportData(){
-  const hdr=['Client','Contact','Email','Rep','Manager','Publication','Package','Value','ShoutMonth','Source','Sent','AgeDays','FollowUpLag','Status','Rolled','RolledTo','RolloverEvidence','Flagged','Notes'];
-  const rows=DATA.map(p=>[p.client,p.contact,p.email,p.rep||'',p.manager||'',p.pub,p.pkg,p.val,p.leadMonth||'',p.source||'',p.sent,ageDays(p),p.lag,p.status,p.rolled?'YES':'',p.rolloverTo||'',(p.rolloverEvidence||'').replace(/\n/g,' '),flagged(p)?(isStale(p)?'STALE':'OVERDUE'):'',(p.notes||'').replace(/\n/g,' ')]);
+  const hdr=['Client','Contact','Email','Rep','Manager','Publication','Package','Value','ShoutMonth','Source','Sent','DecidedAt','AgeDays','FollowUpLag','Status','Rolled','RolledTo','RolloverEvidence','Flagged','Notes'];
+  const rows=DATA.map(p=>[p.client,p.contact,p.email,p.rep||'',p.manager||'',p.pub,p.pkg,p.val,p.leadMonth||'',p.source||'',p.sent,p.decidedAt||'',ageDays(p),p.lag,p.status,p.rolled?'YES':'',p.rolloverTo||'',(p.rolloverEvidence||'').replace(/\n/g,' '),flagged(p)?(isStale(p)?'STALE':'OVERDUE'):'',(p.notes||'').replace(/\n/g,' ')]);
   const csv=[hdr,...rows].map(r=>r.map(c=>`"${String(c==null?'':c).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);a.download='habari_proposals.csv';a.click();

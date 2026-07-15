@@ -1,0 +1,12 @@
+# Netlify configuration for the Habari Sales OS static site.
+# The deployable site lives in /public; _headers sits at that publish root so the
+# noindex rule applies to every page.
+
+[build]
+  publish = "public"
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

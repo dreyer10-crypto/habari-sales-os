@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habari Media · Proposal Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#0c0c0d;
+    --panel:#141416;
+    --panel2:#1b1b1e;
+    --line:#2a2a2e;
+    --gold:#d4a24c;
+    --gold-dim:#9c7732;
+    --cream:#f4ece0;
+    --txt:#e9e4da;
+    --muted:#8a857c;
+    --green:#5aa874;
+    --red:#cf5b5b;
+    --amber:#d49a3c;
+    --blue:#5b86cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:'Manrope',sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    padding:28px 24px 80px;
+    min-height:100vh;
+  }
+  .wrap{max-width:1280px;margin:0 auto}
+
+  header.top{
+    display:flex;align-items:flex-end;justify-content:space-between;
+    border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px;flex-wrap:wrap;gap:16px;
+  }
+  .brand h1{
+    font-family:'Fraunces',serif;font-weight:700;font-size:30px;color:var(--cream);letter-spacing:-.5px;
+  }
+  .brand .sub{color:var(--gold);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-top:4px;font-weight:600}
+  .brand .op{color:var(--muted);font-size:12px;margin-top:6px}
+
+  /* stat cards */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:26px}
+  .mgrmsg{margin-top:5px;font-size:11px;color:var(--amber);background:rgba(212,154,60,.1);border:1px solid rgba(212,154,60,.3);border-radius:6px;padding:4px 7px;max-width:300px}
+  .stat{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;
+  }
+  .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+  .stat .n{font-family:'Fraunces',serif;font-size:30px;font-weight:600;color:var(--cream);line-height:1}
+  .stat .l{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-top:8px}
+  .stat.alert .n{color:var(--amber)}
+  .stat.alert::before{background:var(--amber)}
+  .stat.val .n{color:var(--gold)}
+
+  /* controls */
+  .bar{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+  .bar input[type=text]{
+    background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:9px 13px;font-family:inherit;font-size:13px;min-width:240px;
+  }
+  .seg{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg button{
+    background:none;border:none;color:var(--muted);padding:9px 14px;font-family:inherit;font-size:12px;cursor:pointer;font-weight:600;letter-spacing:.3px;
+  }
+  .seg button.on{background:var(--gold);color:#1a1408}
+  .btn{
+    background:var(--gold);color:#1a1408;border:none;border-radius:8px;padding:9px 16px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.3px;
+  }
+  .btn:hover{background:#e3b25e}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--txt)}
+  .btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .spacer{flex:1}
+
+  /* table */
+  .tablewrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  thead th{
+    text-align:left;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;
+    padding:14px 16px;border-bottom:1px solid var(--line);background:var(--panel2);white-space:nowrap;
+  }
+  tbody td{padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:13px}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--panel2)}
+  .client{font-weight:700;color:var(--cream);font-size:13.5px}
+  .contact{color:var(--muted);font-size:11.5px;margin-top:2px}
+  .pub{color:var(--txt)}
+  .pub small{display:block;color:var(--muted);font-size:11px}
+  .val{font-family:'Fraunces',serif;color:var(--gold);font-weight:600;white-space:nowrap}
+
+  .status{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px;white-space:nowrap}
+  .s-lead{background:rgba(139,133,124,.18);color:var(--cream);border:1px solid var(--muted)}
+  .s-sent{background:rgba(91,134,207,.15);color:var(--blue);border:1px solid rgba(91,134,207,.3)}
+  .s-followed{background:rgba(212,162,76,.15);color:var(--gold);border:1px solid rgba(212,162,76,.3)}
+  .s-replied{background:rgba(90,168,116,.15);color:var(--green);border:1px solid rgba(90,168,116,.3)}
+  .s-won{background:var(--green);color:#0c1a0f;border:1px solid var(--green)}
+  .s-lost{background:rgba(207,91,91,.12);color:var(--red);border:1px solid rgba(207,91,91,.3)}
+
+  /* lead / month / rollover chips */
+  .chip{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.3px;white-space:nowrap;margin-left:4px}
+  .chip.lead{background:rgba(139,133,124,.2);color:var(--cream);border:1px solid var(--muted)}
+  .chip.pool{background:rgba(91,134,207,.15);color:var(--blue);border:1px solid rgba(91,134,207,.3)}
+  .chip.rolled{background:rgba(90,168,116,.14);color:var(--green);border:1px solid rgba(90,168,116,.35)}
+  .chip.month{background:rgba(212,162,76,.12);color:var(--gold);border:1px solid rgba(212,162,76,.3)}
+  .rollnote{margin-top:5px;font-size:11px;color:var(--green);background:rgba(90,168,116,.08);border:1px solid rgba(90,168,116,.28);border-radius:6px;padding:4px 7px;max-width:320px}
+
+  .due{font-size:12px;white-space:nowrap}
+  .due .d{font-weight:700}
+  .due.overdue .d{color:var(--red)}
+  .due.today .d{color:var(--amber)}
+  .due.soon .d{color:var(--gold)}
+  .due.ok .d{color:var(--muted)}
+  .due .tag{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+  .due.overdue .tag{color:var(--red)}
+  .due.today .tag{color:var(--amber)}
+  .due.soon .tag{color:var(--gold-dim)}
+  .due.ok .tag{color:var(--muted)}
+
+  .rowbtns{display:flex;gap:6px;flex-wrap:wrap}
+  .mini{
+    background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:6px 9px;font-family:inherit;font-size:11px;cursor:pointer;font-weight:600;white-space:nowrap;
+  }
+  .mini:hover{border-color:var(--gold);color:var(--gold)}
+  .mini.go{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+  .mini.go:hover{background:#e3b25e}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .overlay.show{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;width:100%;max-width:560px;padding:26px;max-height:90vh;overflow:auto}
+  .modal h2{font-family:'Fraunces',serif;color:var(--cream);font-size:22px;margin-bottom:18px}
+  .field{margin-bottom:14px}
+  .field label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:700}
+  .field input,.field select,.field textarea{
+    width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:10px 12px;font-family:inherit;font-size:13px;
+  }
+  .field textarea{resize:vertical;min-height:60px}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+  .empty{padding:50px;text-align:center;color:var(--muted)}
+  .footnote{color:var(--muted);font-size:11px;margin-top:20px;line-height:1.6}
+  .footnote b{color:var(--gold)}
+  @media(max-width:900px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    thead{display:none}
+    tbody td{display:block;border:none;padding:6px 16px}
+    tbody tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}
+    .frow{grid-template-columns:1fr}
+  }
+
+  /* tabs */
+  .tabnav{display:flex;gap:8px}
+  .tab{background:var(--panel2);border:1px solid var(--line);color:var(--muted);
+    padding:10px 20px;border-radius:8px;font-family:inherit;font-weight:700;font-size:13px;
+    cursor:pointer;letter-spacing:.3px}
+  .tab.on{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+
+  /* dashboard */
+  .dash-sec-h{font-family:'Fraunces',serif;color:var(--cream);font-size:16px;font-weight:600;margin:26px 0 12px}
+  .dash-sec-h.flag{color:var(--amber)}
+  .dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .funnel{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .fn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+  .fn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--muted)}
+  .fn.sent::before{background:var(--blue)}.fn.followed::before{background:var(--gold)}.fn.replied::before{background:var(--green)}.fn.won::before{background:var(--green)}.fn.lost::before{background:var(--red)}
+  .fn .c{font-family:'Fraunces',serif;font-size:26px;color:var(--cream);font-weight:600;line-height:1}
+  .fn .l{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:6px}
+  .fn .v{font-size:12px;color:var(--gold);margin-top:6px;font-weight:600}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .flagchip{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;background:rgba(207,91,91,.15);color:var(--red);border:1px solid rgba(207,91,91,.3);white-space:nowrap}
+  .flagchip.stale{background:rgba(212,154,60,.15);color:var(--amber);border-color:rgba(212,154,60,.35)}
+  .bar-mini{height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:7px;max-width:160px}
+  .bar-mini>span{display:block;height:100%;background:var(--gold)}
+  @media(max-width:900px){.dash-grid2{grid-template-columns:1fr}.funnel{grid-template-columns:repeat(2,1fr)}}
+
+  /* new booking layout */
+  .bk-grid{display:grid;grid-template-columns:minmax(360px,1fr) minmax(420px,1.1fr);gap:24px;align-items:start}
+  .bk-form{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .bk-sec{font-family:'Fraunces',serif;color:var(--gold);font-size:15px;font-weight:600;
+    margin:18px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .bk-sec:first-child{margin-top:0}
+  .bk-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .bk-field{margin-bottom:12px}
+  .bk-field label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;
+    letter-spacing:1px;margin-bottom:5px;font-weight:700}
+  .bk-field input,.bk-field select,.bk-field textarea{width:100%;background:var(--panel2);
+    border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:10px 12px;
+    font-family:inherit;font-size:13px}
+  .bk-field textarea{resize:vertical}
+  .bk-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .bk-note{color:var(--muted);font-size:11px;margin-top:14px;line-height:1.6}
+  .bk-note b{color:var(--gold)}
+
+  /* leads shout */
+  .lead-grid{display:grid;grid-template-columns:minmax(340px,1fr) minmax(340px,1fr);gap:24px;align-items:start}
+  .lead-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+  .shout-head{background:var(--panel);border:1px solid var(--gold-dim);border-radius:12px;padding:16px 18px;margin-bottom:20px}
+  .shout-head .t{font-family:'Fraunces',serif;color:var(--cream);font-size:18px;font-weight:600}
+  .shout-head .d{color:var(--muted);font-size:12px;margin-top:4px}
+  .shout-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .shout-row .bk-field{margin-bottom:0;flex:1;min-width:150px}
+  .lead-list .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:9px}
+  .lead-list .row .c{font-weight:700;color:var(--cream);font-size:13.5px}
+  .lead-list .row .m{color:var(--muted);font-size:11.5px;margin-top:2px}
+  .lead-list .row .v{font-family:'Fraunces',serif;color:var(--gold);font-weight:600;font-size:13px;white-space:nowrap}
+  .lead-list .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  @media(max-width:900px){.lead-grid{grid-template-columns:1fr}}
+
+  /* agreement document (print-faithful, on-screen white page) */
+  .bk-preview{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+  .ag-empty{color:#999;text-align:center;padding:80px 30px;font-size:14px;background:#fff}
+  #agreementDoc{color:#111}
+  .ag-page{padding:40px 46px;font-family:Georgia,'Times New Roman',serif;color:#111;background:#fff;font-size:12.5px;line-height:1.45}
+  .ag-fineprint{font-size:8.5px;color:#333;text-align:center;line-height:1.4;margin-bottom:18px}
+  .ag-pubtitle{text-align:center;font-weight:bold;font-size:26px;letter-spacing:1px;margin:6px 0 14px}
+  .ag-h{text-align:center;font-weight:bold;font-size:15px;margin-bottom:2px}
+  .ag-sub{text-align:center;font-size:10px;text-decoration:underline;margin-bottom:20px;letter-spacing:.5px}
+  .ag-kv{display:grid;grid-template-columns:190px 14px 1fr;margin-bottom:9px;font-size:12px}
+  .ag-kv .k{font-weight:bold;letter-spacing:.4px}
+  .ag-kv .v{font-weight:bold}
+  .ag-kv .v .pkgline{display:block}
+  .ag-terms-h{text-align:center;font-weight:bold;font-size:13px;margin:18px 0 8px}
+  .ag-terms{font-size:9.5px;line-height:1.5;margin-bottom:6px}
+  .ag-terms li{margin-bottom:4px}
+  .ag-sign{margin-top:18px;font-size:11.5px;line-height:2.4}
+  .ag-sign .ln{border-bottom:1px solid #111;display:inline-block;min-width:160px}
+  @media(max-width:1000px){.bk-grid{grid-template-columns:1fr}}
+  @media print{
+    body *{visibility:hidden}
+    #agreementDoc,#agreementDoc *{visibility:visible}
+    #agreementDoc{position:absolute;left:0;top:0;width:100%;box-shadow:none}
+    @page{margin:14mm}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1 id="pageTitle">Proposal Tracker</h1>
+      <div class="sub">Habari Media · Sales OS</div>
+      <div class="op">Dreyer Hoffman · Sales Manager</div>
+    </div>
+    <div class="tabnav">
+      <button id="tab-tracker" class="tab on" onclick="showTab('tracker')">Tracker</button>
+      <button id="tab-leads" class="tab" onclick="showTab('leads')">Leads Shout</button>
+      <button id="tab-booking" class="tab" onclick="showTab('booking')">New Booking</button>
+      <a class="tab" href="habari-media-dashboard.html" style="text-decoration:none;color:var(--muted)" title="Manager access required">Manager Dashboard ↗</a>
+    </div>
+  </header>
+
+  <!-- ============ TRACKER TAB ============ -->
+  <div id="view-tracker">
+  <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+    <button class="btn" onclick="openModal()">+ New Proposal</button>
+  </div>
+
+  <div id="repBanner" style="display:none;background:var(--panel);border:1px solid var(--gold);border-radius:10px;padding:12px 16px;margin-bottom:14px;color:var(--cream);font-size:13px"></div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="bar">
+    <input type="text" id="search" placeholder="Search client, publication, contact…" oninput="render()">
+    <div class="seg" id="filter">
+      <button data-f="all" class="on" onclick="setFilter(this)">All</button>
+      <button data-f="lead" onclick="setFilter(this)">Leads</button>
+      <button data-f="due" onclick="setFilter(this)">Follow-up due</button>
+      <button data-f="open" onclick="setFilter(this)">Open</button>
+      <button data-f="won" onclick="setFilter(this)">Won</button>
+      <button data-f="rolled" onclick="setFilter(this)">Rolled over</button>
+      <button data-f="pool" onclick="setFilter(this)">Lead pool</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn ghost" onclick="exportData()">Export</button>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Publication / Package</th>
+          <th>Value</th>
+          <th>Sent</th>
+          <th>Follow-up</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <div class="footnote">
+    <b>Leads shout → proposals:</b> at the monthly shout, reps log their target clients on the <b>Leads Shout</b> tab (paste the list or import the CG LEADS sheet). Those sit as <b>Leads</b> until a proposal goes out — hit <b>Send proposal</b> to move a lead into the live pipeline.<br>
+    <b>Roll-overs:</b> can't close a client this month but it's coming back? <b>Roll over</b> the lead to a named month with evidence (signed schedule / confirmed budget). It carries forward instead of counting as lost.<br>
+    <b>How sends work:</b> Each "Follow-up" button opens a pre-filled draft in your default mail app (Outlook). You review and hit send — nothing leaves without you. Data is saved to this browser and persists between sessions.<br>
+    <b>Follow-up rule:</b> flagged 5 working days after the proposal is sent (or after the last follow-up). Adjust per row when editing.
+  </div>
+  </div><!-- /view-tracker -->
+
+  <!-- ============ LEADS SHOUT TAB ============ -->
+  <div id="view-leads" style="display:none">
+    <div class="shout-head">
+      <div class="t">🗣️ Leads Shout — <span id="shoutMonthLabel"></span></div>
+      <div class="d">When the monthly leads shout goes out, each rep lists the clients they intend to engage this month. Leads land here first; once a proposal goes out you convert the lead into the tracker. Can't close it this month but the client's coming back? <b style="color:var(--gold)">Roll it over</b> with evidence and it carries to the month you name.</div>
+      <div class="shout-row">
+        <div class="bk-field"><label>Shout month</label><input id="shoutMonth" placeholder="JULY 2026"></div>
+        <div class="bk-field"><label>Your name (rep)</label><input id="shoutRep" placeholder="Dreyer Hoffman"></div>
+      </div>
+    </div>
+
+    <div class="lead-summary" id="leadSummary"></div>
+
+    <div class="lead-grid">
+      <div class="bk-form">
+        <div class="bk-sec">Add clients to this month's shout</div>
+        <div class="bk-field">
+          <label>Client list — one per line</label>
+          <textarea id="leadPaste" rows="7" placeholder="One client per line. Optional extra columns, separated by comma or tab:&#10;Client, Contact, Email, Publication, Est. value (R)&#10;&#10;e.g.&#10;Discovery Health, Thabo Ncube, thabo@discovery.co.za, Compleat Golfer, 45000&#10;Sanlam&#10;BMW SA	Karen Smit	karen@bmw.co.za	Car Magazine	120000"></textarea>
+        </div>
+        <div class="bk-actions">
+          <button class="btn" onclick="addLeadsFromText()">+ Add to my leads</button>
+          <label class="btn ghost" style="cursor:pointer;margin:0">Import CG LEADS file
+            <input type="file" id="leadFile" accept=".csv,.tsv,.txt" style="display:none" onchange="importLeadsFile(event)">
+          </label>
+        </div>
+        <div class="bk-note">
+          <b>From the CG LEADS sheet:</b> open the shout workbook (<i>CG LEADS – DREYER</i>) in SharePoint / Excel,
+          copy the client rows and paste them above, or <b>File → Save As → CSV</b> and use <b>Import CG LEADS file</b>.
+          A header row (Client, Contact, Email, Publication, Value) is auto-detected; the first column is always the client.
+          <br>Live two-way SharePoint sync needs a backend connector — this import brings the sheet into the tracker on demand.
+        </div>
+      </div>
+
+      <div>
+        <div class="bk-sec" style="border-bottom:1px solid var(--line);padding-bottom:6px;margin-top:0">This month's leads</div>
+        <div class="lead-list" id="leadListMonth"></div>
+        <div class="bk-sec" style="border-bottom:1px solid var(--line);padding-bottom:6px">Rolled over — evidence supplied</div>
+        <div class="lead-list" id="leadListRolled"></div>
+      </div>
+    </div>
+  </div><!-- /view-leads -->
+
+  <!-- ============ NEW BOOKING TAB ============ -->
+  <div id="view-booking" style="display:none">
+    <div class="bk-grid">
+      <div class="bk-form">
+        <div class="bk-sec">Client & Publication</div>
+        <div class="bk-row">
+          <div class="bk-field"><label>Attention (who signs)</label><input id="b_attn" placeholder="Lara Bredeveldt"></div>
+          <div class="bk-field"><label>Client email</label><input id="b_email" placeholder="name@client.com"></div>
+        </div>
+        <div class="bk-field"><label>Company (full)</label><input id="b_company" placeholder="METAMEDIA ON BEHALF OF DROMEX SOUTH AFRICA"></div>
+        <div class="bk-row">
+          <div class="bk-field"><label>Publication</label>
+            <select id="b_pub">
+              <option>SA RUGBY MAG</option><option>COMPLEAT GOLFER</option>
+              <option>CAPE TOWN ETC</option><option>GETAWAY</option><option>CAR MAGAZINE</option>
+            </select>
+          </div>
+          <div class="bk-field"><label>Month booked</label><input id="b_month" placeholder="JUNE 2026"></div>
+        </div>
+        <div class="bk-row">
+          <div class="bk-field"><label>Date</label><input id="b_date" type="date"></div>
+          <div class="bk-field"><label>From (rep)</label><input id="b_from" value="DREYER HOFFMAN"></div>
+        </div>
+
+        <div class="bk-sec">Package & Terms</div>
+        <div class="bk-field"><label>Package booked (one item per line)</label>
+          <textarea id="b_pkg" rows="4" placeholder="1 x 300 x 250 DIGITAL BANNER&#10;1 x 728 x 90 DIGITAL BANNER&#10;1 x BOOSTED SOCIAL MEDIA POST&#10;30 DAY CAMPAIGN – POSITIONS MAY ROTATE"></textarea>
+        </div>
+        <div class="bk-row">
+          <div class="bk-field"><label>Total cost (R, excl VAT)</label><input id="b_cost" placeholder="65000"></div>
+          <div class="bk-field"><label>Position</label><input id="b_pos" value="BEST POSSIBLE PER MONTH"></div>
+        </div>
+        <div class="bk-row">
+          <div class="bk-field"><label>Payment terms</label><input id="b_pay" value="30 DAYS FROM DATE OF INVOICE"></div>
+          <div class="bk-field"><label>Material deadline</label><input id="b_mat" value="TO BE ADVISED BY PRODUCTION DEPT."></div>
+        </div>
+
+        <div class="bk-actions">
+          <button class="btn" onclick="genAgreement()">Generate agreement →</button>
+          <button class="btn ghost" onclick="printAgreement()">Print / Save PDF</button>
+          <button class="btn ghost" onclick="emailAgreement()">Email to client ↗</button>
+        </div>
+        <div class="bk-note">Fill the fields, hit <b>Generate</b> to preview, then <b>Print / Save PDF</b> (choose “Save as PDF” in the print dialog) and <b>Email to client</b> to open a pre-filled message. Attach the saved PDF before sending.</div>
+      </div>
+
+      <div class="bk-preview" id="agreementDoc">
+        <div class="ag-empty">Fill the form and press <b>Generate agreement</b> to preview the form here.</div>
+      </div>
+    </div>
+  </div><!-- /view-booking -->
+</div><!-- /wrap -->
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modalTitle">New Proposal</h2>
+    <input type="hidden" id="editId">
+    <div class="field">
+      <label>Client / Brand</label>
+      <input type="text" id="f_client" placeholder="e.g. Mercedes-Benz">
+    </div>
+    <div class="frow">
+      <div class="field"><label>Contact name</label><input type="text" id="f_contact" placeholder="Justin Jacobs"></div>
+      <div class="field"><label>Contact email</label><input type="text" id="f_email" placeholder="name@brand.com"></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Sales rep</label><input type="text" id="f_rep" placeholder="Dreyer Hoffman"></div>
+      <div class="field"><label>Manager</label><input type="text" id="f_manager" placeholder="Robbie Nichols"></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Publication</label>
+        <select id="f_pub">
+          <option>SA Rugby Magazine</option>
+          <option>Compleat Golfer</option>
+          <option>Cape Town Etc</option>
+          <option>Getaway</option>
+          <option>Car Magazine</option>
+          <option>Masters Cup</option>
+          <option>Multi-title</option>
+        </select>
+      </div>
+      <div class="field"><label>Package / slot</label><input type="text" id="f_pkg" placeholder="DPS / Title / Mobility Partner"></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Value (R, ex VAT)</label><input type="text" id="f_val" placeholder="950000"></div>
+      <div class="field"><label>Date sent</label><input type="date" id="f_sent"></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Follow-up after (working days)</label><input type="text" id="f_lag" value="5"></div>
+      <div class="field"><label>Status</label>
+        <select id="f_status">
+          <option value="lead">Lead — no proposal yet</option>
+          <option value="sent">Sent</option>
+          <option value="followed">Followed up</option>
+          <option value="replied">Replied</option>
+          <option value="won">Won</option>
+          <option value="lost">Lost</option>
+        </select>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Shout month</label><input type="text" id="f_month" placeholder="JULY 2026"></div>
+      <div class="field"><label>Lead source</label><input type="text" id="f_source" placeholder="CG LEADS / shout / referral"></div>
+    </div>
+    <div class="field"><label>Notes</label><textarea id="f_notes" placeholder="Context, next action, what was attached…"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn ghost" id="delBtn" onclick="del()" style="color:var(--red);display:none">Delete</button>
+      <button class="btn" onclick="save()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY='habari_proposals_v1';
+const SIG='\n\nWarm regards,\n\nDreyer Hoffman\nSales Manager\nHabari Media\ntel: +27 21 416 0141  ·  cell: +27 84 215 3430\nwww.habarimedia.com';
+
+// ---- tab switching ----
+function showTab(t){
+  ['dashboard','tracker','leads','booking'].forEach(v=>{
+    const el=document.getElementById('view-'+v);if(el)el.style.display=(v===t)?'block':'none';
+    const tb=document.getElementById('tab-'+v);if(tb)tb.classList.toggle('on',v===t);
+  });
+  const titles={tracker:'Proposal Tracker',leads:'Leads Shout',booking:'New Booking'};
+  document.getElementById('pageTitle').textContent=titles[t]||'Proposal Tracker';
+  if(t==='leads')renderLeads();
+}
+
+// ---- lead-health helpers ----
+const STALE_DAYS=30;
+const OPEN_STATUS=['sent','followed','replied'];          // proposals in flight (follow-up clock)
+const PIPELINE_STATUS=['lead','sent','followed','replied'];// everything still open, incl. pre-proposal leads
+function isOpen(p){return OPEN_STATUS.includes(p.status);}
+function isLead(p){return p.status==='lead';}
+function ageDays(p){if(!p.sent)return 0;return Math.max(0,Math.floor((new Date().setHours(0,0,0,0)-new Date(p.sent+'T00:00:00'))/86400000));}
+function isStale(p){return isOpen(p)&&ageDays(p)>=STALE_DAYS;}
+function isOverdue(p){return dueInfo(p).cls==='overdue';}
+function flagged(p){return isStale(p)||isOverdue(p);}
+
+// ---- month helpers (leads shout) ----
+const MONTHS=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+function monthLabel(d){return MONTHS[d.getMonth()]+' '+d.getFullYear();}
+function currentMonth(){return monthLabel(new Date());}
+function nextMonthLabel(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+1);return monthLabel(d);}
+function normMonth(s){return (s||'').trim().toUpperCase();}
+
+
+// ---- new booking: build the agreement document ----
+function bkVal(id){return (document.getElementById(id).value||'').trim();}
+function fmtCost(v){const n=parseInt((v||'').replace(/\D/g,''));return n?('R'+n.toLocaleString('en-ZA').replace(/,/g,' ')+' EXCLUDING VAT'):'';}
+
+function genAgreement(){
+  const attn=bkVal('b_attn'), company=bkVal('b_company'), pub=bkVal('b_pub'),
+        month=bkVal('b_month'), date=bkVal('b_date'), from=bkVal('b_from'),
+        pkg=bkVal('b_pkg'), cost=bkVal('b_cost'), pos=bkVal('b_pos'),
+        pay=bkVal('b_pay'), mat=bkVal('b_mat');
+  const dDisp = date? new Date(date+'T00:00:00').toLocaleDateString('en-ZA',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase() : '';
+  const pkgLines = pkg.split('\n').filter(x=>x.trim()).map(x=>`<span class="pkgline">${esc(x.trim())}</span>`).join('');
+  function kv(k,v){return v?`<div class="ag-kv"><span class="k">${k}</span><span>:</span><span class="v">${v}</span></div>`:`<div class="ag-kv"><span class="k">${k}</span><span>:</span><span class="v"></span></div>`;}
+  const html=`<div class="ag-page">
+    <div class="ag-fineprint">Highbury Media (Pty) Ltd T/A Habari Media 2004/031056/07 — V.A.T. Registration No: 458 022 2752<br>
+    36 Old Mill Road, Ndabeni, Cape Town, 7405 · PO Box 180, Howard Place, Pinelands 7405 · Tel: 021 416 0141 · E-mail: dreyer.hoffman@habarimedia.com</div>
+    <div class="ag-pubtitle">${esc(pub||'SA RUGBY MAG')}</div>
+    <div class="ag-h">ADVERTISING AGREEMENT FORM</div>
+    <div class="ag-sub">PLEASE SIGN, SCAN AND EMAIL BACK TO THE SALES REPRESENTATIVE</div>
+    ${kv('ATTENTION', esc(attn))}
+    ${kv('COMPANY', esc(company))}
+    ${kv('DATE', esc(dDisp))}
+    ${kv('FROM', esc(from))}
+    ${kv('MONTH BOOKED', esc(month))}
+    <div class="ag-kv"><span class="k">PACKAGE BOOKED</span><span>:</span><span class="v">${pkgLines}</span></div>
+    ${kv('TOTAL COST', esc(fmtCost(cost)))}
+    ${kv('POSITION', esc(pos))}
+    ${kv('PAYMENT INSTRUCTIONS', esc(pay))}
+    ${kv('MATERIAL DEADLINE', esc(mat))}
+    <div class="ag-terms-h">The Terms and Conditions of Business</div>
+    <ol class="ag-terms">
+      <li>The terms and conditions of business are available on our website at www.habarimedia.com.</li>
+      <li>This order is subject to the aforesaid terms and conditions of business. Against your signature to this order, you are bound by the terms and conditions of Business, which you hereby declare to have read and understood.</li>
+      <li>The advertiser/applicant may cancel the order at any time prior to the material submission deadline subject to such cancellation being in writing communicated to Habari Media prior to the said date AND subject to payment of 50% of the value of the order plus VAT thereon. Failing such payment, the advertiser shall be liable for the total value of the order placed.</li>
+      <li>By signing this order below, you confirm that you possess the necessary authority to enter into this agreement.</li>
+    </ol>
+    <div class="ag-sign">
+      Signed at <span class="ln"></span> on this <span class="ln" style="min-width:50px"></span> day of <span class="ln" style="min-width:120px"></span> 2026.<br>
+      Full name of Person Signing : <span class="ln" style="min-width:300px"></span><br>
+      Duly Authorised Signature : <span class="ln" style="min-width:240px"></span> Title/Position : <span class="ln" style="min-width:120px"></span><br>
+      On behalf of — Full Company Name : <span class="ln" style="min-width:320px"></span><br>
+      Company VAT Number : <span class="ln" style="min-width:300px"></span><br>
+      Company Registration Number : <span class="ln" style="min-width:280px"></span>
+    </div>
+  </div>`;
+  document.getElementById('agreementDoc').innerHTML=html;
+}
+
+function printAgreement(){
+  if(document.querySelector('.ag-empty')){genAgreement();}
+  window.print();
+}
+
+function emailAgreement(){
+  const to=bkVal('b_email'), attn=bkVal('b_attn'), pub=bkVal('b_pub'), month=bkVal('b_month');
+  const first=(attn||'there').split(' ')[0];
+  const subj=`Advertising agreement — ${pub} · ${month}`;
+  const body=`Hi ${first},\n\nThank you for the booking. Please find attached the advertising agreement for ${pub} (${month}).\n\nKindly sign, scan and email it back to me at your earliest convenience to confirm the booking. Material deadlines and positioning will follow from our production team.\n\nDo shout if anything needs adjusting.`+SIG;
+  window.location.href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+}
+
+// ---- seed data (known Habari contacts) ----
+const SEED=[
+  {id:1, client:'Mercedes-Benz', contact:'Justin Jacobs', email:'justin.jacobs@mercedes-benz.com', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'Masters Cup', pkg:'Official Mobility Partner', val:950000, sent:isoBack(2), lag:5, status:'sent', notes:'Category-exclusive automotive slot. Deck verified R950k/R8.45m/12.2×. Lexus (Glenn Crompton) held as fallback.'},
+  {id:2, client:'Mercedes-Benz', contact:'(agency rep)', email:'', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'DPS', val:59000, sent:isoBack(20), lag:5, status:'sent', notes:'Warm follow-up re print rep feedback.'},
+  {id:3, client:'Bridgement', contact:'', email:'', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'7-slide SME model', val:37000, sent:isoBack(14), lag:5, status:'followed', notes:'Business/SME lead-gen alignment.'},
+  {id:4, client:'Momentum Insure', contact:'', email:'', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'Full Page', val:37000, sent:isoBack(9), lag:5, status:'sent', notes:'Sports/lifestyle premium audience.'},
+  {id:5, client:'MSC Cruises', contact:'', email:'', rep:'Sipho Dlamini', manager:'Robbie Nichols', pub:'SA Rugby Magazine', pkg:'DPS', val:62000, sent:isoBack(6), lag:5, status:'sent', notes:'Campaign outreach.'},
+  {id:6, client:'Dromex', contact:'', email:'', rep:'Sipho Dlamini', manager:'Robbie Nichols', pub:'Multi-title', pkg:'7-slide model', val:80000, sent:isoBack(38), lag:5, status:'replied', notes:'Reference model client — open 5+ weeks, still unbooked. Chase a decision.'},
+  {id:7, client:'Dromex (via Metamedia)', contact:'Lara Bredeveldt', email:'lara.bredeveldt@metamedia.co.za', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'SA Rugby Magazine', pkg:'Digital — 300x250 + 728x90 + boosted social, 30-day', val:65000, sent:isoBack(41), lag:5, status:'won', leadMonth:'JUNE 2026', notes:'Agreement signed. Topsheets + agreement generated and sent to accounts (debtors@habarimedia.com). Commission R10,036.25. June 2026 campaign. VAT 4790284543 / Reg 1984/011226/07.'},
+  // ---- leads from this month's shout (no proposal sent yet) ----
+  {id:8, client:'Discovery Health', contact:'Thabo Ncube', email:'thabo.ncube@discovery.co.za', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'', val:45000, sent:'', lag:5, status:'lead', leadMonth:currentMonth(), source:'CG LEADS', notes:'Named on the CG LEADS shout — wellness/lifestyle fit. Proposal to build.'},
+  {id:9, client:'Sanlam', contact:'', email:'', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'SA Rugby Magazine', pkg:'', val:60000, sent:'', lag:5, status:'lead', leadMonth:currentMonth(), source:'CG LEADS', notes:'Shout lead — finance category. Contact TBC.'},
+  {id:10, client:'BMW SA', contact:'Karen Smit', email:'karen.smit@bmw.co.za', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Car Magazine', pkg:'', val:120000, sent:'', lag:5, status:'lead', leadMonth:currentMonth(), source:'shout', notes:'Shout lead — motoring. Awaiting rate confirmation before proposal.'},
+  // ---- rolled over: evidence supplied that the client returns next month ----
+  {id:11, client:'Momentum Corporate', contact:'Lerato Mokoena', email:'lerato@momentum.co.za', rep:'Sipho Dlamini', manager:'Robbie Nichols', pub:'Getaway', pkg:'', val:52000, sent:'', lag:5, status:'lead', leadMonth:nextMonthLabel(), source:'shout', rolled:true, rolloverFrom:currentMonth(), rolloverTo:nextMonthLabel(), rolloverAt:today(), rolloverEvidence:'Signed media schedule for Q3 received; budget confirmed by client for next month. Email 2026-07-10 on file.', notes:'Rolled from this month — client confirmed spend next month.'},
+];
+
+function isoBack(days){const d=new Date();d.setDate(d.getDate()-days);return d.toISOString().slice(0,10);}
+function today(){return new Date().toISOString().slice(0,10);}
+
+let DATA = load();
+let filter='all';
+let repFilter=new URLSearchParams(location.search).get('rep')||'';   // manager drill-in (?rep=Name)
+
+function load(){
+  try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
+  return SEED.slice();
+}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(DATA));}catch(e){}}
+
+// ---- working-day follow-up calc ----
+function addWorkingDays(iso,n){
+  const d=new Date(iso+'T00:00:00');let added=0;
+  while(added<n){d.setDate(d.getDate()+1);const wd=d.getDay();if(wd!==0&&wd!==6)added++;}
+  return d;
+}
+function dueInfo(p){
+  if(p.status==='lead') return {cls:'ok',label:'—',tag:'no proposal yet'};
+  if(['won','lost','replied'].includes(p.status)) return {cls:'ok',label:'—',tag:p.status==='replied'?'replied':'closed'};
+  const base=p.status==='followed'&&p.lastFollow?p.lastFollow:p.sent;
+  const due=addWorkingDays(base,parseInt(p.lag)||5);
+  const today=new Date();today.setHours(0,0,0,0);
+  const diff=Math.round((due-today)/86400000);
+  const ds=due.toLocaleDateString('en-ZA',{day:'2-digit',month:'short'});
+  if(diff<0) return {cls:'overdue',label:ds,tag:Math.abs(diff)+'d overdue',sortKey:diff};
+  if(diff===0) return {cls:'today',label:ds,tag:'due today',sortKey:0};
+  if(diff<=2) return {cls:'soon',label:ds,tag:'in '+diff+'d',sortKey:diff};
+  return {cls:'ok',label:ds,tag:'in '+diff+'d',sortKey:diff};
+}
+
+function fmtR(v){return 'R '+(Number(v)||0).toLocaleString('en-ZA');}
+function fmtSent(iso){if(!iso)return '—';return new Date(iso+'T00:00:00').toLocaleDateString('en-ZA',{day:'2-digit',month:'short',year:'2-digit'});}
+const SLABEL={lead:'Lead',sent:'Sent',followed:'Followed up',replied:'Replied',won:'Won',lost:'Lost'};
+const SCLASS={lead:'s-lead',sent:'s-sent',followed:'s-followed',replied:'s-replied',won:'s-won',lost:'s-lost'};
+
+function render(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  let list=DATA.filter(p=>{
+    if(repFilter && (p.rep||'')!==repFilter) return false;
+    const hay=(p.client+' '+p.pub+' '+(p.contact||'')+' '+(p.pkg||'')+' '+(p.rep||'')).toLowerCase();
+    if(q&&!hay.includes(q))return false;
+    if(filter==='lead')return p.status==='lead';
+    if(filter==='due'){const di=dueInfo(p);return ['overdue','today','soon'].includes(di.cls);}
+    if(filter==='open')return ['sent','followed','replied'].includes(p.status);
+    if(filter==='won')return p.status==='won';
+    if(filter==='rolled')return !!p.rolled;
+    if(filter==='pool')return !!p.pool;
+    return true;
+  });
+  // sort: most-urgent follow-up first
+  list.sort((a,b)=>{
+    const da=dueInfo(a),db=dueInfo(b);
+    const ka=da.sortKey===undefined?9999:da.sortKey;
+    const kb=db.sortKey===undefined?9999:db.sortKey;
+    return ka-kb;
+  });
+
+  const rows=document.getElementById('rows');
+  if(!list.length){rows.innerHTML='<tr><td colspan="7"><div class="empty">No proposals match.</div></td></tr>';}
+  else rows.innerHTML=list.map(p=>{
+    const di=dueInfo(p);
+    const lead=isLead(p);
+    const chips=
+      (flagged(p)?' <span class="flagchip'+(isStale(p)?' stale':'')+'" title="'+(isStale(p)?'Open '+STALE_DAYS+'d+ unbooked':'Follow-up overdue')+'">⚑</span>':'')
+      +(lead?' <span class="chip lead">LEAD</span>':'')
+      +(p.rolled?' <span class="chip rolled">ROLLED → '+esc(p.rolloverTo||'')+'</span>':'')
+      +(p.leadMonth&&!p.rolled?' <span class="chip month">'+esc(p.leadMonth)+'</span>':'')
+      +(p.pool?' <span class="chip pool">POOL</span>':'');
+    // actions
+    let go;
+    if(p.pool) go=`<button class="mini go" onclick="claim(${p.id})">Claim</button>`;
+    else if(lead) go=`<button class="mini go" onclick="convertToProposal(${p.id})">Send proposal ↗</button>`;
+    else go=`<button class="mini go" onclick="followUp(${p.id})">Follow up ↗</button>`;
+    const rollBtn=(['won','lost'].includes(p.status))?'':`<button class="mini" onclick="rollOver(${p.id})">Roll over ↦</button>`;
+    return `<tr>
+      <td><div class="client">${esc(p.client)}${chips}</div><div class="contact">${esc((p.rep?p.rep+' · ':'')+(p.contact||'—'))}</div>${p.mgrMsg?'<div class="mgrmsg">⚑ Manager ('+esc(p.mgrMsgAt||'')+'): '+esc(p.mgrMsg)+'</div>':''}${p.rolled&&p.rolloverEvidence?'<div class="rollnote">↦ Rolled to '+esc(p.rolloverTo||'')+' — evidence: '+esc(p.rolloverEvidence)+'</div>':''}</td>
+      <td class="pub">${esc(p.pub)}<small>${esc(p.pkg||(lead?'proposal to build':''))}</small></td>
+      <td class="val">${fmtR(p.val)}${lead?'<small style="display:block;color:var(--muted);font-size:10px">est.</small>':''}</td>
+      <td style="color:var(--muted);white-space:nowrap">${fmtSent(p.sent)}</td>
+      <td><div class="due ${di.cls}"><span class="d">${di.label}</span><span class="tag">${di.tag}</span></div></td>
+      <td><span class="status ${SCLASS[p.status]}">${SLABEL[p.status]}</span></td>
+      <td><div class="rowbtns">
+        ${go}${rollBtn}
+        <button class="mini" onclick="openModal(${p.id})">Edit</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+
+  // stats (scoped to the rep when a manager drills in via ?rep=)
+  const scope=repFilter?DATA.filter(p=>(p.rep||'')===repFilter):DATA;
+  const leads=scope.filter(isLead);
+  const rolled=scope.filter(p=>p.rolled);
+  const open=scope.filter(p=>['sent','followed','replied'].includes(p.status));
+  const due=scope.filter(p=>['overdue','today','soon'].includes(dueInfo(p).cls));
+  const pipeline=open.reduce((s,p)=>s+(Number(p.val)||0),0);
+  const leadVal=leads.reduce((s,p)=>s+(Number(p.val)||0),0);
+  const won=scope.filter(p=>p.status==='won'), lost=scope.filter(p=>p.status==='lost');
+  const wonVal=won.reduce((s,p)=>s+(Number(p.val)||0),0);
+  const decided=won.length+lost.length, hit=decided?Math.round(won.length/decided*100):null;
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="n">${scope.length}</div><div class="l">${repFilter?'Rep entries':'Total entries'}</div></div>
+    <div class="stat"><div class="n">${leads.length}</div><div class="l">Leads · ${fmtR(leadVal)} est.</div></div>
+    <div class="stat alert"><div class="n">${due.length}</div><div class="l">Follow-ups due</div></div>
+    <div class="stat"><div class="n">${open.length}</div><div class="l">Proposals open</div></div>
+    <div class="stat"><div class="n">${rolled.length}</div><div class="l">Rolled over</div></div>
+    <div class="stat"><div class="n">${hit==null?'—':hit+'%'}</div><div class="l">Hit rate · ${won.length}W&nbsp;${lost.length}L</div></div>
+    <div class="stat val"><div class="n">${fmtR(pipeline)}</div><div class="l">Open pipeline</div></div>
+    <div class="stat val"><div class="n">${fmtR(wonVal)}</div><div class="l">Won value</div></div>`;
+  const rb=document.getElementById('repBanner');
+  if(repFilter){rb.style.display='block';rb.innerHTML='👤 Manager view — leads for <b>'+esc(repFilter)+'</b> &amp; their hit rate. <a href="habari-proposal-tracker.html" style="color:var(--gold)">Show all ↗</a>';}
+  else{rb.style.display='none';}
+}
+function claim(id){
+  const p=DATA.find(x=>x.id==id);if(!p)return;
+  const who=prompt('Claim this pooled lead — enter your name:', repFilter||'');
+  if(who===null)return;
+  p.rep=(who.trim()||p.pooledFrom||'Unassigned');p.pool=false;
+  if(!['won','lost'].includes(p.status)){p.status='followed';p.lastFollow=new Date().toISOString().slice(0,10);}
+  persist();render();
+}
+
+// ---- lead → proposal, and rollover ----
+function convertToProposal(id){
+  const p=DATA.find(x=>x.id==id);if(!p)return;
+  if(p.status==='lead')p.status='sent';
+  if(!p.sent)p.sent=today();
+  p.rolled=false;                       // it's now a live proposal for the current cycle
+  persist();render();
+  if(document.getElementById('view-leads').style.display!=='none')renderLeads();
+  openModal(id);                        // let the rep confirm value / package / date sent
+}
+function rollOver(id){
+  const p=DATA.find(x=>x.id==id);if(!p)return;
+  const to=prompt('Roll this client over to which month? (evidence required)', p.rolloverTo||nextMonthLabel());
+  if(to===null)return;
+  const ev=prompt('Evidence the client will do business that month\n(signed schedule, confirmed budget, email on file…):', p.rolloverEvidence||'');
+  if(ev===null)return;
+  if(!ev.trim()){alert('A rollover needs supporting evidence — add a short note of what confirms it.');return;}
+  p.rolled=true;
+  p.rolloverFrom=p.leadMonth||currentMonth();
+  p.rolloverTo=normMonth(to);
+  p.leadMonth=normMonth(to);
+  p.rolloverEvidence=ev.trim();
+  p.rolloverAt=today();
+  p.status='lead';                      // carried forward as a fresh lead for the named month
+  p.lastFollow='';
+  persist();render();
+  if(document.getElementById('view-leads').style.display!=='none')renderLeads();
+}
+
+// ---- leads shout: intake + import ----
+function shoutMonthVal(){return normMonth((document.getElementById('shoutMonth')||{}).value)||currentMonth();}
+function shoutRepVal(){return ((document.getElementById('shoutRep')||{}).value||'').trim()||'Dreyer Hoffman';}
+function initLeadsInputs(){
+  const m=document.getElementById('shoutMonth'), r=document.getElementById('shoutRep');
+  if(m&&!m.value)m.value=currentMonth();
+  if(r&&!r.value)r.value=repFilter||'Dreyer Hoffman';
+  if(m&&!m._wired){m._wired=1;m.onchange=renderLeads;}
+  if(r&&!r._wired){r._wired=1;r.onchange=renderLeads;}
+}
+function renderLeads(){
+  initLeadsInputs();
+  const month=shoutMonthVal();
+  document.getElementById('shoutMonthLabel').textContent=month;
+  const monthLeads=DATA.filter(p=>isLead(p)&&!p.rolled&&normMonth(p.leadMonth)===month);
+  const rolledLeads=DATA.filter(p=>p.rolled);
+  const converted=DATA.filter(p=>!isLead(p)&&normMonth(p.leadMonth)===month);
+  const est=monthLeads.reduce((s,p)=>s+(Number(p.val)||0),0);
+  document.getElementById('leadSummary').innerHTML=`
+    <div class="stat"><div class="n">${monthLeads.length}</div><div class="l">Leads this month</div></div>
+    <div class="stat val"><div class="n">${fmtR(est)}</div><div class="l">Estimated value</div></div>
+    <div class="stat"><div class="n">${converted.length}</div><div class="l">Converted to proposals</div></div>
+    <div class="stat"><div class="n">${rolledLeads.length}</div><div class="l">Rolled forward</div></div>`;
+  const ml=document.getElementById('leadListMonth');
+  ml.innerHTML=monthLeads.length?monthLeads.map(p=>leadRow(p,false)).join(''):'<div class="empty" style="padding:24px">No leads yet for '+esc(month)+'. Paste your shout list on the left.</div>';
+  const rl=document.getElementById('leadListRolled');
+  rl.innerHTML=rolledLeads.length?rolledLeads.map(p=>leadRow(p,true)).join(''):'<div class="empty" style="padding:24px">No rollovers. Use “Roll over” on a lead when you have evidence it returns in a coming month.</div>';
+}
+function leadRow(p,rolled){
+  return `<div class="row">
+    <div>
+      <div class="c">${esc(p.client)} ${p.source?'<span class="chip month">'+esc(p.source)+'</span>':''}${rolled?' <span class="chip rolled">→ '+esc(p.rolloverTo||'')+'</span>':''}</div>
+      <div class="m">${esc((p.rep?p.rep+' · ':'')+(p.pub||'')+(p.contact?' · '+p.contact:''))}</div>
+      ${rolled&&p.rolloverEvidence?'<div class="rollnote">Evidence: '+esc(p.rolloverEvidence)+'</div>':''}
+      <div class="acts">
+        <button class="mini go" onclick="convertToProposal(${p.id})">Send proposal ↗</button>
+        <button class="mini" onclick="rollOver(${p.id})">Roll over ↦</button>
+        <button class="mini" onclick="openModal(${p.id})">Edit</button>
+        <button class="mini" onclick="removeLead(${p.id})">Remove</button>
+      </div>
+    </div>
+    <div class="v">${fmtR(p.val)}<div class="m" style="text-align:right">est.</div></div>
+  </div>`;
+}
+function removeLead(id){const p=DATA.find(x=>x.id==id);if(!p)return;if(confirm('Remove this lead from the shout?')){DATA=DATA.filter(x=>x.id!=id);persist();renderLeads();render();}}
+function parseLeadRows(text){
+  const lines=String(text||'').split(/\r?\n/).map(l=>l.replace(/\s+$/,'')).filter(l=>l.trim());
+  if(!lines.length)return [];
+  const split=l=>l.includes('\t')?l.split('\t'):l.split(',');
+  let start=0, idx={client:0,contact:1,email:2,pub:3,val:4};
+  const first=split(lines[0]).map(c=>c.trim().toLowerCase());
+  const hasHeader=first.length>1&&first.some(c=>['client','company','brand','name'].includes(c));
+  if(hasHeader){
+    start=1;idx={client:-1,contact:-1,email:-1,pub:-1,val:-1};
+    first.forEach((c,i)=>{
+      if(idx.client<0&&/client|company|brand/.test(c))idx.client=i;
+      else if(idx.contact<0&&/contact|name|attention/.test(c))idx.contact=i;
+      else if(idx.email<0&&/e-?mail/.test(c))idx.email=i;
+      else if(idx.pub<0&&/pub|title|magazine|platform/.test(c))idx.pub=i;
+      else if(idx.val<0&&/value|amount|budget|est|rate|spend/.test(c))idx.val=i;
+    });
+    if(idx.client<0)idx.client=0;
+  }
+  const out=[];
+  for(let i=start;i<lines.length;i++){
+    const c=split(lines[i]).map(x=>x.trim());
+    const client=(idx.client>=0?c[idx.client]:c[0])||'';
+    if(!client)continue;
+    const g=k=>(idx[k]>=0&&c[idx[k]]!=null)?c[idx[k]]:'';
+    out.push({client, contact:g('contact'), email:g('email'), pub:g('pub'), val:parseInt(String(g('val')).replace(/[^\d]/g,''))||0});
+  }
+  return out;
+}
+function addLeads(rows,source){
+  if(!rows.length){alert('No client rows found — paste at least one client name (one per line).');return 0;}
+  const month=shoutMonthVal(), rep=shoutRepVal();
+  const pubs=['SA Rugby Magazine','Compleat Golfer','Cape Town Etc','Getaway','Car Magazine','Masters Cup','Multi-title'];
+  rows.forEach((r,i)=>{
+    let pub=r.pub||'Compleat Golfer';
+    const match=pubs.find(x=>x.toLowerCase()===String(pub).toLowerCase());pub=match||pub;
+    DATA.push({id:Date.now()+i+DATA.length,
+      client:r.client, contact:r.contact||'', email:r.email||'',
+      rep, manager:'Robbie Nichols', pub, pkg:'', val:r.val||0,
+      sent:'', lag:5, status:'lead', leadMonth:month, source:source||'shout',
+      notes:'From '+(source||'shout')+' · '+month});
+  });
+  persist();renderLeads();render();
+  return rows.length;
+}
+function addLeadsFromText(){
+  const t=document.getElementById('leadPaste');
+  const n=addLeads(parseLeadRows(t.value),'shout');
+  if(n)t.value='';
+}
+function importLeadsFile(ev){
+  const f=ev.target.files&&ev.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=e=>{const n=addLeads(parseLeadRows(String(e.target.result||'')),'CG LEADS');if(n)alert(n+' lead'+(n>1?'s':'')+' imported from '+f.name);ev.target.value='';};
+  reader.readAsText(f);
+}
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+// ---- follow-up: open Outlook draft ----
+function followUp(id){
+  const p=DATA.find(x=>x.id===id);if(!p)return;
+  const subj=`Following up · ${p.client} × ${p.pub}`;
+  const first=(p.contact||'').split(' ')[0]||'there';
+  const body=
+`Hi ${first},
+
+I wanted to follow up on the ${p.pub} proposal I sent through${p.pkg?` for the ${p.pkg} package`:''}${p.val?` (R ${Number(p.val).toLocaleString('en-ZA')} ex VAT)`:''}.
+
+I'd welcome the chance to walk you through it and answer any questions — would a short call this week suit you?`+SIG;
+
+  const to=p.email||'';
+  const link=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+  window.location.href=link;
+
+  // auto-advance status + record follow-up date
+  if(p.status==='sent'){p.status='followed';}
+  p.lastFollow=new Date().toISOString().slice(0,10);
+  persist();render();
+}
+
+// ---- modal ----
+function openModal(id){
+  document.getElementById('overlay').classList.add('show');
+  if(id){
+    const p=DATA.find(x=>x.id===id);
+    document.getElementById('modalTitle').textContent='Edit Proposal';
+    document.getElementById('editId').value=p.id;
+    f_client.value=p.client;f_contact.value=p.contact||'';f_email.value=p.email||'';
+    f_rep.value=p.rep||'';f_manager.value=p.manager||'';
+    f_pub.value=p.pub;f_pkg.value=p.pkg||'';f_val.value=p.val||'';f_sent.value=p.sent||'';
+    f_lag.value=p.lag||5;f_status.value=p.status;f_notes.value=p.notes||'';
+    document.getElementById('f_month').value=p.leadMonth||'';
+    document.getElementById('f_source').value=p.source||'';
+    document.getElementById('delBtn').style.display='inline-block';
+  }else{
+    document.getElementById('modalTitle').textContent='New Proposal';
+    document.getElementById('editId').value='';
+    ['f_client','f_contact','f_email','f_pkg','f_val','f_notes','f_source'].forEach(i=>document.getElementById(i).value='');
+    f_rep.value='Dreyer Hoffman';f_manager.value='Robbie Nichols';
+    f_pub.value='SA Rugby Magazine';f_lag.value='5';f_status.value='sent';
+    f_sent.value=new Date().toISOString().slice(0,10);
+    document.getElementById('f_month').value=currentMonth();
+    document.getElementById('delBtn').style.display='none';
+  }
+}
+function closeModal(){document.getElementById('overlay').classList.remove('show');}
+function save(){
+  const id=document.getElementById('editId').value;
+  const status=f_status.value;
+  const obj={
+    client:f_client.value.trim()||'Untitled',
+    contact:f_contact.value.trim(),email:f_email.value.trim(),
+    rep:f_rep.value.trim(),manager:f_manager.value.trim(),
+    pub:f_pub.value,pkg:f_pkg.value.trim(),
+    val:parseInt((f_val.value||'').replace(/\D/g,''))||0,
+    sent:status==='lead'?(f_sent.value||''):(f_sent.value||today()),
+    lag:parseInt(f_lag.value)||5,status:status,notes:f_notes.value.trim(),
+    leadMonth:normMonth(document.getElementById('f_month').value)||currentMonth(),
+    source:document.getElementById('f_source').value.trim()
+  };
+  if(id){const p=DATA.find(x=>x.id==id);Object.assign(p,obj);}
+  else{obj.id=Date.now();DATA.push(obj);}
+  persist();closeModal();render();
+  if(document.getElementById('view-leads').style.display!=='none')renderLeads();
+}
+function del(){
+  const id=document.getElementById('editId').value;
+  if(id&&confirm('Delete this proposal?')){DATA=DATA.filter(x=>x.id!=id);persist();closeModal();render();}
+}
+function setFilter(btn){
+  filter=btn.dataset.f;
+  document.querySelectorAll('#filter button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');render();
+}
+function exportData(){
+  const hdr=['Client','Contact','Email','Rep','Manager','Publication','Package','Value','ShoutMonth','Source','Sent','AgeDays','FollowUpLag','Status','Rolled','RolledTo','RolloverEvidence','Flagged','Notes'];
+  const rows=DATA.map(p=>[p.client,p.contact,p.email,p.rep||'',p.manager||'',p.pub,p.pkg,p.val,p.leadMonth||'',p.source||'',p.sent,ageDays(p),p.lag,p.status,p.rolled?'YES':'',p.rolloverTo||'',(p.rolloverEvidence||'').replace(/\n/g,' '),flagged(p)?(isStale(p)?'STALE':'OVERDUE'):'',(p.notes||'').replace(/\n/g,' ')]);
+  const csv=[hdr,...rows].map(r=>r.map(c=>`"${String(c==null?'':c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='habari_proposals.csv';a.click();
+}
+
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+render();
+</script>
+</body>
+</html>

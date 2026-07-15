@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habari Media · Sales Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
+  :root{--bg:#0c0c0d;--panel:#141416;--panel2:#1b1b1e;--line:#2a2a2e;--gold:#d4a24c;--gold-dim:#9c7732;--cream:#f4ece0;--txt:#e9e4da;--muted:#8a857c;--green:#5aa874;--red:#cf5b5b;--amber:#d49a3c;--blue:#5b86cf}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:'Manrope',sans-serif;font-size:14px;line-height:1.5;padding:28px 24px 80px;min-height:100vh}
+  .wrap{max-width:1320px;margin:0 auto}
+  header.top{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:22px;flex-wrap:wrap;gap:16px}
+  .brand h1{font-family:'Fraunces',serif;font-weight:700;font-size:30px;color:var(--cream);letter-spacing:-.5px}
+  .brand .sub{color:var(--gold);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-top:4px;font-weight:600}
+  .brand .op{color:var(--muted);font-size:12px;margin-top:6px}
+  .btn{background:var(--gold);color:#1a1408;border:none;border-radius:8px;padding:9px 16px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer}
+  .btn:hover{background:#e3b25e}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--txt)}
+  .btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+  a.link{color:var(--gold);font-size:13px;font-weight:600;text-decoration:none}a.link:hover{text-decoration:underline}
+  .ctrls{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:22px}
+  .ctrl{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+  .ctrl input{width:60px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:7px;padding:7px 9px;font-family:inherit;font-size:13px;text-align:center}
+  .ctrl b{color:var(--cream);font-weight:600}
+  .spacer{flex:1}
+  .kpirow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px 16px;position:relative;overflow:hidden}
+  .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+  .stat .n{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--cream);line-height:1}
+  .stat .l{color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:1.3px;margin-top:8px}
+  .stat.alert .n{color:var(--amber)}.stat.alert::before{background:var(--amber)}
+  .stat.dir .n{color:var(--red)}.stat.dir::before{background:var(--red)}
+  .stat.val .n{color:var(--gold)}
+  .sec-h{font-family:'Fraunces',serif;color:var(--cream);font-size:16px;font-weight:600;margin:26px 0 12px}
+  .sec-h.flag{color:var(--amber)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .funnel{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  .fn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+  .fn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--muted)}
+  .fn.lead::before{background:var(--muted)}.fn.sent::before{background:var(--blue)}.fn.followed::before{background:var(--gold)}.fn.replied::before{background:var(--green)}.fn.won::before{background:var(--green)}.fn.lost::before{background:var(--red)}
+  .fn .c{font-family:'Fraunces',serif;font-size:26px;color:var(--cream);font-weight:600;line-height:1}
+  .fn .l{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:6px}
+  .fn .v{font-size:12px;color:var(--gold);margin-top:6px;font-weight:600}
+  .tablewrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow-x:auto}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:1.1px;font-weight:700;padding:13px 15px;border-bottom:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+  tbody td{padding:13px 15px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:13px}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--panel2)}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .client{font-weight:700;color:var(--cream);font-size:13.5px}
+  .contact{color:var(--muted);font-size:11.5px;margin-top:2px}
+  .pub{color:var(--txt)}
+  .val{font-family:'Fraunces',serif;color:var(--gold);font-weight:600;white-space:nowrap}
+  .empty{padding:40px;text-align:center;color:var(--muted)}
+  .due{font-size:12px;white-space:nowrap}.due .d{font-weight:700}
+  .due.overdue .d{color:var(--red)}.due.today .d{color:var(--amber)}.due.soon .d{color:var(--gold)}.due.ok .d{color:var(--muted)}
+  .due .tag{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-top:2px;color:var(--muted)}
+  .due.overdue .tag{color:var(--red)}
+  .chip{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
+  .chip.mgr{background:rgba(212,154,60,.15);color:var(--amber);border:1px solid rgba(212,154,60,.35)}
+  .chip.dir{background:var(--red);color:#fff;border:1px solid var(--red)}
+  .chip.pool{background:rgba(91,134,207,.15);color:var(--blue);border:1px solid rgba(91,134,207,.3)}
+  .rate{font-family:'Fraunces',serif;font-weight:600}
+  .rate.hi{color:var(--green)}.rate.mid{color:var(--gold)}.rate.lo{color:var(--red)}
+  .bar-mini{height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:6px;max-width:150px}
+  .bar-mini>span{display:block;height:100%;background:var(--gold)}.bar-mini>span.over{background:var(--green)}
+  .tpct{font-size:11px;color:var(--muted);margin-top:3px}
+  .acts{display:flex;gap:6px;flex-wrap:wrap}
+  .mini{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:5px 9px;font-family:inherit;font-size:11px;cursor:pointer;font-weight:600;white-space:nowrap}
+  .mini:hover{border-color:var(--gold);color:var(--gold)}
+  .mini.dir{border-color:rgba(207,91,91,.4);color:var(--red)}.mini.dir:hover{background:var(--red);color:#fff}
+  .msg{margin-top:6px;font-size:11px;color:var(--amber);background:rgba(212,154,60,.1);border:1px solid rgba(212,154,60,.3);border-radius:7px;padding:5px 8px;max-width:260px}
+  .footnote{color:var(--muted);font-size:11px;margin-top:24px;line-height:1.7}.footnote b{color:var(--gold)}
+  /* gate */
+  .gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .gatebox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:38px 34px;max-width:400px;width:100%;text-align:center}
+  .gatebox .lock{font-size:34px}
+  .gatebox h1{font-family:'Fraunces',serif;color:var(--cream);font-size:23px;font-weight:700;margin:12px 0 6px}
+  .gatebox p{color:var(--muted);font-size:13px;margin-bottom:20px}
+  .gatebox input{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:12px 14px;font-family:inherit;font-size:15px;text-align:center;letter-spacing:2px;margin-bottom:12px}
+  .gatebox input:focus{outline:none;border-color:var(--gold)}
+  .gatebox .btn{width:100%;padding:12px}
+  .gerr{color:var(--red);font-size:12.5px;margin-top:12px;min-height:16px;font-weight:600}
+  .gnote{color:var(--muted);font-size:11px;margin-top:16px;line-height:1.5}
+  @media(max-width:900px){.kpirow{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.funnel{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <div class="lock">🔒</div>
+    <h1>Habari Media · Sales Dashboard</h1>
+    <p>Manager access only. Enter the access code to continue.</p>
+    <input type="password" id="gateInput" placeholder="Access code" autocomplete="off">
+    <button class="btn" id="gateBtn">Unlock dashboard</button>
+    <div class="gerr" id="gateErr"></div>
+    <div class="gnote">Sales staff use the Proposal Tracker. This overview is restricted. (Light access gate — for true role security, host behind a login.)</div>
+  </div>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <header class="top">
+    <div class="brand">
+      <h1>Sales Dashboard</h1>
+      <div class="sub">Habari Media · Managers</div>
+      <div class="op">Reads &amp; writes the shared Proposal Tracker store · <a class="link" href="habari-proposal-tracker.html">Open Tracker ↗</a></div>
+    </div>
+  </header>
+
+  <div class="ctrls">
+    <div class="ctrl"><label>Flag after</label><input type="number" id="cfgStale" min="1"> <b>days</b></div>
+    <div class="ctrl"><label>Manager SLA</label><input type="number" id="cfgSla" min="1"> <b>days</b></div>
+    <div class="ctrl"><label>Escalate after</label><input type="number" id="cfgEsc" min="1"> <b>days</b></div>
+    <button class="btn ghost" id="refreshBtn">↻ Refresh</button>
+    <span class="spacer"></span>
+    <button class="btn ghost" id="lockBtn">Lock</button>
+  </div>
+
+  <div class="kpirow" id="dashKpis"></div>
+  <div class="sec-h">Sales funnel</div>
+  <div class="funnel" id="dashFunnel"></div>
+  <div class="grid2">
+    <div><div class="sec-h">Team performance · hit rate &amp; targets</div><div id="dashTeam"></div></div>
+    <div><div class="sec-h">Hit rate by platform &amp; division</div><div id="dashHit"></div></div>
+  </div>
+  <div class="sec-h flag">⚑ Escalations — needs attention</div>
+  <div id="dashFlags"></div>
+  <div class="sec-h">↦ Roll-overs — clients carried to a future month (evidence supplied)</div>
+  <div id="dashRollovers"></div>
+  <div class="sec-h">Client / agency spend</div>
+  <div id="dashClients"></div>
+  <div class="footnote">
+    <b>Escalation ladder:</b> a lead is flagged when it stays open (unbooked, or not followed up) past the <b id="fnStale">30</b>-day window → <b style="color:var(--amber)">Manager</b> to act. If the manager doesn't act (nudge / escalate / reassign) within the <b id="fnSla">5</b>-day SLA, or the lead is still open past <b id="fnEsc">45</b> days, it escalates to the <b style="color:var(--red)">Sales Director</b>.<br>
+    <b>Nudge rep</b> writes a prompt into the lead that the rep sees in their tracker (and opens an email). <b>View leads</b> opens that rep's tracker. <b>Return to pool</b> un-assigns the lead so another rep can claim it.<br>
+    <b>Leads &amp; roll-overs:</b> the <b>Leads</b> KPI and funnel stage count clients from the monthly leads shout that haven't had a proposal sent yet (estimated value shown separately from the open pipeline). <b>Roll-overs</b> are clients a rep has carried to a future month against supplied evidence — listed above with that evidence; they sit as next-month leads rather than counting as lost.<br>
+    <b>Note:</b> emails are pre-filled drafts you send; automatic notifications/timers need a shared backend. Data is this browser's store, shared with the Tracker.
+  </div>
+</div>
+
+<script>
+/* ====== manager access code — change this ====== */
+const PASSCODE='habari2026';
+
+const KEY='habari_proposals_v1';
+const CFGKEY='habari_dashcfg_v1';
+const TGTKEY='habari_targets_v1';
+
+/* sample staff directory + director (edit to your real team) */
+const STAFF={'Dreyer Hoffman':'dreyer.hoffman@habarimedia.com','Nadia Petersen':'nadia.petersen@habarimedia.com','Sipho Dlamini':'sipho.dlamini@habarimedia.com'};
+const DIRECTOR={name:'Sales Director',email:'sales.director@habarimedia.com'};
+const DIVISION={'SA Rugby Magazine':'Sport','SA Rugby Mag':'Sport','Masters Cup':'Sport & Events','Compleat Golfer':'Sport','Getaway':'Lifestyle','Cape Town Etc':'Lifestyle','Car Magazine':'Motoring','CAR Magazine':'Motoring','Multi-title':'Cross-title'};
+function divisionOf(pub){return DIVISION[pub]||'Other';}
+
+const MONTHS=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+function monthLabel(d){return MONTHS[d.getMonth()]+' '+d.getFullYear();}
+function currentMonth(){return monthLabel(new Date());}
+function nextMonthLabel(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+1);return monthLabel(d);}
+
+const SEED=[
+  {id:1, client:'Mercedes-Benz', contact:'Justin Jacobs', email:'justin.jacobs@mercedes-benz.com', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'Masters Cup', pkg:'Official Mobility Partner', val:950000, sent:isoBack(2), lag:5, status:'sent', notes:''},
+  {id:2, client:'Mercedes-Benz', contact:'(agency rep)', email:'', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'DPS', val:59000, sent:isoBack(20), lag:5, status:'sent', notes:''},
+  {id:3, client:'Bridgement', contact:'', email:'', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'7-slide SME model', val:37000, sent:isoBack(14), lag:5, status:'followed', notes:''},
+  {id:4, client:'Momentum Insure', contact:'', email:'', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'Full Page', val:37000, sent:isoBack(9), lag:5, status:'sent', notes:''},
+  {id:5, client:'Old Mutual', contact:'', email:'', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Getaway', pkg:'DPS', val:48000, sent:isoBack(3), lag:5, status:'lost', notes:'Budget cut this quarter.'},
+  {id:6, client:'Dromex', contact:'', email:'', rep:'Sipho Dlamini', manager:'Robbie Nichols', pub:'Multi-title', pkg:'7-slide model', val:80000, sent:isoBack(48), lag:5, status:'replied', notes:'Open 6+ weeks, still unbooked — escalate.'},
+  {id:7, client:'Dromex (via Metamedia)', contact:'Lara Bredeveldt', email:'lara.bredeveldt@metamedia.co.za', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'SA Rugby Magazine', pkg:'Digital — 300x250 + 728x90 + boosted social', val:65000, sent:isoBack(41), lag:5, status:'won', leadMonth:'JUNE 2026', notes:'Booked · June 2026.'},
+  {id:8, client:'Discovery Health', contact:'Thabo Ncube', email:'thabo.ncube@discovery.co.za', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'Compleat Golfer', pkg:'', val:45000, sent:'', lag:5, status:'lead', leadMonth:currentMonth(), source:'CG LEADS', notes:'Shout lead.'},
+  {id:9, client:'Sanlam', contact:'', email:'', rep:'Dreyer Hoffman', manager:'Robbie Nichols', pub:'SA Rugby Magazine', pkg:'', val:60000, sent:'', lag:5, status:'lead', leadMonth:currentMonth(), source:'CG LEADS', notes:'Shout lead.'},
+  {id:10, client:'BMW SA', contact:'Karen Smit', email:'karen.smit@bmw.co.za', rep:'Nadia Petersen', manager:'Robbie Nichols', pub:'Car Magazine', pkg:'', val:120000, sent:'', lag:5, status:'lead', leadMonth:currentMonth(), source:'shout', notes:'Shout lead.'},
+  {id:11, client:'Momentum Corporate', contact:'Lerato Mokoena', email:'lerato@momentum.co.za', rep:'Sipho Dlamini', manager:'Robbie Nichols', pub:'Getaway', pkg:'', val:52000, sent:'', lag:5, status:'lead', leadMonth:nextMonthLabel(), source:'shout', rolled:true, rolloverFrom:currentMonth(), rolloverTo:nextMonthLabel(), rolloverAt:today(), rolloverEvidence:'Signed media schedule for Q3 received; budget confirmed by client for next month. Email 2026-07-10 on file.', notes:'Rolled forward.'},
+];
+const DEFAULT_TARGETS={'Dreyer Hoffman':500000,'Nadia Petersen':250000,'Sipho Dlamini':250000};
+
+function isoBack(d){const x=new Date();x.setDate(x.getDate()-d);return x.toISOString().slice(0,10);}
+function today(){return new Date().toISOString().slice(0,10);}
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return SEED.slice();}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(DATA));}catch(e){}}
+function loadCfg(){try{const r=JSON.parse(localStorage.getItem(CFGKEY));if(r)return Object.assign({stale:30,sla:5,esc:45},r);}catch(e){}return {stale:30,sla:5,esc:45};}
+function saveCfg(){try{localStorage.setItem(CFGKEY,JSON.stringify(CFG));}catch(e){}}
+function loadTargets(){try{const r=JSON.parse(localStorage.getItem(TGTKEY));if(r)return r;}catch(e){}return Object.assign({},DEFAULT_TARGETS);}
+
+let DATA=load(), CFG=loadCfg(), TARGETS=loadTargets();
+
+const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fmtR(v){return 'R '+(Number(v)||0).toLocaleString('en-ZA');}
+function addWorkingDays(iso,n){const d=new Date(iso+'T00:00:00');let a=0;while(a<n){d.setDate(d.getDate()+1);const wd=d.getDay();if(wd!==0&&wd!==6)a++;}return d;}
+function dueInfo(p){
+  if(['won','lost'].includes(p.status)) return {cls:'ok',label:'—',tag:'closed'};
+  const base=p.status==='followed'&&p.lastFollow?p.lastFollow:p.sent;
+  const due=addWorkingDays(base,parseInt(p.lag)||5);const t=new Date();t.setHours(0,0,0,0);
+  const diff=Math.round((due-t)/86400000);const ds=due.toLocaleDateString('en-ZA',{day:'2-digit',month:'short'});
+  if(diff<0) return {cls:'overdue',label:ds,tag:Math.abs(diff)+'d overdue'};
+  if(diff===0) return {cls:'today',label:ds,tag:'due today'};
+  if(diff<=2) return {cls:'soon',label:ds,tag:'in '+diff+'d'};
+  return {cls:'ok',label:ds,tag:'in '+diff+'d'};
+}
+const OPEN=['sent','followed','replied'];
+function isOpen(p){return OPEN.includes(p.status);}
+function isLead(p){return p.status==='lead';}
+function ageDays(p){if(!p.sent)return 0;return Math.max(0,Math.floor((new Date().setHours(0,0,0,0)-new Date(p.sent+'T00:00:00'))/86400000));}
+function daysSince(iso){if(!iso)return Infinity;return Math.floor((new Date().setHours(0,0,0,0)-new Date(iso+'T00:00:00'))/86400000);}
+function isStale(p){return isOpen(p)&&ageDays(p)>=CFG.stale;}
+// escalation tier: '', 'manager', or 'director'
+function escTier(p){
+  if(!isOpen(p)) return '';
+  const age=ageDays(p);
+  if(age<CFG.stale) return '';
+  const daysStale=age-CFG.stale;                         // days since it crossed the flag window
+  const actioned = p.mgrActionedAt && daysSince(p.mgrActionedAt) <= daysStale; // manager acted while stale
+  const slaBreached = !actioned && daysStale>=CFG.sla;   // manager didn't act within SLA
+  if(p.escDir || age>=CFG.esc || slaBreached) return 'director';
+  return 'manager';
+}
+function flagged(p){return escTier(p)!=='' || dueInfo(p).cls==='overdue';}
+function hitRate(list){const w=list.filter(p=>p.status==='won').length, l=list.filter(p=>p.status==='lost').length; const d=w+l; return {w,l,d,pct:d?Math.round(w/d*100):null};}
+function rateClass(pct){return pct==null?'':(pct>=50?'hi':(pct>=25?'mid':'lo'));}
+
+/* ---- gate ---- */
+function unlock(){document.getElementById('gate').style.display='none';document.getElementById('app').style.display='block';try{sessionStorage.setItem('habari_mgr_ok','1');}catch(e){}initControls();render();}
+function tryGate(){if(document.getElementById('gateInput').value===PASSCODE){unlock();}else{document.getElementById('gateErr').textContent='Incorrect access code.';document.getElementById('gateInput').select();}}
+document.getElementById('gateBtn').onclick=tryGate;
+document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')tryGate();});
+document.getElementById('lockBtn').onclick=()=>{try{sessionStorage.removeItem('habari_mgr_ok');}catch(e){}location.reload();};
+
+/* ---- controls ---- */
+function initControls(){
+  cfgStale.value=CFG.stale;cfgSla.value=CFG.sla;cfgEsc.value=CFG.esc;
+  refreshBtn.onclick=()=>{DATA=load();render();};
+  cfgStale.onchange=e=>{CFG.stale=Math.max(1,parseInt(e.target.value)||30);saveCfg();render();};
+  cfgSla.onchange=e=>{CFG.sla=Math.max(1,parseInt(e.target.value)||5);saveCfg();render();};
+  cfgEsc.onchange=e=>{CFG.esc=Math.max(1,parseInt(e.target.value)||45);saveCfg();render();};
+}
+
+/* ---- manager actions ---- */
+function nudgeRep(id){
+  const p=DATA.find(x=>x.id==id);if(!p)return;
+  const msg=(window.prompt('Push message to '+(p.rep||'the rep')+' about '+p.client+':','Please action this lead — client is going cold. Pitch / follow up and update the tracker.')) || 'Please action this lead and update the tracker.';
+  p.mgrMsg=msg;p.mgrMsgAt=today();p.mgrActionedAt=today();
+  persist();render();
+  const to=STAFF[p.rep]||'';
+  const subj='Action needed — '+p.client+' ('+p.pub+')';
+  const body='Hi '+((p.rep||'').split(' ')[0]||'')+',\n\n'+msg+'\n\nLead: '+p.client+' · '+p.pub+' · '+fmtR(p.val)+' · open '+ageDays(p)+' days.\n\nThanks.';
+  window.location.href='mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+}
+function escalateDir(id){
+  const p=DATA.find(x=>x.id==id);if(!p)return;
+  p.escDir=today();persist();render();
+  const subj='Escalation to Sales Director — '+p.client+' ('+p.pub+')';
+  const body='Hi '+(DIRECTOR.name.split(' ')[0]||'')+',\n\nEscalating a stalled lead:\n\n• Client: '+p.client+'\n• Platform: '+p.pub+' ('+divisionOf(p.pub)+')\n• Rep: '+(p.rep||'—')+' · Manager: '+(p.manager||'—')+'\n• Value: '+fmtR(p.val)+' ex VAT\n• Open '+ageDays(p)+' days, status "'+p.status+'", still unbooked.\n\nManager action to date: '+(p.mgrMsgAt?('nudged '+p.mgrMsgAt):'none logged')+'.\n\nPlease advise the next step.';
+  window.location.href='mailto:'+encodeURIComponent(DIRECTOR.email)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+}
+function returnToPool(id){
+  const p=DATA.find(x=>x.id==id);if(!p)return;
+  p.pool=true;p.pooledFrom=p.rep||'';p.rep='';p.mgrActionedAt=today();
+  persist();render();
+}
+
+/* ---- render ---- */
+function render(){
+  const all=DATA;
+  fnStale.textContent=CFG.stale;fnSla.textContent=CFG.sla;fnEsc.textContent=CFG.esc;
+  // funnel
+  const stages=[['lead','Leads'],['sent','Sent'],['followed','Followed up'],['replied','Replied'],['won','Won'],['lost','Lost']];
+  const bs={};stages.forEach(s=>bs[s[0]]={n:0,v:0});
+  all.forEach(p=>{if(bs[p.status]){bs[p.status].n++;bs[p.status].v+=Number(p.val)||0;}});
+  dashFunnel.innerHTML=stages.map(s=>`<div class="fn ${s[0]}"><div class="c">${bs[s[0]].n}</div><div class="l">${s[1]}</div><div class="v">${fmtR(bs[s[0]].v)}</div></div>`).join('');
+  // KPIs
+  const openL=all.filter(isOpen), pipeline=openL.reduce((a,p)=>a+(Number(p.val)||0),0);
+  const wonV=all.filter(p=>p.status==='won').reduce((a,p)=>a+(Number(p.val)||0),0);
+  const leadsL=all.filter(isLead), leadV=leadsL.reduce((a,p)=>a+(Number(p.val)||0),0);
+  const rolledL=all.filter(p=>p.rolled);
+  const hr=hitRate(all);
+  const flags=all.filter(flagged);
+  const dirs=all.filter(p=>escTier(p)==='director');
+  const pooled=all.filter(p=>p.pool);
+  dashKpis.innerHTML=`
+    <div class="stat"><div class="n">${leadsL.length}</div><div class="l">Leads · ${fmtR(leadV)} est.</div></div>
+    <div class="stat val"><div class="n">${fmtR(pipeline)}</div><div class="l">Open pipeline</div></div>
+    <div class="stat val"><div class="n">${fmtR(wonV)}</div><div class="l">Booked (won)</div></div>
+    <div class="stat"><div class="n">${hr.pct==null?'—':hr.pct+'%'}</div><div class="l">Hit rate</div></div>
+    <div class="stat alert"><div class="n">${flags.length}</div><div class="l">Flagged</div></div>
+    <div class="stat dir"><div class="n">${dirs.length}</div><div class="l">Director escalations</div></div>
+    <div class="stat"><div class="n">${rolledL.length}</div><div class="l">Rolled over</div></div>
+    <div class="stat"><div class="n">${pooled.length}</div><div class="l">In lead pool</div></div>`;
+  // team + hit rate + targets
+  const tm={};
+  all.forEach(p=>{const r=p.rep||'(pool / unassigned)';const t=tm[r]||(tm[r]={rep:r,mgr:p.manager||'—',open:0,pipe:0,wonV:0,flag:0,list:[]});
+    if(p.manager)t.mgr=p.manager;t.list.push(p);
+    if(isOpen(p)){t.open++;t.pipe+=Number(p.val)||0;}
+    if(p.status==='won')t.wonV+=Number(p.val)||0;
+    if(flagged(p))t.flag++;});
+  const team=Object.values(tm).sort((a,b)=>(b.pipe+b.wonV)-(a.pipe+a.wonV));
+  dashTeam.innerHTML=`<div class="tablewrap"><table><thead><tr><th>Rep</th><th class="num">Open</th><th class="num">Pipeline</th><th class="num">Booked</th><th class="num">Hit rate</th><th class="num">Target</th><th class="num">⚑</th><th></th></tr></thead><tbody>`+
+    team.map(t=>{const h=hitRate(t.list);const tgt=TARGETS[t.rep]||0;const pct=tgt?Math.round(t.wonV/tgt*100):0;const real=t.rep&&t.rep!=='(pool / unassigned)';
+      return `<tr><td><div class="client">${esc(t.rep)}</div><div class="contact">${esc(t.mgr)}</div></td><td class="num">${t.open}</td><td class="num val">${fmtR(t.pipe)}</td><td class="num" style="color:var(--green)">${fmtR(t.wonV)}</td><td class="num"><span class="rate ${rateClass(h.pct)}">${h.pct==null?'—':h.pct+'%'}</span><div class="contact">${h.w}W · ${h.l}L</div></td><td class="num">${tgt?fmtR(tgt):'—'}${tgt?`<div class="bar-mini" style="margin-left:auto"><span class="${pct>=100?'over':''}" style="width:${Math.min(100,pct)}%"></span></div><div class="tpct">${pct}%</div>`:''}</td><td class="num">${t.flag?`<span class="chip mgr">${t.flag}</span>`:'—'}</td><td>${real?`<a class="mini" href="habari-proposal-tracker.html?rep=${encodeURIComponent(t.rep)}" target="_blank">View leads ↗</a>`:''}</td></tr>`;}).join('')+`</tbody></table></div>`;
+  // hit rate by platform & division
+  function hitTable(keyFn,label){
+    const m={};all.forEach(p=>{const k=keyFn(p);(m[k]=m[k]||[]).push(p);});
+    const rows=Object.keys(m).sort().map(k=>{const h=hitRate(m[k]);const open=m[k].filter(isOpen).length;
+      return `<tr><td class="pub">${esc(k)}</td><td class="num">${m[k].length}</td><td class="num">${open}</td><td class="num" style="color:var(--green)">${h.w}</td><td class="num" style="color:var(--red)">${h.l}</td><td class="num"><span class="rate ${rateClass(h.pct)}">${h.pct==null?'—':h.pct+'%'}</span></td></tr>`;}).join('');
+    return `<div class="contact" style="margin:2px 0 6px">${label}</div><div class="tablewrap" style="margin-bottom:14px"><table><thead><tr><th>${label}</th><th class="num">Leads</th><th class="num">Open</th><th class="num">Won</th><th class="num">Lost</th><th class="num">Hit</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  dashHit.innerHTML=hitTable(p=>p.pub||'—','Platform')+hitTable(p=>divisionOf(p.pub),'Division');
+  // escalations / flagged
+  const fl=all.filter(flagged).sort((a,b)=>{const r={director:0,manager:1,'':2};return (r[escTier(a)]-r[escTier(b)])||(ageDays(b)-ageDays(a));});
+  dashFlags.innerHTML=`<div class="tablewrap"><table><thead><tr><th>Client</th><th>Platform</th><th>Rep</th><th class="num">Age</th><th>Follow-up</th><th class="num">Value</th><th>Escalation</th><th>Actions</th></tr></thead><tbody>`+
+    (fl.length?fl.map(p=>{const di=dueInfo(p);const tier=escTier(p);
+      const badge=tier==='director'?`<span class="chip dir">Director · ${ageDays(p)}d</span>`:(tier==='manager'?`<span class="chip mgr">Manager · ${ageDays(p)}d</span>`:`<span class="chip mgr">Follow-up overdue</span>`);
+      const acts=[`<button class="mini" onclick="nudgeRep(${p.id})">Nudge rep</button>`];
+      if(p.rep)acts.push(`<a class="mini" href="habari-proposal-tracker.html?rep=${encodeURIComponent(p.rep)}" target="_blank">View</a>`);
+      if(tier==='director')acts.push(`<button class="mini dir" onclick="escalateDir(${p.id})">→ Director</button>`);
+      acts.push(`<button class="mini" onclick="returnToPool(${p.id})">To pool</button>`);
+      return `<tr><td><div class="client">${esc(p.client)}</div><div class="contact">${esc(p.manager||'—')}</div>${p.mgrMsg?`<div class="msg">Nudge (${esc(p.mgrMsgAt||'')}): ${esc(p.mgrMsg)}</div>`:''}</td><td class="pub">${esc(p.pub)}<div class="contact">${esc(divisionOf(p.pub))}</div></td><td>${esc(p.rep||'—')}</td><td class="num">${ageDays(p)}d</td><td><div class="due ${di.cls}"><span class="d">${di.label}</span><span class="tag">${di.tag}</span></div></td><td class="num val">${fmtR(p.val)}</td><td>${badge}</td><td><div class="acts">${acts.join('')}</div></td></tr>`;}).join('')
+      :`<tr><td colspan="8"><div class="empty">No escalations — every open lead is on track. 🎉</div></td></tr>`)+`</tbody></table></div>`;
+  // rollovers — clients carried to a future month with evidence
+  const rolls=all.filter(p=>p.rolled).sort((a,b)=>String(b.rolloverAt||'').localeCompare(String(a.rolloverAt||'')));
+  dashRollovers.innerHTML=`<div class="tablewrap"><table><thead><tr><th>Client</th><th>Rep</th><th>Platform</th><th>Rolled</th><th class="num">Est. value</th><th>Evidence supplied</th></tr></thead><tbody>`+
+    (rolls.length?rolls.map(p=>`<tr><td><div class="client">${esc(p.client)}</div><div class="contact">${esc(p.manager||'—')}</div></td><td>${esc(p.rep||'—')}</td><td class="pub">${esc(p.pub)}<div class="contact">${esc(divisionOf(p.pub))}</div></td><td>${esc(p.rolloverFrom||'—')} <span style="color:var(--muted)">→</span> <b style="color:var(--gold)">${esc(p.rolloverTo||'—')}</b><div class="contact">${esc(p.rolloverAt||'')}</div></td><td class="num val">${fmtR(p.val)}</td><td><div style="max-width:360px;color:var(--txt);font-size:12px;line-height:1.5">${esc(p.rolloverEvidence||'—')}</div></td></tr>`).join('')
+      :`<tr><td colspan="6"><div class="empty">No roll-overs — no clients carried forward this cycle.</div></td></tr>`)+`</tbody></table></div>`;
+  // clients
+  const cm={};
+  all.forEach(p=>{const k=p.client||'—';const m=cm[k]||(cm[k]={client:k,n:0,pipe:0,won:0});m.n++;if(isOpen(p))m.pipe+=Number(p.val)||0;if(p.status==='won')m.won+=Number(p.val)||0;});
+  dashClients.innerHTML=`<div class="tablewrap"><table><thead><tr><th>Client / Agency</th><th class="num">Proposals</th><th class="num">Open pipeline</th><th class="num">Booked (won)</th></tr></thead><tbody>`+
+    Object.values(cm).sort((a,b)=>(b.won+b.pipe)-(a.won+a.pipe)).map(m=>`<tr><td class="client">${esc(m.client)}</td><td class="num">${m.n}</td><td class="num val">${fmtR(m.pipe)}</td><td class="num" style="color:var(--green)">${fmtR(m.won)}</td></tr>`).join('')+`</tbody></table></div>`;
+}
+
+if(sessionStorage.getItem('habari_mgr_ok')==='1'){unlock();}else{document.getElementById('gateInput').focus();}
+</script>
+</body>
+</html>

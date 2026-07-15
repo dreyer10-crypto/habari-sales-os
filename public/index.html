@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Habari Media Sales — Tools &amp; Scope</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{
+  --bg:#0c0c0d; --panel:#141416; --panel2:#1b1b1e; --line:#2a2a2e;
+  --gold:#d4a24c; --gold-l:#e7be74; --gold-dim:#9c7732; --cream:#f4ece0; --txt:#e9e4da; --muted:#8a857c;
+  --green:#5aa874; --blue:#5b86cf;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Manrope',system-ui,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Fraunces',Georgia,serif}
+.gold{color:var(--gold)} .muted{color:var(--muted)} .cream{color:var(--cream)}
+a{color:var(--gold)}
+.nav{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:12px 5vw;background:rgba(12,12,13,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .b{font-family:'Fraunces',serif;font-weight:700;font-size:18px;color:var(--cream)}
+.nav .b span{color:var(--gold)}
+.nav .links{display:flex;gap:4px;flex-wrap:wrap}
+.nav .links a{font-size:11.5px;font-weight:700;letter-spacing:.2px;color:var(--muted);text-decoration:none;padding:7px 9px;border-radius:7px}
+.nav .links a:hover{color:var(--gold);background:var(--panel2)}
+.hero{padding:66px 5vw 46px;border-bottom:1px solid var(--line);background:radial-gradient(75% 60% at 15% 0,rgba(212,162,76,.09),transparent 60%)}
+.hero .ey{color:var(--gold);font-size:12px;letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:16px}
+.hero h1{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(32px,5.6vw,62px);color:var(--cream);line-height:1.03;letter-spacing:-.5px;margin-bottom:20px}
+.hero h1 span{color:var(--gold)}
+.hero p{max-width:70ch;color:var(--txt);font-size:clamp(15px,1.8vw,18px)}
+.hero .to{margin-top:22px;display:inline-flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 18px;flex-wrap:wrap}
+.hero .to .k{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700}
+.hero .to .v{font-family:'Fraunces',serif;color:var(--cream);font-weight:600}
+.wrap{max-width:1160px;margin:0 auto;padding:8px 5vw 90px}
+section.blk{padding:44px 0;border-bottom:1px solid var(--line)}
+.kick{color:var(--gold);font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;margin-bottom:10px}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(24px,3.4vw,36px);color:var(--cream);letter-spacing:-.3px;margin-bottom:8px}
+.lead{color:var(--muted);max-width:78ch;margin-bottom:22px}
+p{max-width:80ch}
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;position:relative;overflow:hidden}
+.pcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.pcard.ext::before{background:var(--blue)}
+.pcard .no{font-family:'Fraunces',serif;font-size:13px;color:var(--gold-dim);font-weight:600;letter-spacing:1px}
+.pcard.ext .no{color:var(--blue)}
+.pcard h3{font-family:'Fraunces',serif;font-size:21px;color:var(--cream);margin:6px 0 10px;font-weight:600}
+.pcard p{font-size:13.5px;color:var(--muted);margin-bottom:14px}
+.pcard ul{list-style:none;margin:0 0 16px;padding:0}
+.pcard li{font-size:13px;color:var(--txt);padding:5px 0 5px 20px;position:relative}
+.pcard li::before{content:"→";position:absolute;left:0;color:var(--gold)}
+.pcard.ext li::before{color:var(--blue)}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#1a1408;border:none;border-radius:9px;padding:11px 18px;
+  font-family:inherit;font-weight:800;font-size:13px;letter-spacing:.3px;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--gold-l)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--txt)}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+.frame{margin-top:18px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.frame .barx{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:wrap}
+.frame .dot{width:10px;height:10px;border-radius:50%}
+.frame .u{margin-left:6px;font-size:12px;color:var(--muted)}
+.frame .open{margin-left:auto}
+.frame iframe{width:100%;border:none;display:block;background:#0c0c0d}
+.code{display:inline-block;background:var(--panel2);border:1px solid var(--gold-dim);border-radius:7px;padding:3px 9px;font-family:monospace;color:var(--gold);font-size:12.5px}
+.special{background:linear-gradient(135deg,#171310,#0f0d0b);border:1px solid var(--gold-dim);border-radius:16px;padding:34px;position:relative;overflow:hidden}
+.special .tag{display:inline-block;background:rgba(212,162,76,.15);border:1px solid rgba(212,162,76,.4);color:var(--gold);font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;border-radius:20px;margin-bottom:14px}
+.special h3{font-family:'Fraunces',serif;font-size:clamp(24px,3.5vw,34px);color:var(--cream);font-weight:700;margin-bottom:10px}
+.special h3 b{color:var(--gold)}
+.special .price{display:flex;align-items:baseline;gap:14px;margin:18px 0;flex-wrap:wrap}
+.special .price .strike{color:var(--muted);text-decoration:line-through;font-size:22px;font-family:'Fraunces',serif}
+.special .price .now{font-family:'Fraunces',serif;font-size:clamp(38px,6vw,60px);color:var(--gold);font-weight:700;line-height:1}
+.special .price .ex{color:var(--muted);font-size:13px}
+.titles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:18px 0}
+.titlechip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.titlechip .nm{font-weight:700;color:var(--cream);font-size:13px}
+.titlechip .im{color:var(--gold);font-size:12px;margin-top:3px;font-family:'Fraunces',serif}
+.steps{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:6px}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+.step .n{font-family:'Fraunces',serif;color:var(--gold);font-size:20px;font-weight:700}
+.step h4{color:var(--cream);font-size:15px;margin:6px 0 6px}
+.step p{font-size:13px;color:var(--muted)}
+.cta-band{margin-top:26px;background:var(--panel);border:1px solid var(--gold-dim);border-radius:14px;padding:26px;display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.cta-band .big{font-family:'Fraunces',serif;font-size:22px;color:var(--cream)}
+.note{color:var(--muted);font-size:12px;margin-top:16px;line-height:1.7;max-width:92ch}
+.note b{color:var(--gold)}
+footer{padding:34px 5vw;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.7}
+@media(max-width:640px){.cta-band{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="nav">
+  <div class="b">Habari Media · <span>Sales</span></div>
+  <div class="links">
+    <a href="#overview">Overview</a>
+    <a href="#generator">1 · Generator</a>
+    <a href="#tracker">2 · Tracker</a>
+    <a href="#dashboard">3 · Dashboard</a>
+    <a href="#operating">Operating Desk</a>
+    <a href="#p4c">4 · Play4TheCoin</a>
+    <a href="#special">R25K Special</a>
+    <a href="#next">Next</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="ey">Introduction · Prepared for Habari Media</div>
+  <h1>Four builds that turn Habari's<br>sales into a <span>measured, self-serve</span> engine.</h1>
+  <p>A short interactive walk-through of four projects — a <b class="cream">Campaign Generator</b> that
+  packages our titles into branded, bookable reports; a <b class="cream">Proposal Tracker</b> and a
+  <b class="cream">Sales Dashboard</b> that run and measure the whole desk; and <b class="cream">Play4TheCoin</b>,
+  a partner property that drives Compleat Golfer business. Everything here is live and clickable.</p>
+  <div class="to"><span class="k">To</span><span class="v">Habari Media — Sales</span>
+    <span class="k" style="margin-left:12px">Re</span><span class="v">Meeting request · scope review</span></div>
+  <p class="note">Under NDA (signed). A working draft for discussion — figures, packages and dates shown are indicative and confirmed on the official Habari rate card / booking order.</p>
+</header>
+
+<div class="wrap">
+
+<!-- OVERVIEW -->
+<section class="blk" id="overview">
+  <div class="kick">What you're looking at</div>
+  <h2>Four builds, one sales engine</h2>
+  <p class="lead">All four are already built and running. Open any live link to try it yourself.</p>
+  <div class="cards">
+    <a class="pcard" href="#generator" style="text-decoration:none;color:inherit">
+      <div class="no">Project 01</div><h3>Campaign Generator</h3>
+      <p>Turns a client's flight data into a branded, interactive report the rep sends in one click — closing with the R25K Network Special.</p>
+      <ul><li>Per-client, per-title reporting</li><li>Bookable network upsell</li></ul></a>
+    <a class="pcard" href="#tracker" style="text-decoration:none;color:inherit">
+      <div class="no">Project 02</div><h3>Proposal Tracker</h3>
+      <p>From the monthly leads shout to the signed order: reps log their target clients (import the CG LEADS sheet), turn each into a proposal, get follow-up alerts, and roll clients forward with evidence. It feeds the dashboard.</p>
+      <ul><li>Leads shout intake + roll-overs</li><li>Pipeline + follow-up alerts</li><li>Agreement generator</li></ul></a>
+    <a class="pcard" href="#dashboard" style="text-decoration:none;color:inherit">
+      <div class="no">Project 03</div><h3>Sales Dashboard</h3>
+      <p>A manager view over the whole desk: the sales funnel, every rep vs target, pipeline by platform, flagged leads, and client/agency spend.</p>
+      <ul><li>Team + funnel analytics</li><li>Flag &amp; escalate stale leads</li></ul></a>
+    <a class="pcard ext" href="#p4c" style="text-decoration:none;color:inherit">
+      <div class="no">Project 04 · partner property</div><h3>Play4TheCoin</h3>
+      <p>Not owned by Habari — a golf-championship platform that drives Compleat Golfer tournament, print &amp; web sales, barter deals and course access.</p>
+      <ul><li>New revenue for Compleat Golfer</li><li>Event clients get in-app branding</li></ul></a>
+  </div>
+</section>
+
+<!-- 1 · CAMPAIGN GENERATOR -->
+<section class="blk" id="generator">
+  <div class="kick">Project 01 · for reports</div>
+  <h2>The Campaign Generator</h2>
+  <p class="lead">Give it a client and their flights across our titles; it returns a polished,
+  interactive report the rep can send in one click — and every report ends with a bookable upsell,
+  the R25K Network Special.</p>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+    <div class="pcard"><h3 style="font-size:18px">What it does</h3><ul><li>Pulls reach + impressions per flight</li><li>Shows creative &amp; ad-tag overview</li><li>Brands to the client + title</li><li>One shareable link, print/PDF ready</li></ul></div>
+    <div class="pcard"><h3 style="font-size:18px">Why it sells</h3><ul><li>Proof, not a rate card — real delivery</li><li>Turns a report into a re-book</li><li>Positions the full network, not one title</li><li>Rep sends in seconds</li></ul></div>
+    <div class="pcard"><h3 style="font-size:18px">Live example</h3><p style="color:var(--muted);font-size:13.5px">The Dromex portfolio across SA Rugby Mag &amp; SA Cricket — reach, engagement, creative, and the network upsell.</p>
+      <a class="btn" href="campaign-report.html" target="_blank" rel="noopener">Open the live report ↗</a></div>
+  </div>
+  <div class="frame">
+    <div class="barx"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span>
+      <span class="u">Campaign report · R25,000 Network Special</span>
+      <a class="btn ghost open" href="campaign-report.html" target="_blank" rel="noopener">Open ↗</a></div>
+    <iframe src="campaign-report.html" height="600" loading="lazy" title="Dromex campaign report"></iframe>
+  </div>
+</section>
+
+<!-- R25K SPECIAL -->
+<section class="blk" id="special">
+  <div class="kick">The offer built into every report</div>
+  <h2>The R25,000 Network Special</h2>
+  <p class="lead">The upsell that turns a single-title booking into a full-network flight — claim it straight from here or from any generated report.</p>
+  <div class="special">
+    <span class="tag">★ Exclusive · bookable on the report · ~75% off rate card</span>
+    <h3>One million impressions across <b>all five titles.</b></h3>
+    <p style="color:var(--txt)">SA Rugby Mag · Getaway · Compleat Golfer · CAR Magazine · Cape Town Etc — one combined display package, 200,000 impressions each.</p>
+    <div class="titles">
+      <div class="titlechip"><div class="nm">SA Rugby Mag</div><div class="im">200k impr</div></div>
+      <div class="titlechip"><div class="nm">Getaway</div><div class="im">200k impr</div></div>
+      <div class="titlechip"><div class="nm">Compleat Golfer</div><div class="im">200k impr</div></div>
+      <div class="titlechip"><div class="nm">CAR Magazine</div><div class="im">200k impr</div></div>
+      <div class="titlechip"><div class="nm">Cape Town Etc</div><div class="im">200k impr</div></div>
+    </div>
+    <div class="price"><span class="strike">R100,000</span><span class="now">R25,000</span><span class="ex">ex VAT · 1,000,000 impressions · flexible 1-week / 2-week / 1-month flight</span></div>
+    <div class="btnrow">
+      <button class="btn" onclick="openSpecial()">Claim this special →</button>
+      <a class="btn ghost" href="campaign-report.html" target="_blank" rel="noopener">See it on a live report ↗</a>
+    </div>
+  </div>
+  <p class="note"><b>Combined reach ~20.4M.</b> Audience reach and rate-card values are indicative and confirmed on the official Habari rate card and booking order; offer subject to availability; prices exclude VAT, 30-day terms.</p>
+</section>
+
+<!-- 2 · PROPOSAL TRACKER -->
+<section class="blk" id="tracker">
+  <div class="kick">Project 02</div>
+  <h2>The Proposal Tracker</h2>
+  <p class="lead">One screen for the whole sales cycle. It starts at the <b class="cream">monthly leads shout</b>:
+  on the <b class="cream">Leads Shout</b> tab each rep lists the clients they'll chase this month — pasted in or
+  imported straight from the <b class="cream">CG LEADS</b> sheet. Those sit as leads until a proposal goes out;
+  one click turns a lead into a tracked proposal with a follow-up flag five working days out and a one-click
+  Habari advertising agreement. Can't land a client this month? <b class="cream">Roll it over</b> to a named
+  month with evidence and it carries forward instead of counting as lost. Every entry
+  <b class="cream">feeds the Sales Dashboard</b> below. It's live here — try the Leads Shout tab.</p>
+  <div class="frame">
+    <div class="barx"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span>
+      <span class="u">Proposal Tracker · Sales OS</span>
+      <a class="btn ghost open" href="habari-proposal-tracker.html" target="_blank" rel="noopener">Open full ↗</a></div>
+    <iframe src="habari-proposal-tracker.html" height="700" loading="lazy" title="Proposal Tracker"></iframe>
+  </div>
+  <p class="note"><b>Confidential — Habari sales pipeline.</b> Data saves to this browser and is shared live with the dashboard.</p>
+</section>
+
+<!-- 3 · SALES DASHBOARD -->
+<section class="blk" id="dashboard">
+  <div class="kick">Project 03 · managers</div>
+  <h2>The Habari Sales Dashboard</h2>
+  <p class="lead">A management overview reading <b class="cream">live from the Proposal Tracker</b> — the whole
+  desk on one screen: the sales funnel, every rep against target, pipeline by Habari platform, flagged and
+  stale leads with a one-click escalation email, and total client / agency spend.</p>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+    <div class="pcard"><h3 style="font-size:17px">Sales funnel</h3><p style="color:var(--muted);font-size:13px">Sent → Followed → Replied → Won / Lost, by count and value.</p></div>
+    <div class="pcard"><h3 style="font-size:17px">Staff &amp; targets</h3><p style="color:var(--muted);font-size:13px">Each rep's open pipeline, booked, and % to target.</p></div>
+    <div class="pcard"><h3 style="font-size:17px">By platform</h3><p style="color:var(--muted);font-size:13px">Which title each lead sits on — where the pipeline is.</p></div>
+    <div class="pcard"><h3 style="font-size:17px">Spend &amp; flags</h3><p style="color:var(--muted);font-size:13px">Client/agency spend + stale-lead escalation.</p></div>
+  </div>
+  <p class="note" style="margin-top:18px">Manager access only — for this demo the access code is <span class="code">habari2026</span>. (A light gate; for true role security, host it behind a login.)</p>
+  <div class="frame">
+    <div class="barx"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span>
+      <span class="u">Sales Dashboard · managers · code: habari2026</span>
+      <a class="btn ghost open" href="habari-media-dashboard.html" target="_blank" rel="noopener">Open full ↗</a></div>
+    <iframe src="habari-media-dashboard.html" height="720" loading="lazy" title="Sales Dashboard"></iframe>
+  </div>
+</section>
+
+<!-- 3b · SALES OPERATING DASHBOARD -->
+<section class="blk" id="operating">
+  <div class="kick">Project 03b · the rep's desk</div>
+  <h2>The Sales Operating Dashboard</h2>
+  <p class="lead">The rep's single workspace — <b class="cream">"here's your desk"</b> — pulling the everyday jobs into one screen:
+  campaign reports, a self-serve report generator, raising a booking, the top-sheet library and the live publication rate card.
+  A working companion to the manager view above.</p>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+    <div class="pcard"><h3 style="font-size:17px">Report generator</h3><p style="color:var(--muted);font-size:13px">Self-serve, branded campaign reports in a few clicks.</p></div>
+    <div class="pcard"><h3 style="font-size:17px">Raise a booking</h3><p style="color:var(--muted);font-size:13px">Straight from the desk — into the agreement flow.</p></div>
+    <div class="pcard"><h3 style="font-size:17px">Top-sheet library</h3><p style="color:var(--muted);font-size:13px">Every top sheet in one searchable place.</p></div>
+    <div class="pcard"><h3 style="font-size:17px">Rate card</h3><p style="color:var(--muted);font-size:13px">The live publication rate card at hand.</p></div>
+  </div>
+  <div class="frame">
+    <div class="barx"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span>
+      <span class="u">Sales Operating Dashboard · the rep's desk</span>
+      <a class="btn ghost open" href="habari-operating-dashboard.html" target="_blank" rel="noopener">Open full ↗</a></div>
+    <iframe src="habari-operating-dashboard.html" height="720" loading="lazy" title="Sales Operating Dashboard"></iframe>
+  </div>
+</section>
+
+<!-- 4 · PLAY4THECOIN -->
+<section class="blk" id="p4c">
+  <div class="kick">Project 04 · partner property (not Habari-owned)</div>
+  <h2>Play4TheCoin — new business for Compleat Golfer</h2>
+  <p class="lead">Play4TheCoin is a national, skill-based golf-championship platform. <b class="cream">Habari
+  Media does not own it</b> — it exists to bring Habari more business, all routed through Compleat Golfer.</p>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+    <div class="pcard ext"><h3 style="font-size:18px">What it drives for Habari</h3><ul>
+      <li>Compleat Golfer <b>tournament</b> sales</li>
+      <li>Compleat Golfer <b>magazine &amp; website</b> ad sales</li>
+      <li><b>Barter deals</b> across the network</li>
+      <li>Access to <b>golf courses</b> via Compleat Golfer</li>
+    </ul></div>
+    <div class="pcard ext"><h3 style="font-size:18px">Event → in-app branding</h3><p style="color:var(--muted);font-size:13.5px">Clients who book the <b>Play4TheCoin Championship</b> event also get their branding inside the app — a sponsor property Habari can sell, on top of print and digital.</p></div>
+    <div class="pcard ext"><h3 style="font-size:18px">Try the live app</h3><p style="color:var(--muted);font-size:13.5px">The working product — register, activate a coin, log a round, climb the leaderboard.</p>
+      <a class="btn" style="background:var(--blue);color:#08121f" href="https://play4thecoin.onrender.com/" target="_blank" rel="noopener">Open the live app ↗</a></div>
+  </div>
+  <p class="note">Ownership sits outside Habari; the value to Habari is the <b>new revenue it channels through Compleat Golfer</b> — tournaments, media, barter and course access — plus a sellable in-app sponsor property for event bookings.</p>
+</section>
+
+<!-- NEXT -->
+<section class="blk" id="next" style="border-bottom:none">
+  <div class="kick">Where to next</div>
+  <h2>A short meeting to walk the scope</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h4>15-min walk-through</h4><p>We take the Habari team through all four, live, and answer questions.</p></div>
+    <div class="step"><div class="n">2</div><h4>Pick a first play</h4><p>Roll the Campaign Generator across a title, or brief a Play4TheCoin property.</p></div>
+    <div class="step"><div class="n">3</div><h4>Go live</h4><p>First report / first booking within the week.</p></div>
+  </div>
+  <div class="cta-band">
+    <div class="big">Shall we find 15 minutes this week?</div>
+    <a class="btn" href="mailto:?subject=Habari%20Media%20Sales%20%E2%80%94%2015%20min%20walk-through&body=Hi%20team%2C%0A%0AThanks%20for%20looking%20through%20the%20scope.%20Could%20we%20find%2015%20minutes%20this%20week%20to%20walk%20it%20live%3F%0A%0ADreyer">Request the meeting ↗</a>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <strong style="color:var(--cream)">Habari Media · Sales — Tools &amp; Scope.</strong> Prepared for Habari Media by Dreyer Hoffman.
+  Draft for discussion under NDA; nothing herein is an offer. Live links: Campaign Generator (github.io),
+  Play4TheCoin app (onrender.com). The Proposal Tracker &amp; Sales Dashboard hold a confidential Habari sales
+  pipeline — do not forward outside Habari. Play4TheCoin is a partner property, not owned by Habari Media.
+  Highbury Media (Pty) Ltd T/A Habari Media · www.habarimedia.com.
+</footer>
+
+<!-- Claim / book the R25K Network Special (opens a pre-filled email — no payment taken) -->
+<div id="specialOv" style="position:fixed;inset:0;background:rgba(0,0,0,.74);display:none;align-items:center;justify-content:center;z-index:60;padding:20px">
+  <div style="background:var(--panel);border:1px solid var(--gold-dim);border-radius:16px;max-width:520px;width:100%;padding:28px;position:relative;max-height:90vh;overflow:auto">
+    <button onclick="closeSpecial()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1">✕</button>
+    <h3 style="font-family:'Fraunces',serif;color:var(--cream);font-size:22px;margin-bottom:6px">Claim the Network Special</h3>
+    <p style="color:var(--muted);font-size:13.5px;margin-bottom:16px">1,000,000 impressions across all five Habari titles — confirm the flight and we'll send the booking order.</p>
+    <div style="display:grid;gap:8px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 14px"><span style="color:var(--cream);font-weight:700;font-size:13px">SA Rugby Mag</span><span style="color:var(--muted);font-size:12.5px">200,000 impr · <b style="color:var(--gold)">R20,000</b></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 14px"><span style="color:var(--cream);font-weight:700;font-size:13px">Getaway</span><span style="color:var(--muted);font-size:12.5px">200,000 impr · <b style="color:var(--gold)">R20,000</b></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 14px"><span style="color:var(--cream);font-weight:700;font-size:13px">Compleat Golfer</span><span style="color:var(--muted);font-size:12.5px">200,000 impr · <b style="color:var(--gold)">R20,000</b></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 14px"><span style="color:var(--cream);font-weight:700;font-size:13px">CAR Magazine</span><span style="color:var(--muted);font-size:12.5px">200,000 impr · <b style="color:var(--gold)">R20,000</b></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 14px"><span style="color:var(--cream);font-weight:700;font-size:13px">Cape Town Etc</span><span style="color:var(--muted);font-size:12.5px">200,000 impr · <b style="color:var(--gold)">R20,000</b></span></div>
+    </div>
+    <div style="color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Choose your flight</div>
+    <div id="specDur" style="display:flex;gap:8px;margin-bottom:16px">
+      <button type="button" onclick="pickSpec(this,'1 week')" style="flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">1 week</button>
+      <button type="button" onclick="pickSpec(this,'2 weeks')" style="flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">2 weeks</button>
+      <button type="button" onclick="pickSpec(this,'1 month')" style="flex:1;background:var(--gold);border:1px solid var(--gold);color:#1a1408;border-radius:9px;padding:10px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">1 month</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:16px">
+      <div><div style="color:var(--muted);font-size:12px">1,000,000 impressions · network bundle</div><div style="font-family:'Fraunces',serif;font-size:26px;color:var(--gold);line-height:1.1"><span style="text-decoration:line-through;color:var(--muted);font-size:15px;margin-right:8px">R100,000</span>R25,000</div></div>
+      <div style="color:var(--muted);font-size:11px;text-align:right">ex VAT<br>~75% off</div>
+    </div>
+    <button class="btn" style="width:100%;justify-content:center" onclick="confirmSpecial()">Confirm &amp; send booking enquiry →</button>
+    <p style="color:var(--muted);font-size:11px;margin-top:12px;text-align:center">Opens a pre-filled email to the Habari sales team. No payment is taken here.</p>
+  </div>
+</div>
+<script>
+var _specDur='1 month';
+function openSpecial(){document.getElementById('specialOv').style.display='flex';}
+function closeSpecial(){document.getElementById('specialOv').style.display='none';}
+function pickSpec(b,d){_specDur=d;var x=document.querySelectorAll('#specDur button');for(var i=0;i<x.length;i++){x[i].style.background='var(--panel2)';x[i].style.color='var(--txt)';x[i].style.borderColor='var(--line)';}b.style.background='var(--gold)';b.style.color='#1a1408';b.style.borderColor='var(--gold)';}
+function confirmSpecial(){
+  var to='dreyer.hoffman@habarimedia.com';
+  var subj='Network Special booking — 1,000,000 impressions (R25,000 ex VAT)';
+  var body='Good day,\n\nWe would like to book the Habari Network Special:\n\n• 1,000,000 impressions across SA Rugby Mag, Compleat Golfer, Cape Town Etc, Getaway and CAR Magazine\n• Special price: R25,000 ex VAT (approx. 75% off the R100,000 rate card)\n• Preferred flight: '+_specDur+'\n• Preferred start date: \n• Company / billing details: \n\nPlease send the booking order to confirm.\n\nThank you.';
+  window.location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+}
+document.getElementById('specialOv').addEventListener('click',function(e){if(e.target===this)closeSpecial();});
+</script>
+</body>
+</html>

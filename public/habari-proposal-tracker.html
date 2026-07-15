@@ -324,15 +324,18 @@
         </div>
         <div class="bk-actions">
           <button class="btn" onclick="addLeadsFromText()">+ Add to my leads</button>
-          <label class="btn ghost" style="cursor:pointer;margin:0">Import CG LEADS file
-            <input type="file" id="leadFile" accept=".csv,.tsv,.txt" style="display:none" onchange="importLeadsFile(event)">
+          <label class="btn ghost" style="cursor:pointer;margin:0">Import leads file (.xlsx / .csv)
+            <input type="file" id="leadFile" accept=".xlsx,.csv,.tsv,.txt" style="display:none" onchange="importLeadsFile(event)">
           </label>
         </div>
         <div class="bk-note">
-          <b>From the CG LEADS sheet:</b> open the shout workbook (<i>CG LEADS – DREYER</i>) in SharePoint / Excel,
-          copy the client rows and paste them above, or <b>File → Save As → CSV</b> and use <b>Import CG LEADS file</b>.
-          A header row (Client, Contact, Email, Publication, Value) is auto-detected; the first column is always the client.
-          <br>Live two-way SharePoint sync needs a backend connector — this import brings the sheet into the tracker on demand.
+          <b>From your leads sheet</b> (e.g. <i>Dreyer_Hoffman_SARW_Leads</i> / <i>CG LEADS – DREYER</i>):
+          download it from SharePoint or Google Drive, then <b>Import leads file</b> and pick the <b>.xlsx</b> directly —
+          or just copy the client column and <b>paste it above</b>. A title/date row on top (e.g. “Rugby Leads 13/05/2026”)
+          and one-client-per-line lists are both handled; the publication is guessed from the file name (SARW → SA Rugby Magazine).
+          If the sheet has real headers (Client, Contact, Email, Publication, Value) those map automatically; otherwise the first column is the client.
+          <br><b>Drive / SharePoint:</b> the page reads the <i>file</i> you pick — a live, always-on connection to Drive or SharePoint
+          needs a small backend (their APIs require sign-in). See the repo README for that roadmap.
         </div>
       </div>
 
@@ -767,40 +770,68 @@ function leadRow(p,rolled){
   </div>`;
 }
 function removeLead(id){const p=DATA.find(x=>x.id==id);if(!p)return;if(confirm('Remove this lead from the shout?')){DATA=DATA.filter(x=>x.id!=id);persist();renderLeads();render();}}
-function parseLeadRows(text){
-  const lines=String(text||'').split(/\r?\n/).map(l=>l.replace(/\s+$/,'')).filter(l=>l.trim());
-  if(!lines.length)return [];
-  const split=l=>l.includes('\t')?l.split('\t'):l.split(',');
-  let start=0, idx={client:0,contact:1,email:2,pub:3,val:4};
-  const first=split(lines[0]).map(c=>c.trim().toLowerCase());
-  const hasHeader=first.length>1&&first.some(c=>['client','company','brand','name'].includes(c));
+// Map a 2-D grid of cells (from paste/CSV/xlsx) to lead objects.
+// Handles the real Habari shout format: a title/date heading row on top
+// (e.g. "Rugby Leads 13/05/2026") followed by one client per line.
+function rows2dToLeads(rows){
+  const clean=(rows||[])
+    .map(r=>(Array.isArray(r)?r:[r]).map(c=>String(c==null?'':c).replace(/ /g,' ').trim()))
+    .filter(r=>r.some(x=>x));
+  if(!clean.length)return [];
+  const isTitle=r=>{
+    const cells=r.filter(x=>x);
+    if(cells.length!==1)return false;                    // a real header/data row has >1 col
+    return /leads?\b|prospects?\b|\b\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}\b/i.test(cells[0]);
+  };
+  let start=0;
+  while(start<clean.length&&isTitle(clean[start]))start++; // skip leading title/date lines
+  if(start>=clean.length)return [];
+  // header-row detection (only when the sheet actually has column headers)
+  let idx={client:0,contact:1,email:2,pub:3,val:4};
+  const first=clean[start].map(c=>c.toLowerCase());
+  const hasHeader=first.length>1&&first.some(c=>['client','company','brand','name','prospect'].includes(c));
   if(hasHeader){
-    start=1;idx={client:-1,contact:-1,email:-1,pub:-1,val:-1};
+    idx={client:-1,contact:-1,email:-1,pub:-1,val:-1};
     first.forEach((c,i)=>{
-      if(idx.client<0&&/client|company|brand/.test(c))idx.client=i;
+      if(idx.client<0&&/client|company|brand|prospect/.test(c))idx.client=i;
       else if(idx.contact<0&&/contact|name|attention/.test(c))idx.contact=i;
       else if(idx.email<0&&/e-?mail/.test(c))idx.email=i;
       else if(idx.pub<0&&/pub|title|magazine|platform/.test(c))idx.pub=i;
       else if(idx.val<0&&/value|amount|budget|est|rate|spend/.test(c))idx.val=i;
     });
     if(idx.client<0)idx.client=0;
+    start++;
   }
   const out=[];
-  for(let i=start;i<lines.length;i++){
-    const c=split(lines[i]).map(x=>x.trim());
-    const client=(idx.client>=0?c[idx.client]:c[0])||'';
+  for(let i=start;i<clean.length;i++){
+    const c=clean[i];
+    const client=(idx.client>=0?c[idx.client]:c[0])||c.find(x=>x)||'';
     if(!client)continue;
     const g=k=>(idx[k]>=0&&c[idx[k]]!=null)?c[idx[k]]:'';
     out.push({client, contact:g('contact'), email:g('email'), pub:g('pub'), val:parseInt(String(g('val')).replace(/[^\d]/g,''))||0});
   }
   return out;
 }
-function addLeads(rows,source){
-  if(!rows.length){alert('No client rows found — paste at least one client name (one per line).');return 0;}
+function parseLeadRows(text){
+  const rows=String(text||'').split(/\r?\n/).map(l=>l.includes('\t')?l.split('\t'):l.split(','));
+  return rows2dToLeads(rows);
+}
+// Guess the publication from a filename or sheet title (SARW → SA Rugby Magazine, etc.)
+function inferPub(s){
+  s=(s||'').toLowerCase();
+  if(/rugby|sarw|sa[_-]?rugby/.test(s))return 'SA Rugby Magazine';
+  if(/golf|compleat|\bcg\b/.test(s))return 'Compleat Golfer';
+  if(/getaway/.test(s))return 'Getaway';
+  if(/\bcar\b|motor/.test(s))return 'Car Magazine';
+  if(/cape ?town/.test(s))return 'Cape Town Etc';
+  return '';
+}
+function addLeads(rows,source,defaultPub){
+  if(!rows.length){alert('No client rows found — paste at least one client name (one per line), or pick a leads file.');return 0;}
   const month=shoutMonthVal(), rep=shoutRepVal();
   const pubs=['SA Rugby Magazine','Compleat Golfer','Cape Town Etc','Getaway','Car Magazine','Masters Cup','Multi-title'];
   rows.forEach((r,i)=>{
-    let pub=r.pub||'Compleat Golfer';
+    let pub=r.pub||defaultPub||'Compleat Golfer';
     const match=pubs.find(x=>x.toLowerCase()===String(pub).toLowerCase());pub=match||pub;
     DATA.push({id:Date.now()+i+DATA.length,
       client:r.client, contact:r.contact||'', email:r.email||'',
@@ -813,14 +844,73 @@ function addLeads(rows,source){
 }
 function addLeadsFromText(){
   const t=document.getElementById('leadPaste');
-  const n=addLeads(parseLeadRows(t.value),'shout');
+  const firstLine=(t.value||'').split(/\r?\n/)[0]||'';
+  const n=addLeads(parseLeadRows(t.value),'shout',inferPub(firstLine));
   if(n)t.value='';
+}
+// Read an .xlsx (a zip of XML) entirely in the browser — no library, no upload.
+// Uses the native DecompressionStream to inflate the two entries we need.
+async function readXlsx(buf){
+  const u8=new Uint8Array(buf), dv=new DataView(buf), td=new TextDecoder();
+  let eocd=-1;
+  for(let i=u8.length-22;i>=0;i--){if(dv.getUint32(i,true)===0x06054b50){eocd=i;break;}}
+  if(eocd<0)throw new Error('not a valid .xlsx');
+  const count=dv.getUint16(eocd+10,true); let p=dv.getUint32(eocd+16,true);
+  const entries={};
+  for(let n=0;n<count;n++){
+    if(dv.getUint32(p,true)!==0x02014b50)break;
+    const method=dv.getUint16(p+10,true), compSize=dv.getUint32(p+20,true);
+    const nameLen=dv.getUint16(p+28,true), extraLen=dv.getUint16(p+30,true), commentLen=dv.getUint16(p+32,true);
+    const lho=dv.getUint32(p+42,true);
+    const name=td.decode(u8.subarray(p+46,p+46+nameLen));
+    entries[name]={method,compSize,lho};
+    p+=46+nameLen+extraLen+commentLen;
+  }
+  async function read(name){
+    const e=entries[name]; if(!e)return null;
+    const l=e.lho;
+    const nameLen=dv.getUint16(l+26,true), extraLen=dv.getUint16(l+28,true);
+    const start=l+30+nameLen+extraLen;
+    const comp=u8.subarray(start,start+e.compSize);
+    if(e.method===0)return td.decode(comp);
+    const ds=new DecompressionStream('deflate-raw');
+    const ab=await new Response(new Response(comp).body.pipeThrough(ds)).arrayBuffer();
+    return td.decode(ab);
+  }
+  let sheet='xl/worksheets/sheet1.xml';
+  if(!entries[sheet]){const k=Object.keys(entries).find(x=>/^xl\/worksheets\/sheet\d+\.xml$/.test(x));if(k)sheet=k;}
+  const [ssXml,shXml]=await Promise.all([read('xl/sharedStrings.xml'),read(sheet)]);
+  if(!shXml)throw new Error('no worksheet found');
+  const ss=[];
+  if(ssXml){new DOMParser().parseFromString(ssXml,'application/xml').querySelectorAll('si').forEach(si=>{let t='';si.querySelectorAll('t').forEach(n=>t+=n.textContent);ss.push(t);});}
+  const colNum=ref=>{const c=(ref.match(/[A-Z]+/)||['A'])[0];let n=0;for(const ch of c)n=n*26+(ch.charCodeAt(0)-64);return n-1;};
+  const rows=[];
+  new DOMParser().parseFromString(shXml,'application/xml').querySelectorAll('sheetData > row').forEach(r=>{
+    const cells={}; let mx=-1;
+    r.querySelectorAll('c').forEach(c=>{
+      const ref=c.getAttribute('r')||'', t=c.getAttribute('t');
+      const vEl=c.querySelector('v'), isEl=c.querySelector('is'); let v='';
+      if(t==='s'&&vEl)v=ss[parseInt(vEl.textContent)]||'';
+      else if(t==='inlineStr'&&isEl)v=isEl.textContent||'';
+      else if(vEl)v=vEl.textContent||'';
+      const ci=ref?colNum(ref):0; cells[ci]=v; if(ci>mx)mx=ci;
+    });
+    const arr=[]; for(let i=0;i<=mx;i++)arr.push(cells[i]||''); rows.push(arr);
+  });
+  return rows;
 }
 function importLeadsFile(ev){
   const f=ev.target.files&&ev.target.files[0];if(!f)return;
-  const reader=new FileReader();
-  reader.onload=e=>{const n=addLeads(parseLeadRows(String(e.target.result||'')),'CG LEADS');if(n)alert(n+' lead'+(n>1?'s':'')+' imported from '+f.name);ev.target.value='';};
-  reader.readAsText(f);
+  const defPub=inferPub(f.name);
+  const finish=(leads,src)=>{const n=addLeads(leads,src,defPub);if(n)alert(n+' lead'+(n>1?'s':'')+' imported from '+f.name);ev.target.value='';};
+  if(/\.xlsx$/i.test(f.name)){
+    f.arrayBuffer().then(readXlsx).then(rows=>finish(rows2dToLeads(rows),'CG LEADS'))
+      .catch(err=>{alert('Could not read that .xlsx ('+err.message+').\nTip: open it and paste the client column above, or File → Save As → CSV and pick that instead.');ev.target.value='';});
+  }else{
+    const reader=new FileReader();
+    reader.onload=e=>finish(parseLeadRows(String(e.target.result||'')),'CG LEADS');
+    reader.readAsText(f);
+  }
 }
 function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 

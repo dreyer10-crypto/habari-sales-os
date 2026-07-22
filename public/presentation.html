@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Habari Media · Sales OS — Presentation</title>
+<title>Habari Media · Sales OS — Full System Presentation</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Manrope:wght@400;500;600;700;800&display=swap');
   :root{
     --bg:#0c0c0d; --panel:#141416; --panel2:#1b1b1e; --panel3:#232327; --line:#2a2a2e;
     --gold:#d4a24c; --gold-l:#e7be74; --gold-dim:#9c7732; --cream:#f4ece0; --txt:#e9e4da; --muted:#8a857c;
-    --green:#5aa874; --blue:#5b86cf; --red:#cf5b5b; --amber:#d49a3c;
+    --green:#5aa874; --green-b:#3fc889; --blue:#5b86cf; --red:#cf5b5b; --amber:#d49a3c;
     --serif:'Fraunces',Georgia,'Times New Roman',serif;
     --sans:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   }
@@ -17,155 +17,172 @@
   html,body{height:100%}
   body{background:var(--bg);color:var(--txt);font-family:var(--sans);overflow:hidden}
   .serif{font-family:var(--serif)}
-  .gold{color:var(--gold)} .cream{color:var(--cream)} .muted{color:var(--muted)} .green{color:var(--green)}
+  .gold{color:var(--gold)} .cream{color:var(--cream)} .muted{color:var(--muted)} .green{color:var(--green-b)}
 
-  /* progress + chrome */
   .progress{position:fixed;top:0;left:0;height:3px;background:var(--gold);z-index:60;transition:width .35s ease;box-shadow:0 0 12px rgba(212,162,76,.5)}
-  .brandmark{position:fixed;top:18px;left:26px;z-index:50;font-family:var(--serif);font-weight:700;font-size:15px;color:var(--cream);letter-spacing:.2px}
+  .brandmark{position:fixed;top:18px;left:26px;z-index:50;font-family:var(--serif);font-weight:700;font-size:15px;color:var(--cream)}
   .brandmark span{color:var(--gold)}
-  .counter{position:fixed;bottom:18px;right:26px;z-index:50;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:1px}
+  .counter{position:fixed;bottom:18px;right:80px;z-index:50;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:1px}
   .counter b{color:var(--gold)}
-  .hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:50;color:var(--muted);font-size:11px;letter-spacing:.5px;opacity:.75}
+  .hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:50;color:var(--muted);font-size:11px;letter-spacing:.5px;opacity:.72}
   .hint kbd{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:var(--sans);color:var(--txt);font-size:10.5px}
   .arrows{position:fixed;bottom:14px;right:26px;z-index:57;display:flex;gap:8px}
-  .navbtn{width:44px;height:44px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--txt);
-    font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+  .navbtn{width:44px;height:44px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--txt);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
   .navbtn:hover{background:var(--gold);border-color:var(--gold);color:#1a1408}
+  /* big always-there edge tap zones */
   .edge{position:fixed;top:0;bottom:0;width:clamp(56px,8vw,110px);z-index:55;display:flex;align-items:center;justify-content:center;
     font-size:40px;color:var(--muted);cursor:pointer;user-select:none;transition:.2s;opacity:.55}
   .edge:hover{opacity:1;color:var(--gold);background:linear-gradient(var(--dir),rgba(212,162,76,.14),transparent)}
   .edge.prev{left:0;--dir:to right} .edge.next{right:0;--dir:to left}
   @media(max-width:700px){.counter{right:14px}.edge{width:44px;font-size:30px;opacity:.8}}
-  .counter{right:80px}
 
-  /* deck / slides */
   .deck{position:relative;width:100vw;height:100vh}
   .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
-    padding:min(8vh,80px) clamp(24px,7vw,110px);opacity:0;visibility:hidden;
-    transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;overflow:auto}
+    padding:min(7vh,68px) clamp(24px,7vw,108px);opacity:0;visibility:hidden;transform:translateY(16px);
+    transition:opacity .5s ease,transform .5s ease;overflow:auto}
   .slide.active{opacity:1;visibility:visible;transform:none}
-  .slide.cover{background:radial-gradient(90% 80% at 12% 0%,rgba(212,162,76,.13),transparent 55%),
-    radial-gradient(70% 60% at 100% 100%,rgba(90,168,116,.07),transparent 60%)}
-  .kick{color:var(--gold);font-size:clamp(11px,1.3vw,13px);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:16px}
-  h1{font-family:var(--serif);font-weight:700;color:var(--cream);line-height:1.04;letter-spacing:-.5px;font-size:clamp(34px,6vw,74px)}
+  .slide.cover{background:radial-gradient(90% 80% at 12% 0%,rgba(212,162,76,.13),transparent 55%),radial-gradient(70% 60% at 100% 100%,rgba(90,168,116,.08),transparent 60%)}
+  .kick{color:var(--gold);font-size:clamp(11px,1.3vw,13px);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:14px}
+  h1{font-family:var(--serif);font-weight:700;color:var(--cream);line-height:1.04;letter-spacing:-.5px;font-size:clamp(32px,5.6vw,68px)}
   h1 .gold{color:var(--gold)}
-  h2{font-family:var(--serif);font-weight:600;color:var(--cream);line-height:1.08;letter-spacing:-.3px;font-size:clamp(26px,4.2vw,50px);margin-bottom:10px}
-  .sub{color:var(--txt);font-size:clamp(15px,1.9vw,21px);max-width:60ch;line-height:1.55;margin-top:18px}
-  .lead{color:var(--muted);font-size:clamp(14px,1.6vw,18px);max-width:70ch;line-height:1.6;margin-bottom:26px}
-  .eyerow{display:flex;align-items:center;gap:14px;margin-top:34px;flex-wrap:wrap}
-  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:30px;padding:9px 16px;font-size:13px;color:var(--txt);font-weight:600}
+  h2{font-family:var(--serif);font-weight:600;color:var(--cream);line-height:1.08;letter-spacing:-.3px;font-size:clamp(24px,4vw,46px);margin-bottom:8px}
+  .sub{color:var(--txt);font-size:clamp(15px,1.85vw,20px);max-width:62ch;line-height:1.55;margin-top:16px}
+  .lead{color:var(--muted);font-size:clamp(14px,1.55vw,17px);max-width:72ch;line-height:1.6;margin-bottom:22px}
+  .eyerow{display:flex;align-items:center;gap:12px;margin-top:30px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:30px;padding:9px 15px;font-size:13px;color:var(--txt);font-weight:600}
   .pill b{color:var(--gold)}
-  .presenter{margin-top:40px;color:var(--muted);font-size:13px;line-height:1.7}
+  .presenter{margin-top:34px;color:var(--muted);font-size:13px;line-height:1.7}
   .presenter b{color:var(--cream)}
 
-  /* generic building blocks */
-  .cards{display:grid;gap:18px;margin-top:14px}
-  .c3{grid-template-columns:repeat(3,1fr)} .c4{grid-template-columns:repeat(4,1fr)} .c2{grid-template-columns:repeat(2,1fr)}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 22px;position:relative;overflow:hidden}
+  .cards{display:grid;gap:16px;margin-top:12px}
+  .c2{grid-template-columns:repeat(2,1fr)} .c3{grid-template-columns:repeat(3,1fr)} .c4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:20px;position:relative;overflow:hidden}
   .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
-  .card.blue::before{background:var(--blue)} .card.green::before{background:var(--green)}
+  .card.blue::before{background:var(--blue)} .card.green::before{background:var(--green)} .card.red::before{background:var(--red)}
   .card .no{font-family:var(--serif);font-size:12px;color:var(--gold-dim);font-weight:600;letter-spacing:1px}
-  .card h3{font-family:var(--serif);font-size:clamp(17px,2vw,22px);color:var(--cream);margin:8px 0 8px;font-weight:600}
-  .card p{font-size:13.5px;color:var(--muted);line-height:1.55}
-  .card ul{list-style:none;margin-top:12px}
-  .card li{font-size:13px;color:var(--txt);padding:4px 0 4px 18px;position:relative}
+  .card h3{font-family:var(--serif);font-size:clamp(16px,1.9vw,21px);color:var(--cream);margin:7px 0 7px;font-weight:600}
+  .card p{font-size:13px;color:var(--muted);line-height:1.5}
+  .card ul{list-style:none;margin-top:10px}
+  .card li{font-size:12.5px;color:var(--txt);padding:4px 0 4px 18px;position:relative}
   .card li::before{content:"→";position:absolute;left:0;color:var(--gold)}
-  .icon{font-size:26px;line-height:1}
+  .icon{font-size:24px;line-height:1}
 
-  .split{display:grid;grid-template-columns:1.05fr 1.25fr;gap:44px;align-items:center}
-  @media(max-width:980px){.split{grid-template-columns:1fr;gap:26px}.c3,.c4{grid-template-columns:1fr 1fr}}
+  .split{display:grid;grid-template-columns:1.05fr 1.2fr;gap:40px;align-items:center}
+  @media(max-width:980px){.split{grid-template-columns:1fr;gap:24px}.c3,.c4{grid-template-columns:1fr 1fr}}
   @media(max-width:640px){.c2,.c3,.c4{grid-template-columns:1fr}}
-  ul.ticks{list-style:none;margin-top:18px}
-  ul.ticks li{position:relative;padding:9px 0 9px 30px;font-size:clamp(14px,1.6vw,17px);color:var(--txt);border-bottom:1px solid var(--line)}
+  ul.ticks{list-style:none;margin-top:14px}
+  ul.ticks li{position:relative;padding:8px 0 8px 28px;font-size:clamp(13px,1.5vw,16px);color:var(--txt);border-bottom:1px solid var(--line)}
   ul.ticks li:last-child{border-bottom:none}
-  ul.ticks li::before{content:"";position:absolute;left:0;top:14px;width:14px;height:14px;border-radius:4px;background:var(--gold)}
+  ul.ticks li::before{content:"";position:absolute;left:0;top:13px;width:13px;height:13px;border-radius:4px;background:var(--gold)}
   ul.ticks li b{color:var(--cream)}
 
-  /* flow diagram */
-  .flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;margin-top:26px}
-  .step{flex:1;min-width:130px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 16px;position:relative}
-  .step .n{font-family:var(--serif);color:var(--gold);font-size:13px;font-weight:700}
-  .step h4{color:var(--cream);font-size:15px;margin:6px 0 6px;font-family:var(--serif)}
-  .step p{color:var(--muted);font-size:12px;line-height:1.5}
-  .step .arr{position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:20px;z-index:2}
+  /* metric row */
+  .metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:8px}
+  .metric{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+  .metric::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+  .metric .n{font-family:var(--serif);font-size:clamp(20px,2.4vw,30px);color:var(--cream);font-weight:600;line-height:1}
+  .metric .n.g{color:var(--gold)}
+  .metric .l{color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:1px;margin-top:8px;line-height:1.3}
+  @media(max-width:820px){.metrics{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:520px){.metrics{grid-template-columns:repeat(2,1fr)}}
+
+  /* flow */
+  .flow{display:flex;align-items:stretch;gap:9px;flex-wrap:wrap;margin-top:22px}
+  .step{flex:1;min-width:120px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px 14px;position:relative}
+  .step .n{font-family:var(--serif);color:var(--gold);font-size:12px;font-weight:700}
+  .step h4{color:var(--cream);font-size:14px;margin:5px 0 5px;font-family:var(--serif)}
+  .step p{color:var(--muted);font-size:11.5px;line-height:1.45}
+  .step .arr{position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:18px;z-index:2}
   .step:last-child .arr{display:none}
-  .loopnote{margin-top:16px;background:rgba(90,168,116,.08);border:1px solid rgba(90,168,116,.3);border-radius:12px;
-    padding:14px 18px;color:var(--txt);font-size:14px}
-  .loopnote b{color:var(--green)}
+  .loopnote{margin-top:15px;background:rgba(90,168,116,.08);border:1px solid rgba(90,168,116,.3);border-radius:12px;padding:13px 17px;color:var(--txt);font-size:13.5px}
+  .loopnote b{color:var(--green-b)}
   @media(max-width:820px){.step .arr{display:none}}
 
-  /* mock UI chrome */
-  .mock{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-  .mockbar{display:flex;align-items:center;gap:7px;padding:10px 14px;background:var(--panel2);border-bottom:1px solid var(--line)}
-  .dot{width:10px;height:10px;border-radius:50%}
-  .mockbar .u{margin-left:8px;font-size:12px;color:var(--muted)}
-  .mockbody{padding:18px}
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px}
-  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px 15px;position:relative;overflow:hidden}
+  /* mock */
+  .mock{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.4)}
+  .mockbar{display:flex;align-items:center;gap:7px;padding:9px 13px;background:var(--panel2);border-bottom:1px solid var(--line)}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .mockbar .u{margin-left:8px;font-size:11.5px;color:var(--muted)}
+  .mockbody{padding:16px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:14px}
+  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;position:relative;overflow:hidden}
   .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
-  .stat .n{font-family:var(--serif);font-size:22px;color:var(--cream);font-weight:600;line-height:1}
-  .stat .n.g{color:var(--gold)} .stat .n.a{color:var(--amber)}
-  .stat .l{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-top:7px}
+  .stat .n{font-family:var(--serif);font-size:19px;color:var(--cream);font-weight:600;line-height:1}
+  .stat .n.g{color:var(--gold)} .stat .n.a{color:var(--amber)} .stat .n.gr{color:var(--green-b)}
+  .stat .l{color:var(--muted);font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;margin-top:6px}
   table.mt{width:100%;border-collapse:collapse}
-  table.mt th{text-align:left;color:var(--muted);font-size:9.5px;text-transform:uppercase;letter-spacing:1px;font-weight:700;padding:9px 12px;border-bottom:1px solid var(--line)}
-  table.mt td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:middle}
+  table.mt th{text-align:left;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:1px;font-weight:700;padding:8px 11px;border-bottom:1px solid var(--line)}
+  table.mt td{padding:9px 11px;border-bottom:1px solid var(--line);font-size:12px;vertical-align:middle}
   table.mt tr:last-child td{border-bottom:none}
   .cl{font-weight:700;color:var(--cream)}
   .val{font-family:var(--serif);color:var(--gold);font-weight:600;white-space:nowrap}
   .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:9.5px;font-weight:700;white-space:nowrap}
   .b-sent{background:rgba(91,134,207,.15);color:var(--blue);border:1px solid rgba(91,134,207,.3)}
-  .b-follow{background:rgba(212,162,76,.15);color:var(--gold);border:1px solid rgba(212,162,76,.3)}
+  .b-rep{background:rgba(90,168,116,.15);color:var(--green-b);border:1px solid rgba(90,168,116,.3)}
   .b-won{background:var(--green);color:#0c1a0f}
   .b-lead{background:rgba(139,133,124,.2);color:var(--cream);border:1px solid var(--muted)}
-  .b-roll{background:rgba(90,168,116,.14);color:var(--green);border:1px solid rgba(90,168,116,.35)}
-  .rk{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:700;background:var(--panel3);color:var(--muted);border:1px solid var(--line)}
+  .b-lt{background:rgba(91,134,207,.15);color:var(--blue);border:1px solid rgba(91,134,207,.3)}
+  .b-st{background:rgba(212,162,76,.15);color:var(--gold);border:1px solid rgba(212,162,76,.3)}
+  .b-ver{background:rgba(63,200,137,.14);color:var(--green-b);border:1px solid rgba(63,200,137,.35)}
+  .rk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;background:var(--panel3);color:var(--muted);border:1px solid var(--line)}
   .rk.g{background:var(--gold);color:#1a1408;border-color:var(--gold)}
-  .ratio{font-family:var(--serif);font-weight:600}.ratio.hi{color:var(--green)}.ratio.mid{color:var(--gold)}.ratio.lo{color:var(--red)}
-  .funnel{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-  .fn{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;position:relative;overflow:hidden}
+  .ratio{font-family:var(--serif);font-weight:600}.ratio.hi{color:var(--green-b)}.ratio.mid{color:var(--gold)}.ratio.lo{color:var(--red)}
+  .funnel{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+  .fn{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px;position:relative;overflow:hidden}
   .fn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--muted)}
-  .fn.s::before{background:var(--blue)}.fn.f::before{background:var(--gold)}.fn.r::before{background:var(--green)}.fn.w::before{background:var(--green)}.fn.l::before{background:var(--red)}
-  .fn .c{font-family:var(--serif);font-size:20px;color:var(--cream);font-weight:600;line-height:1}
-  .fn .k{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-top:5px}
-  .prize{display:inline-block;background:rgba(212,162,76,.12);border:1px solid rgba(212,162,76,.35);color:var(--gold);font-weight:700;font-size:12px;padding:5px 11px;border-radius:8px}
+  .fn.p::before{background:var(--muted)}.fn.s::before{background:var(--blue)}.fn.f::before{background:var(--gold)}.fn.r::before{background:var(--green)}.fn.w::before{background:var(--green-b)}
+  .fn .c{font-family:var(--serif);font-size:18px;color:var(--cream);font-weight:600;line-height:1}
+  .fn .k{font-size:8.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:5px}
+  .prize{display:inline-block;background:rgba(212,162,76,.12);border:1px solid rgba(212,162,76,.35);color:var(--gold);font-weight:700;font-size:11.5px;padding:5px 10px;border-radius:8px}
+  .assistant{background:var(--panel2);border:1px solid var(--gold-dim);border-radius:10px;padding:11px 13px;font-size:12.5px;color:var(--txt);display:flex;align-items:center;gap:9px}
+  .assistant .p{color:var(--gold);font-weight:700}
 
-  /* special (upsell) */
-  .special{background:linear-gradient(135deg,#171310,#0f0d0b);border:1px solid var(--gold-dim);border-radius:18px;padding:clamp(22px,3vw,34px);position:relative;overflow:hidden}
-  .special .tag{display:inline-block;background:rgba(212,162,76,.15);border:1px solid rgba(212,162,76,.4);color:var(--gold);font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;border-radius:20px;margin-bottom:14px}
-  .titles{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:20px 0}
-  .tchip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px;text-align:center}
-  .tchip .nm{font-weight:700;color:var(--cream);font-size:12px}
-  .tchip .im{color:var(--gold);font-size:11px;margin-top:3px;font-family:var(--serif)}
-  .price{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:6px}
-  .price .strike{color:var(--muted);text-decoration:line-through;font-size:20px;font-family:var(--serif)}
-  .price .now{font-family:var(--serif);font-size:clamp(34px,5vw,54px);color:var(--gold);font-weight:700;line-height:1}
+  /* studio preview */
+  .studio{background:#0f130f;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .studio .cover{background:linear-gradient(135deg,#0f1f18,#16302a);padding:20px;border-bottom:2px solid var(--green)}
+  .studio .cover .t{font-family:var(--serif);color:var(--cream);font-size:19px;font-weight:700}
+  .studio .cover .s{color:var(--green-b);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:5px;font-weight:600}
+  .studio .body{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .studio .kv{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+  .studio .kv .k{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.8px}
+  .studio .kv .v{color:var(--cream);font-weight:700;font-size:13px;margin-top:2px}
+  .studio .kv .v.g{color:var(--gold);font-family:var(--serif)}
+
+  .special{background:linear-gradient(135deg,#171310,#0f0d0b);border:1px solid var(--gold-dim);border-radius:18px;padding:clamp(20px,3vw,32px);position:relative;overflow:hidden}
+  .special .tag{display:inline-block;background:rgba(212,162,76,.15);border:1px solid rgba(212,162,76,.4);color:var(--gold);font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;border-radius:20px;margin-bottom:12px}
+  .titles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}
+  .tchip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+  .tchip .nm{font-weight:700;color:var(--cream);font-size:11.5px}
+  .tchip .im{color:var(--gold);font-size:10.5px;margin-top:3px;font-family:var(--serif)}
+  .price{display:flex;align-items:baseline;gap:13px;flex-wrap:wrap;margin-top:4px}
+  .price .strike{color:var(--muted);text-decoration:line-through;font-size:19px;font-family:var(--serif)}
+  .price .now{font-family:var(--serif);font-size:clamp(32px,5vw,50px);color:var(--gold);font-weight:700;line-height:1}
   .price .ex{color:var(--muted);font-size:12px}
-  @media(max-width:640px){.titles{grid-template-columns:repeat(2,1fr)}.funnel{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:640px){.titles{grid-template-columns:repeat(2,1fr)}.funnel{grid-template-columns:repeat(3,1fr)}.studio .body{grid-template-columns:1fr}}
 
-  .steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+  .steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:20px}
   @media(max-width:820px){.steps4{grid-template-columns:1fr 1fr}}
-  .s4{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px}
-  .s4 .n{font-family:var(--serif);color:var(--gold);font-size:22px;font-weight:700}
-  .s4 h4{color:var(--cream);font-size:15px;margin:6px 0 5px}
-  .s4 p{color:var(--muted);font-size:12.5px;line-height:1.5}
-  .note{color:var(--muted);font-size:12px;margin-top:20px;line-height:1.6;max-width:90ch}
+  .s4{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:16px}
+  .s4 .n{font-family:var(--serif);color:var(--gold);font-size:20px;font-weight:700}
+  .s4 h4{color:var(--cream);font-size:14px;margin:5px 0 4px}
+  .s4 p{color:var(--muted);font-size:12px;line-height:1.45}
+  .note{color:var(--muted);font-size:12px;margin-top:16px;line-height:1.55;max-width:92ch}
   .note b{color:var(--gold)}
+  .r0{display:inline-block;background:rgba(63,200,137,.12);border:1px solid rgba(63,200,137,.4);color:var(--green-b);font-weight:700;font-size:12px;padding:5px 12px;border-radius:20px}
 
-  /* print → one slide per page */
   @media print{
-    body{overflow:visible;background:#0c0c0d;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{overflow:visible;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .progress,.brandmark,.counter,.hint,.arrows{display:none}
     .deck{height:auto}
-    .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;
-      height:100vh;page-break-after:always;break-after:page}
+    .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;height:100vh;page-break-after:always;break-after:page}
   }
 </style>
 </head>
 <body>
 <div class="progress" id="progress"></div>
 <div class="brandmark">Habari Media · <span>Sales OS</span></div>
-<div class="counter"><b id="cur">1</b> / <span id="total">12</span></div>
+<div class="counter"><b id="cur">1</b> / <span id="total">17</span></div>
 <div class="hint">Click the sides · or <kbd>←</kbd> <kbd>→</kbd> / <kbd>space</kbd> · <kbd>F</kbd> full-screen · <kbd>P</kbd> print / PDF</div>
 <div class="edge prev" id="edgePrev" title="Previous (←)">‹</div>
 <div class="edge next" id="edgeNext" title="Next (→)">›</div>
@@ -175,89 +192,191 @@
 
   <!-- 1 · COVER -->
   <section class="slide cover active">
-    <div class="kick">Sales operating system · prepared for Habari Media</div>
-    <h1>From the monthly leads shout<br>to the <span class="gold">signed order</span>.</h1>
-    <p class="sub">One measured engine that runs the whole desk — lead generation, the proposal pipeline,
-    roll-overs, a closing-ratio competition, and a live manager dashboard. Everything in this deck is a
-    working build.</p>
+    <div class="kick">The full sales system · prepared for Habari Media</div>
+    <h1>From sourced lead to<br>sent proposal to <span class="gold">closed deal.</span></h1>
+    <p class="sub">One owned engine that runs the whole desk — it <b class="cream">finds</b> the advertisers,
+    <b class="cream">resolves</b> the decision-maker, <b class="cream">distributes</b> to reps, <b class="cream">writes</b>
+    the branded proposal, and <b class="cream">tracks</b> it to won. Everything here is a working build, running at <b class="green">R0</b>.</p>
     <div class="eyerow">
-      <span class="pill">🗣️ <b>Leads Shout</b> intake</span>
-      <span class="pill">📋 <b>Proposal</b> Tracker</span>
+      <span class="pill">🧲 <b>Lead OS</b></span>
+      <span class="pill">✍️ <b>Proposal Studio</b></span>
+      <span class="pill">📋 <b>Tracker</b></span>
+      <span class="pill">🔁 <b>Rebooks</b></span>
       <span class="pill">🏆 <b>Competition</b></span>
-      <span class="pill">📊 <b>Manager</b> Dashboard</span>
+      <span class="pill">📊 <b>Dashboard</b></span>
     </div>
     <div class="presenter">Prepared by <b>Dreyer Hoffman</b> · Sales · Habari Media &nbsp;·&nbsp; Confidential — under NDA, for internal discussion.</div>
   </section>
 
-  <!-- 2 · THE GAP -->
+  <!-- 2 · THE NETWORK -->
+  <section class="slide">
+    <div class="kick">The asset</div>
+    <h2>A world-class network deserves an owned sales engine.</h2>
+    <p class="lead">Habari Media — home to Africa's top digital &amp; print titles. The audience is already there. The engine that sells it should be just as strong — and <b class="cream">owned, not rented.</b></p>
+    <div class="metrics">
+      <div class="metric"><div class="n g">20+</div><div class="l">Brands</div></div>
+      <div class="metric"><div class="n g">120M+</div><div class="l">Website views / yr</div></div>
+      <div class="metric"><div class="n g">4M+</div><div class="l">Social followers</div></div>
+      <div class="metric"><div class="n g">1.2M+</div><div class="l">Print run</div></div>
+      <div class="metric"><div class="n g">840k+</div><div class="l">Email subscribers</div></div>
+      <div class="metric"><div class="n g">225+</div><div class="l">Staff</div></div>
+    </div>
+    <p class="note">Source: Habari Media network rate card. Titles include SA&nbsp;Rugby&nbsp;Magazine, Compleat&nbsp;Golfer, Getaway, CAR&nbsp;Magazine, Cape&nbsp;Town&nbsp;Etc.</p>
+  </section>
+
+  <!-- 3 · THE GAP -->
   <section class="slide">
     <div class="kick">The problem</div>
-    <h2>The desk runs on scattered sheets and memory.</h2>
+    <h2>Today the desk leaks — and pays rent for tools.</h2>
     <div class="split">
       <div>
-        <p class="lead">Leads live in a WhatsApp shout and an Excel file. Proposals sit in inboxes.
-        Follow-ups depend on who remembers. Managers have no live view of the pipeline — and no simple
-        way to see who's actually closing.</p>
         <ul class="ticks">
-          <li><b>Leads get lost</b> between the shout and the proposal.</li>
-          <li><b>Follow-ups slip</b> — no clock, no flag, no nudge.</li>
-          <li><b>“Coming next month”</b> deals quietly vanish.</li>
-          <li><b>No live scoreboard</b> — effort isn't visible or rewarded.</li>
+          <li><b>No owned sourcing</b> — leads come from a WhatsApp shout and a spreadsheet.</li>
+          <li><b>Decision-makers unknown</b> — reps chase switchboards, not names.</li>
+          <li><b>Proposals hand-built</b> — hours in PowerPoint, inconsistent look.</li>
+          <li><b>No live forecast</b> — the manager can't see the number.</li>
+          <li><b>Ran-and-gone deals vanish</b> — nobody re-books July's flight for August.</li>
+          <li><b>Paying for Apollo / SaaS</b> to do what we can own.</li>
         </ul>
       </div>
       <div class="mock">
         <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">the old way</span></div>
-        <div class="mockbody" style="font-family:var(--serif);color:var(--muted);font-size:14px;line-height:2">
-          📄 CG&nbsp;LEADS&nbsp;–&nbsp;DREYER.xlsx<br>
-          💬 “who’s following up on Sanlam?”<br>
-          📧 proposal sent… &nbsp;<span style="color:var(--red)">then?</span><br>
-          🧠 “I think BMW is back next month”<br>
-          ❓ hit rate this month = <span style="color:var(--muted)">unknown</span>
+        <div class="mockbody" style="font-family:var(--serif);color:var(--muted);font-size:13.5px;line-height:2">
+          📄 CG&nbsp;LEADS.xlsx &nbsp;·&nbsp; 💬 “who has Sanlam?”<br>
+          ☎️ “can I speak to whoever does marketing?”<br>
+          🖥️ 3 hrs building a deck in PowerPoint<br>
+          📈 forecast this month = <span style="color:var(--red)">?</span><br>
+          💸 Apollo / SaaS subscription = <span style="color:var(--red)">R‑‑‑/mo</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3 · THE ENGINE -->
+  <!-- 4 · THE SYSTEM MAP -->
   <section class="slide">
-    <div class="kick">The solution · one sales engine</div>
-    <h2>Four tools, one shared pipeline.</h2>
-    <p class="lead">Each rep works one screen. Everything they do feeds a single live store the manager reads in real time.</p>
-    <div class="cards c4">
-      <div class="card"><div class="icon">🗣️</div><div class="no">01 · Lead gen</div><h3>Leads Shout</h3><p>The monthly shout, captured. Reps list target clients — import the CG&nbsp;LEADS sheet in one click.</p></div>
-      <div class="card"><div class="icon">📋</div><div class="no">02 · Pipeline</div><h3>Proposal Tracker</h3><p>Every proposal with a follow-up flag, roll-overs, and a one-click signed agreement + email.</p></div>
-      <div class="card green"><div class="icon">🏆</div><div class="no">03 · Motivation</div><h3>Competition</h3><p>Best closing ratio wins — weekly &amp; monthly prizes on a live leaderboard.</p></div>
-      <div class="card blue"><div class="icon">📊</div><div class="no">04 · Oversight</div><h3>Dashboard</h3><p>Funnel, every rep vs target, hit rate, flagged leads, spend — the whole desk on one screen.</p></div>
-    </div>
-    <p class="note">Plus the <b>Campaign Generator</b> — branded, bookable reports that close with the R25,000 Network Special upsell.</p>
-  </section>
-
-  <!-- 4 · THE CYCLE -->
-  <section class="slide">
-    <div class="kick">How it flows</div>
-    <h2>The monthly sales cycle.</h2>
+    <div class="kick">The solution · one owned engine</div>
+    <h2>The whole desk, end to end.</h2>
     <div class="flow">
-      <div class="step"><div class="n">01</div><h4>Leads Shout</h4><p>Reps list the month's target clients · import CG&nbsp;LEADS.</p><span class="arr">→</span></div>
-      <div class="step"><div class="n">02</div><h4>Send proposal</h4><p>Lead becomes a tracked proposal + signed agreement.</p><span class="arr">→</span></div>
-      <div class="step"><div class="n">03</div><h4>Follow up</h4><p>Auto-flagged 5 working days out until it moves.</p><span class="arr">→</span></div>
-      <div class="step"><div class="n">04</div><h4>Won / Lost</h4><p>Decision recorded — feeds hit rate &amp; competition.</p></div>
+      <div class="step"><div class="n">01</div><h4>🧲 Source</h4><p>Lead OS finds SA advertisers &amp; agencies.</p><span class="arr">→</span></div>
+      <div class="step"><div class="n">02</div><h4>🔎 Resolve</h4><p>Decision-maker + verified email + phone.</p><span class="arr">→</span></div>
+      <div class="step"><div class="n">03</div><h4>👥 Distribute</h4><p>Scored leads assigned to the right rep.</p><span class="arr">→</span></div>
+      <div class="step"><div class="n">04</div><h4>✍️ Propose</h4><p>Proposal Studio builds the branded deck.</p><span class="arr">→</span></div>
+      <div class="step"><div class="n">05</div><h4>📋 Track</h4><p>Follow-ups, roll-overs, won / lost.</p><span class="arr">→</span></div>
+      <div class="step"><div class="n">06</div><h4>🔁 Rebook</h4><p>Ran-and-ended flights re-close.</p></div>
     </div>
-    <div class="loopnote">↩︎ <b>Roll-over:</b> can't close this month but the client's coming back? Carry it forward to a named month <b>with evidence</b> — it re-enters as next month's lead instead of counting as lost.</div>
+    <div class="loopnote">📊 Around it all: a live <b>Manager Dashboard</b> (pipeline &amp; weighted forecast), a <b>closing-ratio competition</b>, and <b>integrations</b> (signed-booking intake + Outlook) — all served from <b>one Node app at R0</b>.</div>
   </section>
 
-  <!-- 5 · LEAD GEN -->
+  <!-- 5 · LEAD OS SOURCING -->
   <section class="slide">
-    <div class="kick">01 · Lead generation</div>
-    <h2>The Leads Shout — captured, not scattered.</h2>
+    <div class="kick">Build 01 · lead generation</div>
+    <h2>Lead OS — our own sourcing engine.</h2>
     <div class="split">
       <div>
-        <p class="lead">When the monthly shout goes out, each rep lists the clients they'll chase. Three ways in — all in the browser, no credentials.</p>
+        <p class="lead">It builds the target list from Habari's own data — no bought database, no Apollo bill.</p>
         <ul class="ticks">
-          <li><b>Import the CG&nbsp;LEADS sheet</b> — pick the <b>.xlsx</b> straight from Drive/SharePoint download; the title row is skipped, clients land tagged to the month.</li>
-          <li><b>Paste a list</b> — one client per line, or full columns copied from Excel.</li>
-          <li><b>Type them in</b> — quick add, one at a time.</li>
+          <li><b>73 real SA targets</b> pre-loaded — 49 top advertisers + 20 agencies / media owners (Ogilvy, TBWA, King&nbsp;James, MediaShop, DStv&nbsp;Media&nbsp;Sales…).</li>
+          <li><b>Ad-Intel ranked</b> — sorted by ad-spend so reps chase the biggest spenders first.</li>
+          <li><b>Scored &amp; classed</b> — each lead scored and tagged short- or long-term.</li>
         </ul>
-        <p class="note">Publication is guessed from the sheet name (SARW → SA&nbsp;Rugby&nbsp;Magazine). A lead sits with no follow-up clock until a proposal goes out.</p>
+        <p class="note"><b>The honest framing:</b> our own engine, our own data, at R0 — no Apollo subscription. Contacts are illustrative demo data; a free Hunter.io key turns them into real named people, and email domains are genuinely verified.</p>
+      </div>
+      <div class="mock">
+        <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">Lead OS · Lists &amp; Leads</span></div>
+        <div class="mockbody">
+          <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+            <div class="stat"><div class="n">73</div><div class="l">Targets loaded</div></div>
+            <div class="stat"><div class="n">49</div><div class="l">Advertisers</div></div>
+            <div class="stat"><div class="n">20</div><div class="l">Agencies</div></div>
+          </div>
+          <table class="mt">
+            <tr><th>Advertiser</th><th>Decision-maker</th><th class="num">Score</th></tr>
+            <tr><td class="cl">Mercedes-Benz SA</td><td>Marketing Dir <span class="badge b-ver">✓ email</span></td><td class="num">94</td></tr>
+            <tr><td class="cl">MultiChoice</td><td>Head of Brand <span class="badge b-ver">✓ email</span></td><td class="num">91</td></tr>
+            <tr><td class="cl">Distell</td><td>Media Manager <span class="badge b-ver">✓ email</span></td><td class="num">88</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · RESOLVE + ASSISTANT -->
+  <section class="slide">
+    <div class="kick">Build 01 · continued</div>
+    <h2>Right person, verified — and an assistant that just does it.</h2>
+    <div class="split">
+      <div>
+        <ul class="ticks">
+          <li><b>Decision-maker resolution</b> — name, role, verified-email pill, phone number.</li>
+          <li><b>Lead drawer</b> — cadence, log-a-call, advance-stage, opt-out — all in one panel.</li>
+          <li><b>Natural-language assistant</b> — type a request, it runs live against the engine.</li>
+        </ul>
+        <div style="margin-top:18px;display:grid;gap:9px">
+          <div class="assistant"><span class="p">⌨</span> “find advertising agencies in Sandton”</div>
+          <div class="assistant"><span class="p">⌨</span> “load top advertisers by ad-spend”</div>
+        </div>
+      </div>
+      <div class="mock">
+        <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">Lead drawer · Distell</span></div>
+        <div class="mockbody">
+          <table class="mt">
+            <tr><td class="muted" style="width:38%">Decision-maker</td><td class="cl">Media Manager</td></tr>
+            <tr><td class="muted">Email</td><td>media@distell.co.za <span class="badge b-ver">✓ verified domain</span></td></tr>
+            <tr><td class="muted">Phone</td><td>+27 21 809 7000</td></tr>
+            <tr><td class="muted">Cadence</td><td><span class="badge b-sent">Call → email → call</span></td></tr>
+            <tr><td class="muted">Stage</td><td><span class="badge b-rep">Replied</span></td></tr>
+          </table>
+          <p class="note" style="margin-top:12px"><b>Voice-first:</b> the system logs calls &amp; matches replies — it never emails a bought list.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · PIPELINE + DISTRIBUTION -->
+  <section class="slide">
+    <div class="kick">Build 02 · the pipeline</div>
+    <h2>Distributed to reps — everyone sees their own.</h2>
+    <div class="split">
+      <div>
+        <p class="lead">Scored leads flow into a shared pipeline and are assigned to the right rep. Role-scoped by design.</p>
+        <ul class="ticks">
+          <li><b>Board</b> — Lead pool → Sent → Followed → Replied → Won.</li>
+          <li><b>Manager</b> sees the whole desk; <b>each rep</b> sees only their assigned leads.</li>
+          <li><b>Sign-in roles</b> — Manager (admin) · Rep (Nadia, brands) · Rep (Sipho, agencies).</li>
+        </ul>
+      </div>
+      <div class="mock">
+        <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">Pipeline · manager view</span></div>
+        <div class="mockbody">
+          <div class="funnel">
+            <div class="fn p"><div class="c">31</div><div class="k">Lead pool</div></div>
+            <div class="fn s"><div class="c">18</div><div class="k">Sent</div></div>
+            <div class="fn f"><div class="c">12</div><div class="k">Followed</div></div>
+            <div class="fn r"><div class="c">7</div><div class="k">Replied</div></div>
+            <div class="fn w"><div class="c">5</div><div class="k">Won</div></div>
+          </div>
+          <table class="mt" style="margin-top:12px">
+            <tr><td class="cl">Mercedes-Benz</td><td><span class="badge b-rep">Nadia</span></td><td class="num val">R 950k</td></tr>
+            <tr><td class="cl">Ogilvy ZA</td><td><span class="badge b-rep">Sipho</span></td><td class="num val">R 420k</td></tr>
+            <tr><td class="cl">MultiChoice</td><td><span class="badge b-won">Won</span></td><td class="num val">R 500k</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · LEADS SHOUT -->
+  <section class="slide">
+    <div class="kick">Build 03 · monthly intake</div>
+    <h2>The Leads Shout — and one-click sync.</h2>
+    <div class="split">
+      <div>
+        <p class="lead">The monthly shout, captured in the Proposal Tracker. Three ways in — plus a direct pull from Lead OS.</p>
+        <ul class="ticks">
+          <li><b>Import the CG&nbsp;LEADS sheet</b> — pick the <b>.xlsx</b> straight from Drive/SharePoint; the title row is skipped, clients land tagged to the month.</li>
+          <li><b>Paste or type</b> a list of target clients.</li>
+          <li><b>⚡ Sync from Lead OS</b> — pull the engine's scored leads straight into the Lead pool (dedupes by client automatically).</li>
+        </ul>
       </div>
       <div class="mock">
         <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">Leads Shout · July 2026</span></div>
@@ -265,30 +384,88 @@
           <div class="stats" style="grid-template-columns:repeat(3,1fr)">
             <div class="stat"><div class="n">23</div><div class="l">Leads this month</div></div>
             <div class="stat"><div class="n g">R 1.03m</div><div class="l">Est. value</div></div>
-            <div class="stat"><div class="n">4</div><div class="l">Converted</div></div>
+            <div class="stat"><div class="n gr">⚡</div><div class="l">Synced from Lead OS</div></div>
           </div>
           <table class="mt">
-            <tr><td><span class="cl">Kalahari Group</span></td><td><span class="badge b-lead">CG LEADS</span></td><td class="num muted">SA Rugby Mag</td></tr>
-            <tr><td><span class="cl">Discovery Health</span></td><td><span class="badge b-lead">CG LEADS</span></td><td class="num muted">Compleat Golfer</td></tr>
-            <tr><td><span class="cl">BMW SA</span></td><td><span class="badge b-lead">shout</span></td><td class="num muted">Car Magazine</td></tr>
-            <tr><td><span class="cl">Sportsmans W.</span></td><td><span class="badge b-lead">CG LEADS</span></td><td class="num muted">SA Rugby Mag</td></tr>
+            <tr><td class="cl">Kalahari Group</td><td><span class="badge b-lead">CG LEADS</span></td><td class="num muted">SA Rugby Mag</td></tr>
+            <tr><td class="cl">Discovery Health</td><td><span class="badge b-lead">Lead OS ⚡</span></td><td class="num muted">Compleat Golfer</td></tr>
+            <tr><td class="cl">BMW SA</td><td><span class="badge b-lead">shout</span></td><td class="num muted">CAR Magazine</td></tr>
           </table>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 6 · PROPOSAL TRACKER -->
+  <!-- 9 · PROPOSAL STUDIO -->
   <section class="slide">
-    <div class="kick">02 · The pipeline</div>
+    <div class="kick">Build 04 · the proposal / presentation generator</div>
+    <h2>Proposal Studio — the deck writes itself.</h2>
+    <div class="split">
+      <div>
+        <p class="lead">Open a lead → <b class="cream">✍️ Generate proposal</b> → a branded deck in the Habari house style, ready in two minutes. Same look as the master deck, per client.</p>
+        <ul class="ticks">
+          <li><b>Rate-card library</b> — real 2026 card rates autofill (Compleat Golfer DPS R59k, Full Page R29k…); saving % + totals update live.</li>
+          <li><b>Auto-branding</b> — client × publication logos load automatically for known brands.</li>
+          <li><b>Media packs</b> — SA&nbsp;Rugby&nbsp;Mag auto-fills audience stats, a Springbok hero cover, a live “this week” headlines panel, an embedded YouTube short, and a Dromex proof strip.</li>
+          <li><b>⬇ PDF</b> (landscape deck) &amp; <b>⬇ PowerPoint</b> (fully editable, logos + images embedded). Nothing auto-sends.</li>
+        </ul>
+      </div>
+      <div class="studio">
+        <div class="cover">
+          <div class="s">Habari Media · SA Rugby Mag</div>
+          <div class="t">Mercedes-Benz — 2026 Campaign Proposal</div>
+        </div>
+        <div class="body">
+          <div class="kv"><div class="k">Audience</div><div class="v">54.6M pageviews · 4.5M users</div></div>
+          <div class="kv"><div class="k">Social</div><div class="v">1.63M followers</div></div>
+          <div class="kv"><div class="k">Package (special)</div><div class="v g">R 720 000</div></div>
+          <div class="kv"><div class="k">Card value</div><div class="v">R 980 000 · save 27%</div></div>
+        </div>
+        <div style="padding:0 16px 14px;display:flex;gap:8px">
+          <span class="prize">⬇ PDF</span><span class="prize">⬇ PowerPoint</span><span class="prize" style="color:var(--muted);border-color:var(--line);background:var(--panel2)">💾 Save draft</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · LEAD CLASSES + REBOOKS -->
+  <section class="slide">
+    <div class="kick">Build 05 · never lose a flight</div>
+    <h2>Lead classes &amp; rebooks.</h2>
+    <div class="cards c2">
+      <div class="card">
+        <h3>Short-term vs long-term</h3>
+        <p>Every lead is classed. It flows straight into the proposal.</p>
+        <ul>
+          <li><span class="badge b-st">ST</span> buys monthly / bi-monthly · single-flight proposal · quicker to close</li>
+          <li><span class="badge b-lt">LT</span> bigger budget · books 3 / 6 / 12 months · multi-month proposal prefilled</li>
+          <li>Big advertisers auto-classed long-term</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>🔁 Rebooks — ran &amp; ended</h3>
+        <p>A flight that ran (e.g. July) and has nothing booked next becomes a rebook — still that rep's to re-close.</p>
+        <ul>
+          <li>Rep has <b>2 months</b> to re-close · Due / Lapsed views</li>
+          <li>Not closed in time → <b>lapses</b> → manager reassigns to a <b>different rep</b></li>
+          <li>“Different voice, different day brings more deals.”</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">Rebooks are opened from the lead drawer (＋ Booking ran → e.g. “JULY 2026”). Signed bookings via Integrations open the rebook clock automatically.</p>
+  </section>
+
+  <!-- 11 · PROPOSAL TRACKER -->
+  <section class="slide">
+    <div class="kick">Build 06 · the pipeline of record</div>
     <h2>The Proposal Tracker.</h2>
     <div class="split">
       <div>
-        <p class="lead">One screen for the sales cycle. Send a proposal, get a follow-up flag, generate the signed Habari agreement — nothing leaves without the rep.</p>
+        <p class="lead">Where every proposal lives — follow-up flags, roll-overs, and a one-click signed agreement.</p>
         <ul class="ticks">
           <li><b>Follow-up flags</b> five working days out, colour-coded when overdue.</li>
-          <li><b>One-click agreement</b> + pre-filled email to the client.</li>
-          <li><b>Live stats</b> — open pipeline, hit rate, won value.</li>
+          <li><b>Roll-overs</b> — carry a client to a future month <b>with evidence</b> instead of counting it lost.</li>
+          <li><b>One-click agreement</b> + pre-filled email; nothing sends without the rep.</li>
         </ul>
       </div>
       <div class="mock">
@@ -301,53 +478,25 @@
             <div class="stat"><div class="n g">R 1.16m</div><div class="l">Pipeline</div></div>
           </div>
           <table class="mt">
-            <tr><td><span class="cl">Mercedes-Benz</span><br><span class="muted" style="font-size:11px">Masters Cup</span></td><td class="val">R 950 000</td><td><span class="badge b-sent">Sent</span></td></tr>
-            <tr><td><span class="cl">Momentum Insure</span><br><span class="muted" style="font-size:11px">Compleat Golfer</span></td><td class="val">R 37 000</td><td><span class="badge b-follow">Follow-up</span></td></tr>
-            <tr><td><span class="cl">Dromex / Metamedia</span><br><span class="muted" style="font-size:11px">SA Rugby Mag</span></td><td class="val">R 65 000</td><td><span class="badge b-won">Won</span></td></tr>
+            <tr><td class="cl">Momentum Corporate <span class="badge b-rep">→ AUG</span><br><span class="muted" style="font-size:10px">rolled · evidence on file</span></td><td class="val">R 52k</td></tr>
+            <tr><td class="cl">Dromex / Metamedia<br><span class="muted" style="font-size:10px">SA Rugby Mag</span></td><td><span class="badge b-won">Won</span></td></tr>
           </table>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 7 · ROLL-OVERS -->
+  <!-- 12 · COMPETITION -->
   <section class="slide">
-    <div class="kick">Never lose a live client</div>
-    <h2>Roll-overs — carried forward, with evidence.</h2>
-    <div class="split">
-      <div>
-        <p class="lead">A client that won't close this month isn't a loss if it's genuinely coming back.
-        The rep rolls it to a named month and attaches the proof.</p>
-        <ul class="ticks">
-          <li><b>Evidence required</b> — signed schedule, confirmed budget, email on file.</li>
-          <li><b>Carries forward</b> as a lead for the month named, not a “Lost”.</li>
-          <li><b>Manager sees it</b> — every roll-over and its evidence on the dashboard.</li>
-        </ul>
-      </div>
-      <div class="mock">
-        <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">Roll-overs · evidence supplied</span></div>
-        <div class="mockbody">
-          <table class="mt">
-            <tr><th>Client</th><th>Rolled</th><th class="num">Value</th></tr>
-            <tr><td><span class="cl">Momentum Corporate</span> <span class="badge b-roll">→ AUG</span><br><span class="muted" style="font-size:11px">Sipho Dlamini · Getaway</span></td><td class="muted" style="font-size:11px">JUL → AUG</td><td class="val">R 52 000</td></tr>
-          </table>
-          <div class="loopnote" style="margin-top:14px;font-size:12.5px">📎 <b>Evidence:</b> Signed Q3 media schedule received; budget confirmed for next month. Email 2026-07-10 on file.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8 · COMPETITION -->
-  <section class="slide">
-    <div class="kick">03 · Motivation</div>
+    <div class="kick">Build 07 · motivation</div>
     <h2>Sales competition — best closing ratio.</h2>
-    <p class="lead">Every closed proposal counts. <b class="cream">Closing ratio = Won ÷ (Won + Lost)</b>. Top qualifying rep each week and month takes the prize — live on every rep's screen.</p>
+    <p class="lead"><b class="cream">Closing ratio = Won ÷ (Won + Lost).</b> Top qualifying rep each week and month takes the prize — live on every rep's screen.</p>
     <div class="cards c2">
       <div class="mock">
         <div class="mockbar"><span class="dot" style="background:#5aa874"></span><span class="u">Weekly · Week of 13–19 Jul</span></div>
-        <div class="mockbody" style="padding:14px 16px">
+        <div class="mockbody" style="padding:13px 15px">
           <div class="prize">🎁 R500 Sportsman’s Warehouse voucher</div>
-          <table class="mt" style="margin-top:10px">
+          <table class="mt" style="margin-top:9px">
             <tr><td><span class="rk g">🏆</span></td><td class="cl">Nadia Petersen</td><td class="num"><span class="ratio hi">100%</span></td><td class="num muted">2W·0L</td></tr>
             <tr><td><span class="rk">2</span></td><td class="cl">Dreyer Hoffman</td><td class="num"><span class="ratio hi">50%</span></td><td class="num muted">1W·1L</td></tr>
             <tr><td><span class="rk">3</span></td><td class="cl">Sipho Dlamini</td><td class="num"><span class="ratio lo">0%</span></td><td class="num muted">0W·1L</td></tr>
@@ -356,54 +505,61 @@
       </div>
       <div class="mock">
         <div class="mockbar"><span class="dot" style="background:#d4a24c"></span><span class="u">Monthly · July 2026</span></div>
-        <div class="mockbody" style="padding:14px 16px">
+        <div class="mockbody" style="padding:13px 15px">
           <div class="prize">🎁 R2,000 + Top Closer trophy</div>
-          <table class="mt" style="margin-top:10px">
-            <tr><td><span class="rk g">🏆</span></td><td class="cl">Nadia Petersen</td><td class="num"><span class="ratio hi">100%</span></td><td class="num val">R 137 000</td></tr>
-            <tr><td><span class="rk">2</span></td><td class="cl">Sipho Dlamini</td><td class="num"><span class="ratio mid">50%</span></td><td class="num val">R 70 000</td></tr>
-            <tr><td><span class="rk">3</span></td><td class="cl">Dreyer Hoffman</td><td class="num"><span class="ratio mid">50%</span></td><td class="num val">R 62 000</td></tr>
+          <table class="mt" style="margin-top:9px">
+            <tr><td><span class="rk g">🏆</span></td><td class="cl">Nadia Petersen</td><td class="num"><span class="ratio hi">100%</span></td><td class="num val">R 137k</td></tr>
+            <tr><td><span class="rk">2</span></td><td class="cl">Sipho Dlamini</td><td class="num"><span class="ratio mid">50%</span></td><td class="num val">R 70k</td></tr>
+            <tr><td><span class="rk">3</span></td><td class="cl">Dreyer Hoffman</td><td class="num"><span class="ratio mid">50%</span></td><td class="num val">R 62k</td></tr>
           </table>
         </div>
       </div>
     </div>
-    <p class="note">Manager sets the prizes and a “qualify at N decided” rule — so a lone 1-for-1 = 100% can't grab it. Ranked by ratio, then wins, then won value.</p>
+    <p class="note">Manager sets the prizes and a “qualify at N decided” rule, so a lone 1-for-1 = 100% can't grab it.</p>
   </section>
 
-  <!-- 9 · DASHBOARD -->
+  <!-- 13 · ADMIN OVERVIEW / FORECAST -->
   <section class="slide">
-    <div class="kick">04 · Oversight</div>
-    <h2>The manager dashboard — the whole desk.</h2>
-    <div class="mock">
-      <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">Sales Dashboard · reads live from the tracker</span></div>
-      <div class="mockbody">
-        <div class="stats" style="grid-template-columns:repeat(6,1fr)">
-          <div class="stat"><div class="n">4</div><div class="l">Leads</div></div>
-          <div class="stat"><div class="n g">R 1.16m</div><div class="l">Open pipeline</div></div>
-          <div class="stat"><div class="n g">R 334k</div><div class="l">Booked</div></div>
-          <div class="stat"><div class="n">67%</div><div class="l">Hit rate</div></div>
-          <div class="stat"><div class="n a">4</div><div class="l">Flagged</div></div>
-          <div class="stat"><div class="n">1</div><div class="l">Rolled over</div></div>
-        </div>
-        <div class="funnel">
-          <div class="fn"><div class="c">4</div><div class="k">Leads</div></div>
-          <div class="fn s"><div class="c">3</div><div class="k">Sent</div></div>
-          <div class="fn f"><div class="c">1</div><div class="k">Followed</div></div>
-          <div class="fn r"><div class="c">1</div><div class="k">Replied</div></div>
-          <div class="fn w"><div class="c">6</div><div class="k">Won</div></div>
-          <div class="fn l"><div class="c">3</div><div class="k">Lost</div></div>
-        </div>
+    <div class="kick">Build 08 · oversight</div>
+    <h2>Admin Overview — the number, live.</h2>
+    <div class="metrics" style="grid-template-columns:repeat(4,1fr)">
+      <div class="metric"><div class="n g">R 18.5m</div><div class="l">Pipeline</div></div>
+      <div class="metric"><div class="n g">R 4.27m</div><div class="l">Weighted forecast</div></div>
+      <div class="metric"><div class="n g">R 800k</div><div class="l">Won</div></div>
+      <div class="metric"><div class="n">73</div><div class="l">Live leads</div></div>
+    </div>
+    <div class="mock" style="margin-top:16px">
+      <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">Rep leaderboard · manager</span></div>
+      <div class="mockbody" style="padding:6px 4px">
+        <table class="mt">
+          <tr><th>Rep</th><th class="num">Deals</th><th class="num">Pipeline</th><th class="num">Weighted</th><th class="num">Won</th><th class="num">Rebooks due</th><th class="num">Closing %</th></tr>
+          <tr><td class="cl">Nadia (brands)</td><td class="num">21</td><td class="num val">R 9.8m</td><td class="num">R 2.4m</td><td class="num">R 500k</td><td class="num">3</td><td class="num"><span class="ratio hi">58%</span></td></tr>
+          <tr><td class="cl">Sipho (agencies)</td><td class="num">18</td><td class="num val">R 6.1m</td><td class="num">R 1.4m</td><td class="num">R 300k</td><td class="num">2</td><td class="num"><span class="ratio mid">41%</span></td></tr>
+        </table>
       </div>
     </div>
-    <p class="note">Every rep vs target, hit rate by title &amp; division, an escalation ladder for stale leads (Manager → Sales Director), client/agency spend — and the competition, all in one view. Light access gate; host behind a login for production.</p>
+    <p class="note">One screen: totals, the short- vs long-term mix, rebooks (running / due / lapsed), the rep leaderboard, and pipeline by stage — all live from your own data.</p>
   </section>
 
-  <!-- 10 · UPSELL -->
+  <!-- 14 · INTEGRATIONS + COMPLIANCE -->
   <section class="slide">
-    <div class="kick">Built into every report</div>
+    <div class="kick">Build 09 · integrations &amp; compliance</div>
+    <h2>Signed bookings in, Outlook matched, POPIA by design.</h2>
+    <div class="cards c3">
+      <div class="card"><div class="icon">🧾</div><h3>Booking intake</h3><p>Log a signed booking (client, rep, publication, period, value, class) — it assigns the lead, marks it <b>won</b>, and starts the rebook clock. CSV import + secure webhook for e-sign tools.</p></div>
+      <div class="card blue"><div class="icon">📧</div><h3>Outlook / M365</h3><p>Each rep connects their own mailbox (Mail.Read). The system matches emails to leads and logs replies as touches — <b>it never sends</b>.</p></div>
+      <div class="card green"><div class="icon">🛡️</div><h3>POPIA by design</h3><p>Voice-first — reps call; the system never emails a bought list. Mailbox access needs the rep's consent + <b>Dreyer / counsel sign-off</b>.</p></div>
+    </div>
+    <p class="note">Booking webhook enabled with a <b>WEBHOOK_KEY</b>; Outlook via a free Azure AD app (Mail.Read). No auto-send anywhere in the system.</p>
+  </section>
+
+  <!-- 15 · R25K SPECIAL -->
+  <section class="slide">
+    <div class="kick">The upsell built into every report</div>
     <h2>The R25,000 Network Special.</h2>
     <div class="special">
       <span class="tag">★ bookable on the report · ~75% off rate card</span>
-      <h2 style="font-size:clamp(22px,3.4vw,34px);margin-bottom:6px">One million impressions across <span class="gold">all five titles.</span></h2>
+      <h2 style="font-size:clamp(20px,3.2vw,32px);margin-bottom:4px">One million impressions across <span class="gold">all five titles.</span></h2>
       <div class="titles">
         <div class="tchip"><div class="nm">SA Rugby Mag</div><div class="im">200k</div></div>
         <div class="tchip"><div class="nm">Getaway</div><div class="im">200k</div></div>
@@ -413,47 +569,49 @@
       </div>
       <div class="price"><span class="strike">R100,000</span><span class="now">R25,000</span><span class="ex">ex VAT · 1,000,000 impressions · flexible 1-week / 2-week / 1-month flight</span></div>
     </div>
-    <p class="note"><b>Combined reach ~20.4M.</b> The upsell that turns a single-title booking into a full-network flight — claimed straight from any generated campaign report. Figures indicative; confirmed on the official rate card.</p>
+    <p class="note"><b>Combined reach ~20.4M.</b> Turns a single-title booking into a full-network flight — claimed straight from any generated campaign report. Figures indicative; confirmed on the official rate card.</p>
   </section>
 
-  <!-- 11 · WHAT IT RUNS ON -->
+  <!-- 16 · RUNS AT R0 -->
   <section class="slide">
     <div class="kick">What it runs on</div>
-    <h2>Live today — with a clear path to scale.</h2>
-    <div class="cards c2">
-      <div class="card green">
-        <h3>Today · zero setup</h3>
-        <ul>
-          <li>Pure static site — deploys to Netlify in one step</li>
-          <li>No credentials in the page; imports the file you pick</li>
-          <li>Tracker + dashboard share one live store</li>
-          <li>Works on any device, online or off</li>
+    <h2>Owned. R0. Deploys free.</h2>
+    <div class="split">
+      <div>
+        <span class="r0">● Zero SaaS · zero subscription</span>
+        <ul class="ticks" style="margin-top:18px">
+          <li><b>One Node app</b> serves everything — Lead OS, Studio, Tracker, Dashboard.</li>
+          <li><b>Node built-ins only</b> — optional Postgres for production scale.</li>
+          <li><b>Free deploy</b> — a bundled <b>render.yaml</b> puts it on a public URL.</li>
+          <li><b>Change without code</b> — rates, logos, audience stats live in editable JSON.</li>
         </ul>
       </div>
-      <div class="card blue">
-        <h3>Next · multi-user product</h3>
-        <ul>
-          <li>Shared backend (Supabase/Postgres) — one live pipeline for the whole desk</li>
-          <li>Auth &amp; roles — reps vs managers</li>
-          <li>Live CG&nbsp;LEADS sync via Microsoft Graph / Google Drive</li>
-          <li>Scheduled follow-up reminders &amp; SLA timers</li>
-        </ul>
+      <div class="mock">
+        <div class="mockbar"><span class="dot" style="background:#cf5b5b"></span><span class="dot" style="background:#d49a3c"></span><span class="dot" style="background:#5aa874"></span><span class="u">one app · localhost:8787</span></div>
+        <div class="mockbody" style="font-family:var(--serif);font-size:13px;line-height:1.9;color:var(--txt)">
+          /login &nbsp;<span class="muted">— sign in (admin / 1234)</span><br>
+          /app#overview &nbsp;<span class="muted">— Admin Overview</span><br>
+          /proposal &nbsp;<span class="muted">— Proposal Studio</span><br>
+          /app#rebooks &nbsp;<span class="muted">— Rebooks</span><br>
+          /app#integrations &nbsp;<span class="muted">— Integrations</span><br>
+          /tracker &nbsp;<span class="muted">— Proposal Tracker</span><br>
+          /manager &nbsp;<span class="muted">— Manager Dashboard</span>
+        </div>
       </div>
     </div>
-    <p class="note">None of the “next” is required to use it now — it's the on-ramp from a working desk tool to an always-in-sync product.</p>
   </section>
 
-  <!-- 12 · CTA -->
+  <!-- 17 · CTA -->
   <section class="slide cover">
     <div class="kick">Where to next</div>
-    <h1>A 15-minute walk-through,<br>then <span class="gold">first booking this week.</span></h1>
+    <h1>A 15-minute live walk-through,<br>then <span class="gold">first booking this week.</span></h1>
     <div class="steps4">
-      <div class="s4"><div class="n">1</div><h4>Walk it live</h4><p>The team sees all four tools, live, and asks questions.</p></div>
-      <div class="s4"><div class="n">2</div><h4>Load a real shout</h4><p>Import an actual CG&nbsp;LEADS sheet and work the pipeline.</p></div>
-      <div class="s4"><div class="n">3</div><h4>Set the prizes</h4><p>Manager picks the weekly &amp; monthly competition prizes.</p></div>
-      <div class="s4"><div class="n">4</div><h4>Go live</h4><p>Deploy the desk; first tracked booking within the week.</p></div>
+      <div class="s4"><div class="n">1</div><h4>Walk it live</h4><p>Sign in as manager (admin/1234) — see the R18.5m pipeline &amp; forecast.</p></div>
+      <div class="s4"><div class="n">2</div><h4>Source &amp; sync</h4><p>Load top advertisers, sync a real shout into the tracker.</p></div>
+      <div class="s4"><div class="n">3</div><h4>Generate a deck</h4><p>Open a lead → Proposal Studio → download a branded PDF/PPTX.</p></div>
+      <div class="s4"><div class="n">4</div><h4>Go live free</h4><p>Deploy on render.yaml; first tracked booking within the week.</p></div>
     </div>
-    <div class="presenter">Habari Media · Sales OS &nbsp;·&nbsp; <b>habarimedia.com</b> &nbsp;·&nbsp; Confidential — do not forward outside Habari.</div>
+    <div class="presenter">Habari Media · Sales OS &nbsp;·&nbsp; owned engine, R0 &nbsp;·&nbsp; <b>habarimedia.com</b> &nbsp;·&nbsp; Confidential — do not forward outside Habari.</div>
   </section>
 
 </div>
@@ -467,19 +625,18 @@
     slides.forEach((s,x)=>s.classList.toggle('active',x===i));
     document.getElementById('cur').textContent=i+1;
     document.getElementById('progress').style.width=((i+1)/slides.length*100)+'%';
-    // reset scroll of the shown slide
     slides[i].scrollTop=0;
   }
   function go(d){show(i+d);}
   window.go=go;
-  document.addEventListener('keydown',e=>{
-    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(1);}
-    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(-1);}
-    else if(e.key==='Home'){show(0);}
-    else if(e.key==='End'){show(slides.length-1);}
+  function onKey(e){
+    if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(1);}
+    else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();go(-1);}
+    else if(e.key==='Home'){show(0);} else if(e.key==='End'){show(slides.length-1);}
     else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen&&document.exitFullscreen();}
     else if(e.key==='p'||e.key==='P'){window.print();}
-  });
+  }
+  document.addEventListener('keydown',onKey);
   // dedicated edge zones
   document.getElementById('edgePrev').addEventListener('click',ev=>{ev.stopPropagation();go(-1);});
   document.getElementById('edgeNext').addEventListener('click',ev=>{ev.stopPropagation();go(1);});

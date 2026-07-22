@@ -193,6 +193,11 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
           <div class="note" id="prepnote"></div>
         </div>
       </div>
+      <div class="panel" id="goldpanel" style="border-color:rgba(216,121,79,.35)">
+        <h2>Gold (Au) reading — read this before acting ⚠</h2>
+        <div class="ph">The XL2 reports an Au column, but tungsten samples are a classic false-positive trap.</div>
+        <div id="goldbody"></div>
+      </div>
       <div class="panel">
         <h2>Best intercepts <span class="tag">top WO₃ · prepared</span></h2>
         <div class="ph">Highest-grade prepared readings — your priority zones for grade control and follow-up.</div>
@@ -286,6 +291,7 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
         <span class="pill" data-f="qc">QA/QC</span>
       </div>
       <div class="tw"><table id="regtbl"></table></div>
+      <div class="mini" id="regfoot" style="margin-top:10px"></div>
     </section>
 
     <!-- SAMPLES -->
@@ -330,9 +336,9 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
 <script>
 /* ---------- constants & domain math ---------- */
 var W_TO_WO3 = 1.2611;                 // WO3 231.84 / W 183.84 (231.837/183.84 = 1.26107)
-var STORE = 'zam_tungsten_xrf_v1';
+var STORE = 'zam_tungsten_xrf_v2';
 var SETT  = 'zam_tungsten_xrf_settings_v1';
-var ELEMENTS = ['W','Ta','Hf','Sn','Nb','Au','Ti','Fe','Mn','Cu','Zn','As','Si','Ca','S','Bal'];
+var ELEMENTS = ['W','Au','Sn','Fe','Mn','Cu','Zn','As','Pb','Bi','Sr','Zr','Al','Si','Cl','Ca','S','Ti','Bal'];
 var settings = loadSettings();
 
 function loadSettings(){ try{return JSON.parse(localStorage.getItem(SETT))||{}}catch(e){return{}} }
@@ -341,6 +347,10 @@ var CONC_SPEC = 65;                           // %WO3 saleable concentrate
 
 function wo3(wPct){ return (wPct==null||isNaN(wPct))?null:wPct*W_TO_WO3; }
 function mtu(wo3Pct){ return wo3Pct; }        // 1% WO3 = 1 MTU per tonne
+function auPpm(auPct){ return (auPct==null||isNaN(auPct))?null:auPct*10000; } // Au %→ppm (=g/t)
+// Au Lα (9.713 keV) is only ~40 eV from W Lβ (9.672 keV) — unresolvable on a handheld.
+// So ANY apparent Au in a W-rich sample is a likely tungsten artifact, not real gold.
+function auSuspect(r){ var au=r.el&&r.el.Au?r.el.Au.v:null, w=r.el&&r.el.W?r.el.W.v:null; return au!=null&&w!=null&&w>=0.5; }
 
 function tier(wo3Pct){
   if(wo3Pct==null) return {k:'nd',lbl:'—',cls:'b-below'};
@@ -384,18 +394,20 @@ var DATA = load();
 if(!DATA){ DATA = seed(); save(DATA); }
 
 function seed(){
-  // one real reading from the Niton screenshot (#1655) + a few illustrative rows
+  // Real readings — Niton XL2-108297 export, 22 Jul 2026 (workbook XL2108297S).
+  // The 0.24 s misfire (reading 1648) and the spreadsheet average row are excluded.
   return [
-    mk({readingNo:'1655',sampleId:'TR01-005',site:'Kanyemba block',feature:'Trench 01',from:'4',to:'5',type:'Channel / trench',prep:'crushed',operator:'JD',count:'32.4',dateTime:'2026-07-20T09:12',
-        el:{W:[6.04,0.079],Au:[0.021,0.004],Si:[18.08,2.31],Ti:[0.18,0.11],Bal:[71.19,28.10]},notes:'Wolframite specks in quartz vein'}),
-    mk({readingNo:'1656',sampleId:'TR01-005',site:'Kanyemba block',feature:'Trench 01',from:'4',to:'5',type:'Channel / trench',prep:'insitu',operator:'JD',count:'20.0',dateTime:'2026-07-20T09:02',
-        el:{W:[3.10,0.21],Si:[24.0,3.1],Bal:[70.2,30]},notes:'Same interval, read on rock face before crushing'}),
-    mk({readingNo:'1657',sampleId:'TR01-008',site:'Kanyemba block',feature:'Trench 01',from:'7',to:'8',type:'Channel / trench',prep:'pulv',operator:'JD',count:'40.0',dateTime:'2026-07-20T10:20',
-        el:{W:[0.62,0.03],Sn:[0.04,0.01],Si:[31,2],Bal:[66,20]},notes:''}),
-    mk({readingNo:'1658',sampleId:'TR02-002',site:'Kanyemba block',feature:'Trench 02',from:'1',to:'2',type:'Channel / trench',prep:'crushed',operator:'ML',count:'35.0',dateTime:'2026-07-21T08:41',
-        el:{W:[0.07,0.02],Si:[40,2],Bal:[58,15]},notes:'Barren-looking'}),
-    mk({readingNo:'1659',sampleId:'STK-A',site:'ROM pad',feature:'Stockpile A',from:'',to:'',type:'Stockpile',prep:'crushed',operator:'ML',count:'35.0',dateTime:'2026-07-21T14:03',
-        el:{W:[1.85,0.06],Si:[22,2],Bal:[68,18]},notes:'Blend candidate'})
+    mk({readingNo:'1642',sampleId:'W-CRUSHED-1',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:50',el:{W:[4.439,0.057],Au:[0.012,0.003],Sn:[0.309,0.022],Fe:[1.944,0.071],Mn:[0.103,0.018],Cu:[0.017,0.004],Sr:[0.035,0.002],Zr:[0.004,0.003],Al:[1.089,0.084],Si:[13.883,0.88],Cl:[0.19,0.015],Bal:[77.924,0.429]}}),
+    mk({readingNo:'1643',sampleId:'W-CRUSHED-1',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:52',el:{W:[1.48,0.026],Au:[0.004,0.002],Sn:[0.367,0.027],Fe:[2.042,0.084],Mn:[0.117,0.019],Cu:[0.013,0.004],Sr:[0.041,0.003],Zr:[0.004,0.002],Al:[1.134,0.089],Si:[13.828,0.932],Cl:[0.146,0.013],Bal:[80.798,0.412]}}),
+    mk({readingNo:'1644',sampleId:'W-CRUSHED-1',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:54',el:{W:[4.963,0.057],Au:[0.014,0.003],Sn:[0.374,0.024],Fe:[2.045,0.067],Mn:[0.098,0.016],Cu:[0.013,0.003],Pb:[0.002,0.001],Sr:[0.038,0.002],Zr:[0.004,0.002],Al:[0.863,0.074],Si:[11.796,0.717],Cl:[0.101,0.01],Bal:[79.625,0.356]}}),
+    mk({readingNo:'1645',sampleId:'W-CRUSHED-2',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:57',el:{W:[3.206,0.043],Au:[0.011,0.003],Sn:[0.383,0.027],Fe:[3.708,0.116],Mn:[0.06,0.014],Cu:[0.013,0.003],Pb:[0.003,0.001],Sr:[0.111,0.006],Zr:[0.015,0.003],Al:[1.807,0.097],Si:[16.217,0.994],Cl:[0.069,0.007],Bal:[74.351,0.482]}}),
+    mk({readingNo:'1646',sampleId:'W-CRUSHED-2',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:59',el:{W:[2.358,0.032],Au:[0.005,0.002],Sn:[0.427,0.027],Fe:[3.737,0.111],Mn:[0.067,0.014],Cu:[0.012,0.003],Pb:[0.003,0.001],Sr:[0.112,0.006],Zr:[0.014,0.003],Al:[1.788,0.1],Si:[16.121,0.898],Cl:[0.076,0.008],Bal:[75.216,0.46]}}),
+    mk({readingNo:'1647',sampleId:'W-CRUSHED-2',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'64.85',mode:'XL2-108297',dateTime:'2026-07-22T15:01',el:{W:[3.047,0.041],Au:[0.007,0.003],Sn:[0.416,0.027],Fe:[3.742,0.116],Mn:[0.068,0.016],Cu:[0.015,0.004],Pb:[0.002,0.001],Sr:[0.103,0.006],Zr:[0.014,0.003],Al:[1.798,0.098],Si:[16.042,0.928],Cl:[0.113,0.009],Bal:[74.562,0.511]}}),
+    mk({readingNo:'1649',sampleId:'W-CRUSHED-4',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:05',el:{W:[4.535,0.05],Au:[0.013,0.003],Sn:[0.068,0.008],Fe:[3.912,0.103],Mn:[0.032,0.012],Cu:[0.016,0.003],Pb:[0.003,0.001],Sr:[0.136,0.007],Zr:[0.006,0.003],Al:[1.122,0.067],Si:[13.827,0.712],Cl:[0.081,0.007],Bal:[76.002,0.414]}}),
+    mk({readingNo:'1650',sampleId:'W-CRUSHED-4',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:07',el:{W:[4.363,0.045],Au:[0.009,0.003],Sn:[0.078,0.008],Fe:[4.237,0.102],Mn:[0.038,0.012],Cu:[0.014,0.003],Pb:[0.003,0.001],Bi:[0.003,0.001],Sr:[0.14,0.006],Zr:[0.004,0.002],Al:[1.734,0.085],Si:[17.305,0.758],Cl:[0.095,0.007],Bal:[71.745,0.473]}}),
+    mk({readingNo:'1651',sampleId:'W-CRUSHED-4',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:09',el:{W:[6.569,0.065],Au:[0.021,0.004],Sn:[0.089,0.009],Fe:[4.29,0.1],Mn:[0.042,0.012],Cu:[0.013,0.003],Pb:[0.003,0.001],Sr:[0.139,0.007],Zr:[0.005,0.002],Al:[1.447,0.077],Si:[15.534,0.79],Cl:[0.077,0.007],Bal:[71.491,0.433]}}),
+    mk({readingNo:'1652',sampleId:'W-CRUSHED-5',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:13',el:{W:[6.025,0.064],Au:[0.017,0.004],Sn:[0.35,0.021],Fe:[2.049,0.064],Mn:[0.111,0.017],Cu:[0.018,0.004],Sr:[0.038,0.002],Zr:[0.007,0.003],Al:[1.294,0.092],Si:[14.475,0.775],Cl:[0.107,0.01],Bal:[75.447,0.439]}}),
+    mk({readingNo:'1653',sampleId:'W-CRUSHED-5',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:15',el:{W:[5.739,0.065],Au:[0.012,0.003],Sn:[0.262,0.018],Fe:[1.971,0.064],Mn:[0.101,0.016],Cu:[0.011,0.003],Sr:[0.028,0.002],Zr:[0.008,0.002],Al:[1.115,0.085],Si:[14.045,0.835],Cl:[0.13,0.011],Bal:[76.493,0.402]}})
   ];
 }
 function mk(o){
@@ -508,6 +520,21 @@ function renderDash(){
   var rawCt=DATA.filter(function(r){return isRaw(r.prep)}).length, pct=DATA.length?Math.round(100*rawCt/DATA.length):0;
   $('prepnote').innerHTML='<b>'+pct+'%</b> of readings are uncrushed. Crush &amp; re-read anything near an ore/waste boundary — in-situ readings under-read fine wolframite and carry large error.';
 
+  // gold panel — correlate apparent Au against W to expose the spectral overlap
+  var pairs=DATA.filter(function(r){var au=r.el&&r.el.Au?r.el.Au.v:null;return au!=null&&Wval(r)!=null});
+  var auVals=pairs.map(function(r){return r.el.Au.v});
+  var wForAu=pairs.map(Wval);
+  var meanAuPpm=auVals.length?auPpm(auVals.reduce(function(a,b){return a+b},0)/auVals.length):null;
+  var rWAu=pearson(wForAu,auVals);
+  var flagged=DATA.filter(auSuspect).length;
+  $('goldbody').innerHTML=
+    '<div class="deltacard">'+
+    '<div class="dc"><div class="k">Mean apparent Au</div><div class="v">'+(meanAuPpm==null?'—':fmt(meanAuPpm,0)+' <span class="mini">ppm</span>')+'</div></div>'+
+    '<div class="dc"><div class="k">Au↔W correlation</div><div class="v" style="color:'+(rWAu!=null&&rWAu>0.6?'var(--red)':'inherit')+'">'+(rWAu==null?'—':'r = '+fmt(rWAu,2))+'</div></div>'+
+    '<div class="dc"><div class="k">Readings flagged suspect</div><div class="v">'+flagged+' / '+DATA.length+'</div></div>'+
+    '</div>'+
+    '<div class="note"><b>Verdict for this dataset:</b> the apparent gold tracks tungsten at <b>r = '+(rWAu==null?'—':fmt(rWAu,2))+'</b> and averages <b>~'+(meanAuPpm==null?'—':fmt(meanAuPpm,0))+' ppm</b>. Gold Lα (9.71 keV) sits ~40 eV from the tungsten Lβ line (9.67 keV), which a handheld cannot separate — so this "gold" is almost certainly the tungsten peak bleeding into the Au channel, <b>not</b> real gold. A uniform ~100 g/t across every sample would also be geologically implausible; real gold is erratic (nugget effect), not proportional to W. <b>Treat Au here as unconfirmed. The only proof of gold is fire assay at a certified lab.</b></div>';
+
   // best intercepts
   var top=withW.slice().sort(function(a,b){return wo3(Wval(b))-wo3(Wval(a))}).slice(0,8);
   $('besttbl').innerHTML=
@@ -515,6 +542,14 @@ function renderDash(){
     (top.map(function(r){var g=wo3(Wval(r));var t=tier(g);var cf=confidence(Wval(r),Werr(r));
       return '<tr><td><b>'+esc(r.sampleId)+'</b></td><td class="mini">'+esc(r.feature||r.site)+'</td><td>'+prepBadge(r.prep)+'</td><td class="num">'+fmt(Wval(r),2)+'</td><td class="num">'+fmt(g,2)+'</td><td class="num">'+fmt(mtu(g),1)+'</td><td><span class="badge '+t.cls+'">'+t.lbl+'</span></td><td><span class="conf '+cf.cls+'">'+cf.lbl+'</span></td></tr>';
     }).join('')||'<tr><td colspan="8" class="empty">No W readings yet</td></tr>')+'</tbody>';
+}
+function pearson(x,y){
+  var n=x.length; if(n<3)return null;
+  var mx=x.reduce(function(a,b){return a+b},0)/n, my=y.reduce(function(a,b){return a+b},0)/n;
+  var sxy=0,sxx=0,syy=0;
+  for(var i=0;i<n;i++){var dx=x[i]-mx,dy=y[i]-my;sxy+=dx*dy;sxx+=dx*dx;syy+=dy*dy;}
+  if(sxx===0||syy===0)return null;
+  return sxy/Math.sqrt(sxx*syy);
 }
 function bar(lbl,fillCount,max,val){
   var w=Math.round(100*fillCount/max);
@@ -533,9 +568,10 @@ function renderRegister(){
     if(regFilter==='qc')return !!r.qc;
     return true;
   });
-  var head='<thead><tr><th>#</th><th>Sample</th><th>Feature / interval</th><th>Prep</th><th class="num">W %</th><th class="num">±2σ</th><th class="num">WO₃ %</th><th class="num">MTU/t</th><th>Tier</th><th>Conf.</th><th>QC</th><th>Date</th><th></th></tr></thead>';
+  var head='<thead><tr><th>#</th><th>Sample</th><th>Feature / interval</th><th>Prep</th><th class="num">W %</th><th class="num">±2σ</th><th class="num">WO₃ %</th><th class="num">MTU/t</th><th class="num">Au ppm*</th><th class="num">Sn %</th><th>Tier</th><th>Conf.</th><th>QC</th><th>Date</th><th></th></tr></thead>';
   var body=rows.map(function(r){
     var w=Wval(r),e=Werr(r),g=wo3(w),t=tier(g),cf=confidence(w,e);
+    var au=r.el&&r.el.Au?r.el.Au.v:null, sn=r.el&&r.el.Sn?r.el.Sn.v:null;
     var iv=(r.from!==''&&r.to!=='')?(r.from+'–'+r.to+' m'):'';
     return '<tr>'+
       '<td class="mono mini">'+esc(r.readingNo||'—')+'</td>'+
@@ -546,6 +582,8 @@ function renderRegister(){
       '<td class="num mini">'+(e==null?'—':fmt(e,3))+'</td>'+
       '<td class="num"><b>'+fmt(g,2)+'</b></td>'+
       '<td class="num">'+fmt(mtu(g),1)+'</td>'+
+      '<td class="num '+(auSuspect(r)?'':'')+'" style="color:'+(auSuspect(r)?'var(--red)':'inherit')+'">'+(au==null?'—':fmt(auPpm(au),0)+(auSuspect(r)?' ⚠':''))+'</td>'+
+      '<td class="num mini">'+(sn==null?'—':fmt(sn,2))+'</td>'+
       '<td><span class="badge '+t.cls+'">'+t.lbl+'</span></td>'+
       '<td><span class="conf '+cf.cls+'">'+cf.lbl+'</span>'+(interference(r)?' <span class="conf weak" title="High W with elevated Cu/Zn — W L-line overlap, confirm at lab">⚠</span>':'')+'</td>'+
       '<td class="mini">'+(r.qc?'<span class="tag">'+esc(r.qc)+'</span>':'')+'</td>'+
@@ -553,7 +591,8 @@ function renderRegister(){
       '<td><button class="btn sm gho" onclick="editReading(\''+r.id+'\')">edit</button> <button class="btn sm gho" onclick="delReading(\''+r.id+'\')">✕</button></td>'+
     '</tr>';
   }).join('');
-  $('regtbl').innerHTML=head+'<tbody>'+(body||'<tr><td colspan="13" class="empty"><div class="ic">▤</div>No readings match this filter</td></tr>')+'</tbody>';
+  $('regtbl').innerHTML=head+'<tbody>'+(body||'<tr><td colspan="15" class="empty"><div class="ic">▤</div>No readings match this filter</td></tr>')+'</tbody>';
+  $('regfoot').innerHTML='* <b>Au ppm</b> is the raw XRF number (1 ppm = 1 g/t). ⚠ = suspect: gold Lα overlaps the tungsten Lβ line, so apparent Au in a W-rich sample is likely a tungsten artifact — confirm by fire assay before treating as gold.';
 }
 
 /* ---------- samples & QA/QC ---------- */
@@ -742,6 +781,12 @@ function renderGuide(){
   '<li><b>Pressed pellet</b> — best practical pXRF repeatability. <b>Fused bead</b> (lab) is definitive.</li></ol>',
   '<p>This tool tags every reading <span class="prep raw">⚠ RAW</span> or <span class="prep prep-ok">✓ prepared</span> and keeps raw readings out of the grade averages. Read a face, then crush the same interval and re-read — the <b>Samples</b> tab shows the gap so you learn how far to trust field numbers.</p>',
   '<div class="note"><b>Tungsten spectral caution.</b> The XL2 cannot excite W K-lines, so it reads W on its <b>L-lines (~8.4 keV)</b> — a congested region overlapping <b>Zn Kα (8.64 keV) and Cu Kβ</b>. In Cu/Zn-bearing ore, apparent W can be inflated. The register flags high-W readings that also show elevated Cu/Zn with a ⚠ — always confirm those at the lab.</div>',
+  '<h3>Gold (Au) — do not trust the XRF number</h3>',
+  '<p>This is the single most important caveat in the whole dataset. <b>Gold Lα is at 9.713 keV; tungsten Lβ is at 9.672 keV</b> — about 40 eV apart, which no handheld detector can separate. In a tungsten-rich sample the strong W Lβ peak spills straight into the gold channel and the instrument reports <b>phantom gold roughly proportional to the tungsten grade</b>.</p>',
+  '<ul><li>In your 22 Jul batch the apparent Au correlates with W at <b>r ≈ 0.92</b> and averages <b>~114 ppm (≈114 g/t)</b> — a uniform bonanza grade across every sample, which is geologically impossible. That is the fingerprint of a spectral artifact, not gold.</li>',
+  '<li>Real free gold shows a violent <b>nugget effect</b> — wildly erratic spot-to-spot — never a smooth line with tungsten.</li>',
+  '<li>Handheld XRF also cannot see economic gold anyway: pay grades are ~1–10 g/t (0.0001–0.001 %), far below its detection limit.</li></ul>',
+  '<div class="note"><b>Gold policy:</b> the XL2 Au column is a <u>screening curiosity only</u> in W ore. The register shows it with a ⚠ and never uses it for grade. <b>Gold is proven only by fire assay</b> (± gravimetric/AAS finish) at a certified lab. If you want to know whether these samples carry gold, send a split for fire assay — do not act on the XRF Au figure.</div>',
 
   '<h3>3 · Sample labeling &amp; chain of custody</h3>',
   '<p>Label <b>before</b> anything else and keep the ID unique, sortable, zero-padded and space-free. A workable scheme:</p>',

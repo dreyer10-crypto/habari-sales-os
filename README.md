@@ -94,6 +94,13 @@ and is independent of the sales pipeline.
   and QA/QC tags (CRM / blank / duplicate / repeat). Cut-off grade is **configurable** (site-specific).
 - A **W L-line / Cu-Zn spectral-interference** ⚠ flag on high-W readings that also show elevated
   Cu/Zn — confirm those at the lab.
+- **Gold (Au) is not trusted.** Au Lα (9.71 keV) overlaps the tungsten Lβ line (9.67 keV), which a
+  handheld cannot resolve, so a W-rich sample reports phantom gold ∝ tungsten. The dashboard shows
+  the live Au↔W correlation and flags every suspect Au reading; gold is proven only by fire assay.
+  Multi-element (W, Au, Sn, Fe, Mn, Cu, Pb, Bi, Sr, Zr, Al, Si, Cl …) — the panel matches the XL2 export.
+
+The tool ships pre-loaded with the **real XL2-108297 batch of 22 Jul 2026** (11 crushed readings across
+four samples; the 0.24 s misfire is excluded). Clear site data or bump `zam_tungsten_xrf_v2` to reseed.
 
 **Data in / out**
 

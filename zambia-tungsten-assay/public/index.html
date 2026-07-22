@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Zambian Tungsten — XRF Assay Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<!-- Backend (optional): Supabase client + your config. Absent config.js = local mode. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js" onerror="window.__xrfNoConfig=1"></script>
+<style>
+:root{
+  --ink:#0c0c0e; --ink-2:#141417; --panel:#17171b; --panel-2:#1d1d22; --line:rgba(233,224,201,.12); --line-2:rgba(233,224,201,.2);
+  --gold:#C9A24B; --gold-soft:#e3c684; --cream:#F2EAD3; --muted:#9b9583; --muted-2:#a8a294; --green:#4fae84; --red:#d8794f; --amber:#e0b04a; --blue:#6ea8d8;
+  --display:"Fraunces",Georgia,serif; --body:"Hanken Grotesk",sans-serif; --mono:"JetBrains Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--cream);font-family:var(--body);-webkit-font-smoothing:antialiased;line-height:1.5;
+  background-image:radial-gradient(90% 50% at 100% 0%,rgba(201,162,75,.07),transparent 60%);min-height:100vh}
+a{color:inherit;text-decoration:none}
+.layout{display:flex;min-height:100vh}
+.side{width:250px;flex-shrink:0;background:var(--ink-2);border-right:1px solid var(--line);padding:26px 18px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.logo{display:flex;align-items:center;gap:11px;padding:4px 6px 20px;border-bottom:1px solid var(--line)}
+.logo .mk{width:40px;height:40px;border-radius:10px;background:linear-gradient(140deg,var(--gold),#9c7a2f);display:grid;place-items:center;color:#1a1408;font-family:var(--display);font-weight:700;font-size:15px}
+.logo .nm{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:-.01em;line-height:1.15}
+.logo .nm small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--muted-2);text-transform:uppercase;margin-top:3px;font-weight:600}
+.nav{margin-top:18px;display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;font-size:14px;font-weight:500;color:var(--muted-2);cursor:pointer;transition:.14s}
+.nav a .ic{width:18px;text-align:center;font-size:15px}
+.nav a:hover{color:var(--cream);background:var(--panel)}
+.nav a.on{color:var(--cream);background:var(--panel);box-shadow:inset 2px 0 0 var(--gold)}
+.side .foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.5}
+.side .foot b{color:var(--muted-2);font-weight:600}
+
+.main{flex:1;min-width:0;padding:30px 38px 70px;max-width:1320px}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:24px;flex-wrap:wrap}
+.topbar h1{font-family:var(--display);font-weight:600;font-size:27px;letter-spacing:-.01em}
+.topbar .sub{color:var(--muted-2);font-size:13.5px;margin-top:4px;max-width:640px}
+.view{display:none}.view.on{display:block}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:17px 17px 15px;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;inset:0 0 auto auto;width:60px;height:60px;background:radial-gradient(circle at top right,rgba(201,162,75,.16),transparent 70%)}
+.kpi .k{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted-2);font-weight:600}
+.kpi .n{font-family:var(--display);font-weight:600;font-size:29px;margin-top:8px;line-height:1}
+.kpi .n small{font-size:15px;color:var(--muted-2);font-family:var(--body);font-weight:600}
+.kpi .d{font-size:12px;color:var(--muted-2);margin-top:5px}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:20px}
+.panel h2{font-family:var(--display);font-weight:600;font-size:18px;margin-bottom:4px}
+.panel .ph{color:var(--muted-2);font-size:13px;margin-bottom:16px}
+.panel.hl{border-color:var(--line-2);background:linear-gradient(160deg,var(--panel),var(--ink-2))}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--body);font-weight:600;font-size:13.5px;border-radius:10px;padding:11px 17px;cursor:pointer;border:1px solid var(--line-2);background:var(--panel-2);color:var(--cream);transition:.15s}
+.btn:hover{border-color:var(--gold)}
+.btn.primary{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.btn.primary:hover{background:var(--gold-soft)}
+.btn.sm{padding:7px 12px;font-size:12px}
+.btn.gho{background:transparent}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+label.fld{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2);font-weight:600;margin-bottom:6px}
+input,select,textarea{width:100%;background:var(--ink);border:1px solid var(--line-2);border-radius:9px;padding:10px 11px;color:var(--cream);font-family:var(--body);font-size:14px;transition:.14s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+input::placeholder{color:var(--muted)}
+.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 16px}
+.form-grid .col2{grid-column:span 2}.form-grid .col4{grid-column:span 4}
+.hint{font-size:11.5px;color:var(--muted);margin-top:5px}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-2);text-align:left;padding:11px 12px;background:var(--ink-2);border-bottom:1px solid var(--line);white-space:nowrap;font-weight:600}
+td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--panel-2)}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+.mono{font-family:var(--mono)}
+
+.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.03em;padding:3px 8px;border-radius:20px;border:1px solid var(--line-2);text-transform:uppercase;white-space:nowrap}
+.b-below{color:var(--muted-2);border-color:var(--line-2)}
+.b-low{color:var(--blue);border-color:rgba(110,168,216,.4);background:rgba(110,168,216,.09)}
+.b-ore{color:var(--green);border-color:rgba(79,174,132,.4);background:rgba(79,174,132,.1)}
+.b-high{color:var(--gold-soft);border-color:rgba(201,162,75,.5);background:rgba(201,162,75,.13)}
+.b-vhigh{color:#f0c96b;border-color:rgba(240,201,107,.6);background:rgba(240,201,107,.18)}
+.b-conc{color:#1a1408;background:var(--gold);border-color:var(--gold)}
+.prep{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;border:1px solid var(--line-2)}
+.prep.raw{color:var(--red);border-color:rgba(216,121,79,.4);background:rgba(216,121,79,.09)}
+.prep.prep-ok{color:var(--green);border-color:rgba(79,174,132,.35);background:rgba(79,174,132,.08)}
+.conf{font-family:var(--mono);font-size:11px;font-weight:600}
+.conf.strong{color:var(--green)}.conf.ok{color:var(--gold-soft)}.conf.low{color:var(--amber)}.conf.weak{color:var(--red)}.conf.nd{color:var(--muted)}
+
+.pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.pill{font-family:var(--mono);font-size:11.5px;font-weight:600;padding:7px 13px;border-radius:20px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--muted-2);cursor:pointer;transition:.14s}
+.pill:hover{color:var(--cream)}
+.pill.on{color:#1a1408;background:var(--gold);border-color:var(--gold)}
+
+.bars{display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:130px 1fr 54px;align-items:center;gap:12px;font-size:12.5px}
+.bar .lbl{color:var(--muted-2);font-family:var(--mono);font-size:11px}
+.bar .track{height:22px;background:var(--ink-2);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar .fill{height:100%;background:linear-gradient(90deg,#9c7a2f,var(--gold));border-radius:6px 0 0 6px;min-width:2px;transition:width .4s}
+.bar .val{text-align:right;font-family:var(--mono);font-weight:600}
+
+.empty{text-align:center;padding:44px 20px;color:var(--muted-2)}
+.empty .ic{font-size:34px;margin-bottom:10px;opacity:.6}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--gold);color:var(--cream);padding:12px 20px;border-radius:10px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:99;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.flags{display:flex;flex-direction:column;gap:2px}
+.flag{font-size:11px;color:var(--amber)}
+.note{background:rgba(224,176,74,.08);border:1px solid rgba(224,176,74,.28);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--cream);margin-top:14px;line-height:1.55}
+.note b{color:var(--amber)}
+.elgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.elcell{background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:11px}
+.elcell label.fld{margin-bottom:5px}
+.elcell .pair{display:flex;gap:6px}
+.elcell .pair input{padding:8px 8px;font-size:13px;font-family:var(--mono)}
+.elcell .pair .e{max-width:70px}
+.guide h3{font-family:var(--display);font-size:16px;margin:20px 0 8px;color:var(--gold-soft)}
+.guide h3:first-child{margin-top:0}
+.guide p,.guide li{font-size:13.5px;color:var(--cream);line-height:1.65}
+.guide ul,.guide ol{margin:6px 0 6px 20px}
+.guide li{margin-bottom:5px}
+.guide .lead{color:var(--muted-2)}
+.steps{counter-reset:s;list-style:none;margin:0!important}
+.steps li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:12px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:23px;height:23px;border-radius:50%;background:var(--gold);color:#1a1408;font-family:var(--mono);font-weight:700;font-size:12px;display:grid;place-items:center}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mini{font-size:11px;color:var(--muted-2)}
+.deltacard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.dc{background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:12px}
+.dc .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2)}
+.dc .v{font-family:var(--display);font-size:20px;margin-top:4px}
+.hdrbtns{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:1080px){.kpis{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:repeat(2,1fr)}.elgrid{grid-template-columns:repeat(3,1fr)}.split{grid-template-columns:1fr}.deltacard{grid-template-columns:1fr}}
+@media(max-width:760px){.side{display:none}.main{padding:22px 16px}.elgrid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.form-grid .col2{grid-column:span 1}}
+/* auth */
+#authbar{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:12px}
+.who{display:flex;align-items:center;gap:8px}
+.who .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(140deg,var(--gold),#9c7a2f);display:grid;place-items:center;color:#1a1408;font-weight:700;font-size:12px}
+.who .nm2{font-weight:600;line-height:1.1}
+.who .rl{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2)}
+.syncdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:5px}
+.syncdot.local{background:var(--amber)}
+#loginOverlay{position:fixed;inset:0;background:rgba(8,8,10,.94);z-index:200;display:none;place-items:center;padding:20px}
+.logincard{width:min(400px,94vw);background:var(--panel);border:1px solid var(--line-2);border-radius:18px;padding:30px}
+.logincard .mk{width:46px;height:46px;border-radius:12px;background:linear-gradient(140deg,var(--gold),#9c7a2f);display:grid;place-items:center;color:#1a1408;font-family:var(--display);font-weight:700;font-size:20px;margin-bottom:16px}
+.logincard h2{font-family:var(--display);font-size:22px;margin-bottom:4px}
+.logincard p.sub2{color:var(--muted-2);font-size:13px;margin-bottom:18px}
+.logincard label.fld{margin-top:12px}
+.logincard .btnrow{margin-top:18px}
+#li_msg{font-size:12px;color:var(--amber);margin-top:12px;min-height:16px}
+.seg{display:flex;gap:0;margin-bottom:4px;border:1px solid var(--line-2);border-radius:9px;overflow:hidden}
+.seg button{flex:1;background:transparent;border:none;color:var(--muted-2);font-family:var(--body);font-weight:600;font-size:13px;padding:9px;cursor:pointer}
+.seg button.on{background:var(--gold);color:#1a1408}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="side">
+    <div class="logo">
+      <div class="mk">W</div>
+      <div class="nm">Tungsten Assay OS<small>Zambia · XRF register</small></div>
+    </div>
+    <nav class="nav" id="nav">
+      <a data-v="dash" class="on"><span class="ic">◆</span> Dashboard</a>
+      <a data-v="capture"><span class="ic">＋</span> Capture reading</a>
+      <a data-v="register"><span class="ic">▤</span> Assay register</a>
+      <a data-v="samples"><span class="ic">⛃</span> Samples &amp; QA/QC</a>
+      <a data-v="guide"><span class="ic">◇</span> Field &amp; data protocol</a>
+    </nav>
+    <div class="foot">
+      <b>Niton XL2-108297</b><br>
+      <span id="modeline">Local mode — data on this device only. Export CSV and back up off-device.</span>
+    </div>
+    <div id="authbar" style="display:none"></div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section class="view on" id="v-dash">
+      <div class="topbar">
+        <div>
+          <h1>Grade dashboard</h1>
+          <div class="sub">Every XRF reading, enriched with tungsten grade (WO₃), MTU/t, grade tier and reading confidence. Uncrushed readings are treated as indicative only.</div>
+        </div>
+        <div class="hdrbtns">
+          <button class="btn sm gho" onclick="go('guide')">◇ Protocol</button>
+          <button class="btn sm primary" onclick="go('capture')">＋ New reading</button>
+        </div>
+      </div>
+      <div class="panel hl" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 18px">
+        <div style="flex:1;min-width:220px">
+          <div class="tag">Ore/waste cut-off</div>
+          <div class="mini" style="margin-top:3px">Site-specific — derive from mining + processing cost ÷ recovery ÷ payable WO₃ price. Generic hard-rock guide: ~0.1–0.2 % WO₃ open-pit, ~0.25–0.45 % underground.</div>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:8px">
+          <div style="width:110px"><label class="fld">Cut-off % WO₃</label><input id="cutoffInput" inputmode="decimal"></div>
+          <button class="btn sm" onclick="setCutoff()">Apply</button>
+        </div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="split">
+        <div class="panel">
+          <h2>WO₃ grade distribution</h2>
+          <div class="ph">Prepared (crushed/pulverised) readings only — the assay-grade population.</div>
+          <div class="bars" id="hist"></div>
+        </div>
+        <div class="panel">
+          <h2>Sample preparation mix</h2>
+          <div class="ph">How representative your dataset is. Aim to convert raw readings into crushed confirmations.</div>
+          <div class="bars" id="prepmix"></div>
+          <div class="note" id="prepnote"></div>
+        </div>
+      </div>
+      <div class="panel" id="goldpanel" style="border-color:rgba(216,121,79,.35)">
+        <h2>Gold (Au) reading — read this before acting ⚠</h2>
+        <div class="ph">The XL2 reports an Au column, but tungsten samples are a classic false-positive trap.</div>
+        <div id="goldbody"></div>
+      </div>
+      <div class="panel">
+        <h2>Best intercepts <span class="tag">top WO₃ · prepared</span></h2>
+        <div class="ph">Highest-grade prepared readings — your priority zones for grade control and follow-up.</div>
+        <div class="tw"><table id="besttbl"></table></div>
+      </div>
+    </section>
+
+    <!-- CAPTURE -->
+    <section class="view" id="v-capture">
+      <div class="topbar">
+        <div>
+          <h1>Capture reading</h1>
+          <div class="sub">Mirror the Niton readout panel. Enter the reading number, sample label and prep state, then the element panel with its ±2σ. Or import a batch exported from the NDT software.</div>
+        </div>
+        <div class="hdrbtns">
+          <button class="btn sm gho" onclick="openImport()">⇪ Import Niton CSV</button>
+          <button class="btn sm gho" onclick="openQuickPaste()">⤵ Paste panel</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Sample &amp; context</h2>
+        <div class="ph">Metadata that must travel with every reading — this is what makes the number auditable.</div>
+        <div class="form-grid">
+          <div><label class="fld">Reading # (Niton)</label><input id="f_readingNo" placeholder="1655" inputmode="numeric"></div>
+          <div class="col2"><label class="fld">Sample label / ID</label><input id="f_sampleId" placeholder="TR01-005 (trench 01, 5 m)"></div>
+          <div><label class="fld">Date / time</label><input id="f_dateTime" type="datetime-local"></div>
+
+          <div><label class="fld">Site / prospect</label><input id="f_site" placeholder="Kanyemba block"></div>
+          <div><label class="fld">Feature</label><input id="f_feature" placeholder="Trench 01 / Hole DDH-3 / Face"></div>
+          <div><label class="fld">From (m)</label><input id="f_from" inputmode="decimal" placeholder="0.0"></div>
+          <div><label class="fld">To (m)</label><input id="f_to" inputmode="decimal" placeholder="1.0"></div>
+
+          <div class="col2"><label class="fld">Sample type</label>
+            <select id="f_type">
+              <option>Rock chip</option><option>Channel / trench</option><option>Drill core</option>
+              <option>RC chips</option><option>Grab</option><option>Stockpile</option><option>Concentrate</option>
+            </select>
+          </div>
+          <div class="col2"><label class="fld">Prep state &nbsp;— drives confidence</label>
+            <select id="f_prep">
+              <option value="insitu">In-situ rock face — UNCRUSHED (indicative)</option>
+              <option value="grab">Grab / rock chip — UNCRUSHED (indicative)</option>
+              <option value="crushed" selected>Crushed (&lt; ~2 mm)</option>
+              <option value="pulv">Pulverised (&lt; 75 µm / 200 mesh)</option>
+              <option value="pellet">Pressed pellet</option>
+            </select>
+          </div>
+
+          <div><label class="fld">Operator</label><input id="f_operator" placeholder="Initials"></div>
+          <div><label class="fld">Mode</label><input id="f_mode" value="Mining Ta/Hf"></div>
+          <div><label class="fld">Count time (s)</label><input id="f_count" inputmode="decimal" placeholder="32.4"></div>
+          <div><label class="fld">GPS (lat, lon)</label><input id="f_gps" placeholder="-15.41, 28.28"></div>
+
+          <div class="col2"><label class="fld">QA/QC tag</label>
+            <select id="f_qc"><option value="">— routine sample —</option><option value="dup">Field duplicate</option><option value="crm">CRM / standard</option><option value="blank">Blank</option><option value="repeat">Repeat read</option></select>
+          </div>
+          <div class="col2"><label class="fld">Notes</label><input id="f_notes" placeholder="Vein visible, wolframite specks…"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Element panel <span class="tag">value % · ±2σ</span></h2>
+        <div class="ph">Enter what the Niton shows. Leave blank or type <span class="mono">nd</span> for not-detected. W drives the tungsten grade; the rest characterise the ore &amp; matrix.</div>
+        <div class="elgrid" id="elgrid"></div>
+        <div class="btnrow" style="margin-top:18px">
+          <button class="btn primary" onclick="saveReading()">Save reading</button>
+          <button class="btn gho" onclick="resetForm()">Clear</button>
+          <span id="editnote" class="mini"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- REGISTER -->
+    <section class="view" id="v-register">
+      <div class="topbar">
+        <div>
+          <h1>Assay register</h1>
+          <div class="sub">Every reading captured, newest first. Filter by prep quality, export to CSV for the geologist or lab.</div>
+        </div>
+        <div class="hdrbtns">
+          <button class="btn sm gho" onclick="exportCSV()">⤓ Export CSV</button>
+          <button class="btn sm primary" onclick="go('capture')">＋ New reading</button>
+        </div>
+      </div>
+      <div class="pillrow" id="regfilter">
+        <span class="pill on" data-f="all">All</span>
+        <span class="pill" data-f="prepared">Prepared only</span>
+        <span class="pill" data-f="raw">Uncrushed</span>
+        <span class="pill" data-f="ore">Ore grade +</span>
+        <span class="pill" data-f="qc">QA/QC</span>
+      </div>
+      <div class="tw"><table id="regtbl"></table></div>
+      <div class="mini" id="regfoot" style="margin-top:10px"></div>
+    </section>
+
+    <!-- SAMPLES -->
+    <section class="view" id="v-samples">
+      <div class="topbar">
+        <div>
+          <h1>Samples &amp; QA/QC</h1>
+          <div class="sub">Readings grouped by sample label. Multiple reads → mean grade, spread (RSD) and a crushed-vs-uncrushed check. High spread flags a heterogeneous sample that needs finer prep or more reads.</div>
+        </div>
+        <button class="btn sm gho" onclick="exportSamplesCSV()">⤓ Export sample summary</button>
+      </div>
+      <div class="tw"><table id="samptbl"></table></div>
+      <div class="panel" style="margin-top:20px">
+        <h2>Crushed vs uncrushed — accuracy check</h2>
+        <div class="ph">Samples with both a raw and a prepared reading. A large gap confirms why crushing matters and tells you how far to trust field numbers.</div>
+        <div id="deltawrap"></div>
+      </div>
+    </section>
+
+    <!-- GUIDE -->
+    <section class="view guide" id="v-guide">
+      <div class="topbar"><div><h1>Field &amp; data protocol</h1><div class="sub">The best-practice loop that turns XRF spot-readings into decisions a mining division can bank on.</div></div></div>
+      <div class="panel" id="guidebody"></div>
+    </section>
+  </main>
+</div>
+
+<!-- IMPORT MODAL (simple inline) -->
+<div class="panel" id="importbox" style="display:none;position:fixed;inset:auto;left:50%;top:6%;transform:translateX(-50%);width:min(720px,94vw);z-index:50;max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.6)">
+  <h2 id="importTitle">Import Niton CSV export</h2>
+  <div class="ph">Paste the CSV/TSV exported from the Niton NDT software (Export ▸ CSV), or the on-screen panel. The parser auto-detects the reading number, date, duration and each element with its error column.</div>
+  <textarea id="importText" rows="9" placeholder="Paste export here…" style="font-family:var(--mono);font-size:12px"></textarea>
+  <div id="importPreview" class="mini" style="margin:10px 0"></div>
+  <div class="btnrow">
+    <button class="btn primary" onclick="runImport()">Parse &amp; add</button>
+    <button class="btn gho" onclick="closeImport()">Cancel</button>
+  </div>
+</div>
+<div id="scrim" onclick="closeImport()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40"></div>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN (shown only when a Supabase backend is configured) -->
+<div id="loginOverlay">
+  <div class="logincard">
+    <div class="mk">W</div>
+    <h2>Tungsten Assay OS</h2>
+    <p class="sub2">Zambia XRF register — sign in to the shared assay database.</p>
+    <div class="seg"><button id="tab_login" class="on" onclick="authTab('login')">Log in</button><button id="tab_signup" onclick="authTab('signup')">Create account</button></div>
+    <div id="nameRow" style="display:none"><label class="fld">Full name</label><input id="li_name" placeholder="Your name"></div>
+    <label class="fld">Email</label><input id="li_email" type="email" placeholder="you@company.com" autocomplete="username">
+    <label class="fld">Password</label><input id="li_pw" type="password" placeholder="••••••••" autocomplete="current-password">
+    <div id="li_msg"></div>
+    <div class="btnrow"><button class="btn primary" id="authBtn" onclick="authSubmit()">Log in</button></div>
+  </div>
+</div>
+
+<script>
+/* ---------- constants & domain math ---------- */
+var W_TO_WO3 = 1.2611;                 // WO3 231.84 / W 183.84 (231.837/183.84 = 1.26107)
+var STORE = 'zam_tungsten_xrf_v2';
+var SETT  = 'zam_tungsten_xrf_settings_v1';
+var ELEMENTS = ['W','Au','Sn','Fe','Mn','Cu','Zn','As','Pb','Bi','Sr','Zr','Al','Si','Cl','Ca','S','Ti','Bal'];
+var settings = loadSettings();
+
+function loadSettings(){ try{return JSON.parse(localStorage.getItem(SETT))||{}}catch(e){return{}} }
+var CUTOFF = settings.cutoffWO3 || 0.10;      // %WO3 open-pit cut-off default
+var CONC_SPEC = 65;                           // %WO3 saleable concentrate
+
+function wo3(wPct){ return (wPct==null||isNaN(wPct))?null:wPct*W_TO_WO3; }
+function mtu(wo3Pct){ return wo3Pct; }        // 1% WO3 = 1 MTU per tonne
+function auPpm(auPct){ return (auPct==null||isNaN(auPct))?null:auPct*10000; } // Au %→ppm (=g/t)
+// Au Lα (9.713 keV) is only ~40 eV from W Lβ (9.672 keV) — unresolvable on a handheld.
+// So ANY apparent Au in a W-rich sample is a likely tungsten artifact, not real gold.
+function auSuspect(r){ var au=r.el&&r.el.Au?r.el.Au.v:null, w=r.el&&r.el.W?r.el.W.v:null; return au!=null&&w!=null&&w>=0.5; }
+
+function tier(wo3Pct){
+  if(wo3Pct==null) return {k:'nd',lbl:'—',cls:'b-below'};
+  if(wo3Pct>=CONC_SPEC) return {k:'conc',lbl:'Concentrate',cls:'b-conc'};
+  if(wo3Pct>=20) return {k:'vhigh',lbl:'Very high',cls:'b-vhigh'};
+  if(wo3Pct>=3)  return {k:'high',lbl:'High grade',cls:'b-high'};
+  if(wo3Pct>=0.5)return {k:'ore',lbl:'Ore grade',cls:'b-ore'};
+  if(wo3Pct>=CUTOFF) return {k:'low',lbl:'Low grade',cls:'b-low'};
+  return {k:'below',lbl:'Below cut-off',cls:'b-below'};
+}
+// confidence: value vs 2σ. Convention — robust when value > 3×(2σ);
+// detected-but-caution 1.5–3×; below ~1.5×(2σ) it is effectively < LOD.
+function confidence(v,e){
+  if(v==null) return {cls:'nd',lbl:'nd'};
+  if(e==null||e===0) return {cls:'ok',lbl:'—'};
+  var r=v/e;
+  if(r>=10)  return {cls:'strong',lbl:'strong'};
+  if(r>=3)   return {cls:'ok',lbl:'robust'};
+  if(r>=1.5) return {cls:'low',lbl:'caution'};
+  return {cls:'weak',lbl:'< LOD'};
+}
+// W is read on L-lines (~8.4 keV) which overlap Zn Kα / Cu Kβ — flag high W where Cu/Zn are also elevated.
+function interference(r){
+  var w=r.el&&r.el.W?r.el.W.v:null; if(w==null||w<0.2)return false;
+  var cu=r.el&&r.el.Cu?r.el.Cu.v:null, zn=r.el&&r.el.Zn?r.el.Zn.v:null;
+  return (cu!=null&&cu>=0.5)||(zn!=null&&zn>=0.5);
+}
+var PREP={
+  insitu:{lbl:'In-situ',raw:true,short:'RAW·face'},
+  grab:{lbl:'Grab',raw:true,short:'RAW·grab'},
+  crushed:{lbl:'Crushed',raw:false,short:'crushed'},
+  pulv:{lbl:'Pulverised',raw:false,short:'pulv'},
+  pellet:{lbl:'Pellet',raw:false,short:'pellet'}
+};
+function isRaw(p){ return PREP[p]?PREP[p].raw:false; }
+
+/* ---------- store ---------- */
+function load(){ try{return JSON.parse(localStorage.getItem(STORE))||null}catch(e){return null} }
+function save(d){ localStorage.setItem(STORE,JSON.stringify(d)); }
+var DATA = load();
+if(!DATA){ DATA = seed(); save(DATA); }
+
+function seed(){
+  // Real readings — Niton XL2-108297 export, 22 Jul 2026 (workbook XL2108297S).
+  // The 0.24 s misfire (reading 1648) and the spreadsheet average row are excluded.
+  return [
+    mk({readingNo:'1642',sampleId:'W-CRUSHED-1',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:50',el:{W:[4.439,0.057],Au:[0.012,0.003],Sn:[0.309,0.022],Fe:[1.944,0.071],Mn:[0.103,0.018],Cu:[0.017,0.004],Sr:[0.035,0.002],Zr:[0.004,0.003],Al:[1.089,0.084],Si:[13.883,0.88],Cl:[0.19,0.015],Bal:[77.924,0.429]}}),
+    mk({readingNo:'1643',sampleId:'W-CRUSHED-1',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:52',el:{W:[1.48,0.026],Au:[0.004,0.002],Sn:[0.367,0.027],Fe:[2.042,0.084],Mn:[0.117,0.019],Cu:[0.013,0.004],Sr:[0.041,0.003],Zr:[0.004,0.002],Al:[1.134,0.089],Si:[13.828,0.932],Cl:[0.146,0.013],Bal:[80.798,0.412]}}),
+    mk({readingNo:'1644',sampleId:'W-CRUSHED-1',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:54',el:{W:[4.963,0.057],Au:[0.014,0.003],Sn:[0.374,0.024],Fe:[2.045,0.067],Mn:[0.098,0.016],Cu:[0.013,0.003],Pb:[0.002,0.001],Sr:[0.038,0.002],Zr:[0.004,0.002],Al:[0.863,0.074],Si:[11.796,0.717],Cl:[0.101,0.01],Bal:[79.625,0.356]}}),
+    mk({readingNo:'1645',sampleId:'W-CRUSHED-2',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:57',el:{W:[3.206,0.043],Au:[0.011,0.003],Sn:[0.383,0.027],Fe:[3.708,0.116],Mn:[0.06,0.014],Cu:[0.013,0.003],Pb:[0.003,0.001],Sr:[0.111,0.006],Zr:[0.015,0.003],Al:[1.807,0.097],Si:[16.217,0.994],Cl:[0.069,0.007],Bal:[74.351,0.482]}}),
+    mk({readingNo:'1646',sampleId:'W-CRUSHED-2',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T14:59',el:{W:[2.358,0.032],Au:[0.005,0.002],Sn:[0.427,0.027],Fe:[3.737,0.111],Mn:[0.067,0.014],Cu:[0.012,0.003],Pb:[0.003,0.001],Sr:[0.112,0.006],Zr:[0.014,0.003],Al:[1.788,0.1],Si:[16.121,0.898],Cl:[0.076,0.008],Bal:[75.216,0.46]}}),
+    mk({readingNo:'1647',sampleId:'W-CRUSHED-2',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'64.85',mode:'XL2-108297',dateTime:'2026-07-22T15:01',el:{W:[3.047,0.041],Au:[0.007,0.003],Sn:[0.416,0.027],Fe:[3.742,0.116],Mn:[0.068,0.016],Cu:[0.015,0.004],Pb:[0.002,0.001],Sr:[0.103,0.006],Zr:[0.014,0.003],Al:[1.798,0.098],Si:[16.042,0.928],Cl:[0.113,0.009],Bal:[74.562,0.511]}}),
+    mk({readingNo:'1649',sampleId:'W-CRUSHED-4',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:05',el:{W:[4.535,0.05],Au:[0.013,0.003],Sn:[0.068,0.008],Fe:[3.912,0.103],Mn:[0.032,0.012],Cu:[0.016,0.003],Pb:[0.003,0.001],Sr:[0.136,0.007],Zr:[0.006,0.003],Al:[1.122,0.067],Si:[13.827,0.712],Cl:[0.081,0.007],Bal:[76.002,0.414]}}),
+    mk({readingNo:'1650',sampleId:'W-CRUSHED-4',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:07',el:{W:[4.363,0.045],Au:[0.009,0.003],Sn:[0.078,0.008],Fe:[4.237,0.102],Mn:[0.038,0.012],Cu:[0.014,0.003],Pb:[0.003,0.001],Bi:[0.003,0.001],Sr:[0.14,0.006],Zr:[0.004,0.002],Al:[1.734,0.085],Si:[17.305,0.758],Cl:[0.095,0.007],Bal:[71.745,0.473]}}),
+    mk({readingNo:'1651',sampleId:'W-CRUSHED-4',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:09',el:{W:[6.569,0.065],Au:[0.021,0.004],Sn:[0.089,0.009],Fe:[4.29,0.1],Mn:[0.042,0.012],Cu:[0.013,0.003],Pb:[0.003,0.001],Sr:[0.139,0.007],Zr:[0.005,0.002],Al:[1.447,0.077],Si:[15.534,0.79],Cl:[0.077,0.007],Bal:[71.491,0.433]}}),
+    mk({readingNo:'1652',sampleId:'W-CRUSHED-5',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:13',el:{W:[6.025,0.064],Au:[0.017,0.004],Sn:[0.35,0.021],Fe:[2.049,0.064],Mn:[0.111,0.017],Cu:[0.018,0.004],Sr:[0.038,0.002],Zr:[0.007,0.003],Al:[1.294,0.092],Si:[14.475,0.775],Cl:[0.107,0.01],Bal:[75.447,0.439]}}),
+    mk({readingNo:'1653',sampleId:'W-CRUSHED-5',site:'Zambia W project',feature:'',type:'Crushed sub-sample',prep:'crushed',count:'70',mode:'XL2-108297',dateTime:'2026-07-22T15:15',el:{W:[5.739,0.065],Au:[0.012,0.003],Sn:[0.262,0.018],Fe:[1.971,0.064],Mn:[0.101,0.016],Cu:[0.011,0.003],Sr:[0.028,0.002],Zr:[0.008,0.002],Al:[1.115,0.085],Si:[14.045,0.835],Cl:[0.13,0.011],Bal:[76.493,0.402]}})
+  ];
+}
+function mk(o){
+  var el={}; ELEMENTS.forEach(function(s){ el[s]={v:null,e:null}; });
+  Object.keys(o.el||{}).forEach(function(s){ el[s]={v:o.el[s][0],e:o.el[s][1]}; });
+  return {
+    id:o.id||('r'+Math.abs(hash(o.readingNo+o.sampleId+(o.dateTime||'')+Math.random()))),
+    readingNo:o.readingNo||'',sampleId:o.sampleId||'',dateTime:o.dateTime||'',operator:o.operator||'',
+    site:o.site||'',feature:o.feature||'',from:o.from||'',to:o.to||'',type:o.type||'Rock chip',
+    prep:o.prep||'crushed',mode:o.mode||'Mining Ta/Hf',count:o.count||'',gps:o.gps||'',qc:o.qc||'',notes:o.notes||'',
+    el:el, createdAt:o.createdAt||nowISO()
+  };
+}
+function hash(s){s=String(s);var h=0;for(var i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0}return h}
+function nowISO(){ return new Date().toISOString(); }
+
+/* ---------- helpers ---------- */
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fmt(n,d){ if(n==null||isNaN(n))return '—'; return Number(n).toFixed(d==null?2:d); }
+function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(function(){t.classList.remove('show')},2200); }
+function Wval(r){ return r.el && r.el.W ? r.el.W.v : null; }
+function Werr(r){ return r.el && r.el.W ? r.el.W.e : null; }
+
+/* ---------- navigation ---------- */
+function go(v){
+  document.querySelectorAll('.view').forEach(function(s){s.classList.remove('on')});
+  $('v-'+v).classList.add('on');
+  document.querySelectorAll('#nav a').forEach(function(a){a.classList.toggle('on',a.dataset.v===v)});
+  window.scrollTo(0,0);
+  if(v==='dash')renderDash(); if(v==='register')renderRegister(); if(v==='samples')renderSamples(); if(v==='guide')renderGuide();
+}
+document.querySelectorAll('#nav a').forEach(function(a){a.onclick=function(){go(a.dataset.v)}});
+
+/* ---------- capture form ---------- */
+function buildElGrid(){
+  var g=$('elgrid'); g.innerHTML='';
+  ELEMENTS.forEach(function(s){
+    var d=document.createElement('div'); d.className='elcell';
+    d.innerHTML='<label class="fld">'+s+(s==='Bal'?' (balance)':'')+'</label>'+
+      '<div class="pair"><input id="el_'+s+'_v" placeholder="%" inputmode="decimal"><input class="e" id="el_'+s+'_e" placeholder="±2σ" inputmode="decimal"></div>';
+    g.appendChild(d);
+  });
+}
+var editingId=null;
+function resetForm(){
+  editingId=null; $('editnote').textContent='';
+  ['readingNo','sampleId','dateTime','site','feature','from','to','operator','count','gps','notes'].forEach(function(k){$('f_'+k).value=''});
+  $('f_type').selectedIndex=0; $('f_prep').value='crushed'; $('f_qc').value=''; $('f_mode').value='Mining Ta/Hf';
+  ELEMENTS.forEach(function(s){$('el_'+s+'_v').value='';$('el_'+s+'_e').value='';});
+  var d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); $('f_dateTime').value=d.toISOString().slice(0,16);
+}
+function parseNum(x){ if(x==null)return null; x=String(x).trim().toLowerCase(); if(x===''||x==='nd'||x==='<'||x.indexOf('nd')===0||x.indexOf('< lod')===0||x==='<lod')return null; var n=parseFloat(x.replace(/[, ]/g,'')); return isNaN(n)?null:n; }
+function saveReading(){
+  var el={}; ELEMENTS.forEach(function(s){ el[s]={v:parseNum($('el_'+s+'_v').value), e:parseNum($('el_'+s+'_e').value)}; });
+  var rec={
+    id: editingId || (SB_ON?uuid():('r'+Math.abs(hash($('f_readingNo').value+$('f_sampleId').value+Date.now()+Math.random())))),
+    readingNo:$('f_readingNo').value.trim(), sampleId:$('f_sampleId').value.trim(), dateTime:$('f_dateTime').value,
+    operator:$('f_operator').value.trim(), site:$('f_site').value.trim(), feature:$('f_feature').value.trim(),
+    from:$('f_from').value.trim(), to:$('f_to').value.trim(), type:$('f_type').value, prep:$('f_prep').value,
+    mode:$('f_mode').value.trim(), count:$('f_count').value.trim(), gps:$('f_gps').value.trim(), qc:$('f_qc').value,
+    notes:$('f_notes').value.trim(), el:el, createdAt: editingId?(findRec(editingId).createdAt):nowISO()
+  };
+  if(!rec.sampleId){ toast('Add a sample label first'); $('f_sampleId').focus(); return; }
+  if(editingId){ DATA=DATA.map(function(r){return r.id===editingId?rec:r}); toast(SB_ON?'Reading updated · syncing':'Reading updated'); }
+  else { DATA.unshift(rec); toast(SB_ON?'Reading saved · syncing':'Reading saved'); }
+  save(DATA); if(SB_ON) sbUpsert(rec); resetForm(); go('register');
+}
+function findRec(id){ for(var i=0;i<DATA.length;i++)if(DATA[i].id===id)return DATA[i]; return null; }
+function editReading(id){
+  var r=findRec(id); if(!r)return; editingId=id; go('capture');
+  $('editnote').textContent='Editing reading '+(r.readingNo||r.sampleId);
+  ['readingNo','sampleId','dateTime','site','feature','from','to','operator','count','gps','notes'].forEach(function(k){$('f_'+k).value=r[k]||''});
+  $('f_type').value=r.type; $('f_prep').value=r.prep; $('f_qc').value=r.qc||''; $('f_mode').value=r.mode||'Mining Ta/Hf';
+  ELEMENTS.forEach(function(s){ var c=r.el[s]||{}; $('el_'+s+'_v').value=c.v==null?'':c.v; $('el_'+s+'_e').value=c.e==null?'':c.e; });
+}
+function delReading(id){ if(!confirm('Delete this reading?'))return; if(SB_ON) sbDelete(id); DATA=DATA.filter(function(r){return r.id!==id}); save(DATA); renderRegister(); toast('Deleted'); }
+
+/* ---------- dashboard ---------- */
+function setCutoff(){
+  var v=parseFloat($('cutoffInput').value); if(isNaN(v)||v<0){toast('Enter a number');return;}
+  CUTOFF=v; settings.cutoffWO3=v; localStorage.setItem(SETT,JSON.stringify(settings)); renderDash(); toast('Cut-off set to '+v+'% WO₃');
+}
+function renderDash(){
+  $('cutoffInput').value=CUTOFF;
+  var prepared=DATA.filter(function(r){return !isRaw(r.prep)});
+  var withW=prepared.filter(function(r){return Wval(r)!=null});
+  var grades=withW.map(function(r){return wo3(Wval(r))});
+  var above=grades.filter(function(g){return g>=CUTOFF}).length;
+  var avg=grades.length?grades.reduce(function(a,b){return a+b},0)/grades.length:null;
+  var best=grades.length?Math.max.apply(null,grades):null;
+  var samples={}; DATA.forEach(function(r){samples[r.sampleId]=1});
+  var kpi=[
+    {k:'Readings',n:DATA.length,d:prepared.length+' prepared · '+(DATA.length-prepared.length)+' raw'},
+    {k:'Samples',n:Object.keys(samples).length,d:'unique labels'},
+    {k:'Avg grade (prepared)',n:avg==null?'—':fmt(avg,2),u:'% WO₃',d:avg==null?'—':fmt(mtu(avg),1)+' MTU/t'},
+    {k:'Best intercept',n:best==null?'—':fmt(best,2),u:'% WO₃',d:above+' of '+withW.length+' ≥ cut-off '+CUTOFF+'%'}
+  ];
+  $('kpis').innerHTML=kpi.map(function(x){return '<div class="kpi"><div class="k">'+x.k+'</div><div class="n">'+x.n+(x.u?' <small>'+x.u+'</small>':'')+'</div><div class="d">'+x.d+'</div></div>'}).join('');
+
+  // histogram of WO3 tiers (prepared)
+  var buckets=[['Below cut-off',function(g){return g<CUTOFF}],['Low '+CUTOFF+'–0.5%',function(g){return g>=CUTOFF&&g<0.5}],['Ore 0.5–3%',function(g){return g>=0.5&&g<3}],['High 3–20%',function(g){return g>=3&&g<20}],['Very high 20%+',function(g){return g>=20}]];
+  var max=1; var counts=buckets.map(function(b){var c=grades.filter(b[1]).length;max=Math.max(max,c);return c});
+  $('hist').innerHTML=buckets.map(function(b,i){var c=counts[i];return bar(b[0],c,max,c)}).join('')||'<div class="empty">No prepared readings yet</div>';
+
+  // prep mix
+  var pm={}; DATA.forEach(function(r){var p=isRaw(r.prep)?'Uncrushed (indicative)':'Prepared (crushed+)';pm[p]=(pm[p]||0)+1});
+  var pmMax=Math.max(1,Math.max.apply(null,Object.values(pm).concat([1])));
+  $('prepmix').innerHTML=Object.keys(pm).map(function(k){return bar(k,pm[k],pmMax,pm[k])}).join('')||'<div class="empty">No data</div>';
+  var rawCt=DATA.filter(function(r){return isRaw(r.prep)}).length, pct=DATA.length?Math.round(100*rawCt/DATA.length):0;
+  $('prepnote').innerHTML='<b>'+pct+'%</b> of readings are uncrushed. Crush &amp; re-read anything near an ore/waste boundary — in-situ readings under-read fine wolframite and carry large error.';
+
+  // gold panel — correlate apparent Au against W to expose the spectral overlap
+  var pairs=DATA.filter(function(r){var au=r.el&&r.el.Au?r.el.Au.v:null;return au!=null&&Wval(r)!=null});
+  var auVals=pairs.map(function(r){return r.el.Au.v});
+  var wForAu=pairs.map(Wval);
+  var meanAuPpm=auVals.length?auPpm(auVals.reduce(function(a,b){return a+b},0)/auVals.length):null;
+  var rWAu=pearson(wForAu,auVals);
+  var flagged=DATA.filter(auSuspect).length;
+  $('goldbody').innerHTML=
+    '<div class="deltacard">'+
+    '<div class="dc"><div class="k">Mean apparent Au</div><div class="v">'+(meanAuPpm==null?'—':fmt(meanAuPpm,0)+' <span class="mini">ppm</span>')+'</div></div>'+
+    '<div class="dc"><div class="k">Au↔W correlation</div><div class="v" style="color:'+(rWAu!=null&&rWAu>0.6?'var(--red)':'inherit')+'">'+(rWAu==null?'—':'r = '+fmt(rWAu,2))+'</div></div>'+
+    '<div class="dc"><div class="k">Readings flagged suspect</div><div class="v">'+flagged+' / '+DATA.length+'</div></div>'+
+    '</div>'+
+    '<div class="note"><b>Verdict for this dataset:</b> the apparent gold tracks tungsten at <b>r = '+(rWAu==null?'—':fmt(rWAu,2))+'</b> and averages <b>~'+(meanAuPpm==null?'—':fmt(meanAuPpm,0))+' ppm</b>. Gold Lα (9.71 keV) sits ~40 eV from the tungsten Lβ line (9.67 keV), which a handheld cannot separate — so this "gold" is almost certainly the tungsten peak bleeding into the Au channel, <b>not</b> real gold. A uniform ~100 g/t across every sample would also be geologically implausible; real gold is erratic (nugget effect), not proportional to W. <b>Treat Au here as unconfirmed. The only proof of gold is fire assay at a certified lab.</b></div>';
+
+  // best intercepts
+  var top=withW.slice().sort(function(a,b){return wo3(Wval(b))-wo3(Wval(a))}).slice(0,8);
+  $('besttbl').innerHTML=
+    '<thead><tr><th>Sample</th><th>Feature</th><th>Prep</th><th class="num">W %</th><th class="num">WO₃ %</th><th class="num">MTU/t</th><th>Tier</th><th>Conf.</th></tr></thead><tbody>'+
+    (top.map(function(r){var g=wo3(Wval(r));var t=tier(g);var cf=confidence(Wval(r),Werr(r));
+      return '<tr><td><b>'+esc(r.sampleId)+'</b></td><td class="mini">'+esc(r.feature||r.site)+'</td><td>'+prepBadge(r.prep)+'</td><td class="num">'+fmt(Wval(r),2)+'</td><td class="num">'+fmt(g,2)+'</td><td class="num">'+fmt(mtu(g),1)+'</td><td><span class="badge '+t.cls+'">'+t.lbl+'</span></td><td><span class="conf '+cf.cls+'">'+cf.lbl+'</span></td></tr>';
+    }).join('')||'<tr><td colspan="8" class="empty">No W readings yet</td></tr>')+'</tbody>';
+}
+function pearson(x,y){
+  var n=x.length; if(n<3)return null;
+  var mx=x.reduce(function(a,b){return a+b},0)/n, my=y.reduce(function(a,b){return a+b},0)/n;
+  var sxy=0,sxx=0,syy=0;
+  for(var i=0;i<n;i++){var dx=x[i]-mx,dy=y[i]-my;sxy+=dx*dy;sxx+=dx*dx;syy+=dy*dy;}
+  if(sxx===0||syy===0)return null;
+  return sxy/Math.sqrt(sxx*syy);
+}
+function bar(lbl,fillCount,max,val){
+  var w=Math.round(100*fillCount/max);
+  return '<div class="bar"><span class="lbl">'+esc(lbl)+'</span><div class="track"><div class="fill" style="width:'+w+'%"></div></div><span class="val">'+val+'</span></div>';
+}
+function prepBadge(p){ var raw=isRaw(p); return '<span class="prep '+(raw?'raw':'prep-ok')+'">'+(raw?'⚠ ':'✓ ')+(PREP[p]?PREP[p].short:p)+'</span>'; }
+
+/* ---------- register ---------- */
+var regFilter='all';
+function renderRegister(){
+  document.querySelectorAll('#regfilter .pill').forEach(function(p){p.classList.toggle('on',p.dataset.f===regFilter);p.onclick=function(){regFilter=p.dataset.f;renderRegister()}});
+  var rows=DATA.filter(function(r){
+    if(regFilter==='prepared')return !isRaw(r.prep);
+    if(regFilter==='raw')return isRaw(r.prep);
+    if(regFilter==='ore'){var g=wo3(Wval(r));return g!=null&&g>=0.5}
+    if(regFilter==='qc')return !!r.qc;
+    return true;
+  });
+  var head='<thead><tr><th>#</th><th>Sample</th><th>Feature / interval</th><th>Prep</th><th class="num">W %</th><th class="num">±2σ</th><th class="num">WO₃ %</th><th class="num">MTU/t</th><th class="num">Au ppm*</th><th class="num">Sn %</th><th>Tier</th><th>Conf.</th><th>QC</th><th>Date</th><th></th></tr></thead>';
+  var body=rows.map(function(r){
+    var w=Wval(r),e=Werr(r),g=wo3(w),t=tier(g),cf=confidence(w,e);
+    var au=r.el&&r.el.Au?r.el.Au.v:null, sn=r.el&&r.el.Sn?r.el.Sn.v:null;
+    var iv=(r.from!==''&&r.to!=='')?(r.from+'–'+r.to+' m'):'';
+    return '<tr>'+
+      '<td class="mono mini">'+esc(r.readingNo||'—')+'</td>'+
+      '<td><b>'+esc(r.sampleId)+'</b></td>'+
+      '<td class="mini">'+esc(r.feature||r.site)+(iv?' · '+iv:'')+'</td>'+
+      '<td>'+prepBadge(r.prep)+'</td>'+
+      '<td class="num">'+fmt(w,2)+'</td>'+
+      '<td class="num mini">'+(e==null?'—':fmt(e,3))+'</td>'+
+      '<td class="num"><b>'+fmt(g,2)+'</b></td>'+
+      '<td class="num">'+fmt(mtu(g),1)+'</td>'+
+      '<td class="num '+(auSuspect(r)?'':'')+'" style="color:'+(auSuspect(r)?'var(--red)':'inherit')+'">'+(au==null?'—':fmt(auPpm(au),0)+(auSuspect(r)?' ⚠':''))+'</td>'+
+      '<td class="num mini">'+(sn==null?'—':fmt(sn,2))+'</td>'+
+      '<td><span class="badge '+t.cls+'">'+t.lbl+'</span></td>'+
+      '<td><span class="conf '+cf.cls+'">'+cf.lbl+'</span>'+(interference(r)?' <span class="conf weak" title="High W with elevated Cu/Zn — W L-line overlap, confirm at lab">⚠</span>':'')+'</td>'+
+      '<td class="mini">'+(r.qc?'<span class="tag">'+esc(r.qc)+'</span>':'')+'</td>'+
+      '<td class="mini">'+esc((r.dateTime||'').slice(0,10))+'</td>'+
+      '<td><button class="btn sm gho" onclick="editReading(\''+r.id+'\')">edit</button> <button class="btn sm gho" onclick="delReading(\''+r.id+'\')">✕</button></td>'+
+    '</tr>';
+  }).join('');
+  $('regtbl').innerHTML=head+'<tbody>'+(body||'<tr><td colspan="15" class="empty"><div class="ic">▤</div>No readings match this filter</td></tr>')+'</tbody>';
+  $('regfoot').innerHTML='* <b>Au ppm</b> is the raw XRF number (1 ppm = 1 g/t). ⚠ = suspect: gold Lα overlaps the tungsten Lβ line, so apparent Au in a W-rich sample is likely a tungsten artifact — confirm by fire assay before treating as gold.';
+}
+
+/* ---------- samples & QA/QC ---------- */
+function groupSamples(){
+  var g={}; DATA.forEach(function(r){ (g[r.sampleId]=g[r.sampleId]||[]).push(r); }); return g;
+}
+function stats(arr){ // arr of numbers
+  if(!arr.length)return{n:0};
+  var m=arr.reduce(function(a,b){return a+b},0)/arr.length;
+  var sd=arr.length>1?Math.sqrt(arr.reduce(function(a,b){return a+(b-m)*(b-m)},0)/(arr.length-1)):0;
+  return {n:arr.length,mean:m,sd:sd,rsd:m?100*sd/m:0,min:Math.min.apply(null,arr),max:Math.max.apply(null,arr)};
+}
+function renderSamples(){
+  var g=groupSamples();
+  var keys=Object.keys(g).sort();
+  var head='<thead><tr><th>Sample</th><th>Feature</th><th class="num">n</th><th class="num">Prepared W̄ %</th><th class="num">WO₃ %</th><th class="num">RSD %</th><th>Spread</th><th class="num">Raw W̄ %</th><th>Custody</th></tr></thead>';
+  var body=keys.map(function(k){
+    var arr=g[k];
+    var prep=arr.filter(function(r){return !isRaw(r.prep)&&Wval(r)!=null}).map(Wval);
+    var raw=arr.filter(function(r){return isRaw(r.prep)&&Wval(r)!=null}).map(Wval);
+    var ps=stats(prep), rs=stats(raw);
+    var meanG=ps.n?wo3(ps.mean):null;
+    var rsdFlag=ps.n>1&&ps.rsd>20;
+    var f=arr[0];
+    var custody=[]; if(raw.length)custody.push('raw'); if(prep.length)custody.push('prepared'); if(arr.some(function(r){return r.qc==='dup'}))custody.push('dup');
+    return '<tr>'+
+      '<td><b>'+esc(k)+'</b></td>'+
+      '<td class="mini">'+esc(f.feature||f.site)+'</td>'+
+      '<td class="num">'+arr.length+'</td>'+
+      '<td class="num">'+(ps.n?fmt(ps.mean,2):'—')+'</td>'+
+      '<td class="num"><b>'+(meanG==null?'—':fmt(meanG,2))+'</b></td>'+
+      '<td class="num '+(rsdFlag?'':'')+'">'+(ps.n>1?fmt(ps.rsd,0):'—')+'</td>'+
+      '<td>'+(ps.n>1?(rsdFlag?'<span class="conf weak">heterogeneous ⚠</span>':'<span class="conf strong">tight ✓</span>'):'<span class="mini">single</span>')+'</td>'+
+      '<td class="num mini">'+(rs.n?fmt(rs.mean,2):'—')+'</td>'+
+      '<td class="mini">'+custody.map(function(c){return '<span class="tag">'+c+'</span>'}).join(' ')+'</td>'+
+    '</tr>';
+  }).join('');
+  $('samptbl').innerHTML=head+'<tbody>'+(body||'<tr><td colspan="9" class="empty">No samples yet</td></tr>')+'</tbody>';
+
+  // crushed vs uncrushed deltas
+  var wrap=$('deltawrap'); var cards='';
+  keys.forEach(function(k){
+    var arr=g[k];
+    var prep=arr.filter(function(r){return !isRaw(r.prep)&&Wval(r)!=null}).map(Wval);
+    var raw=arr.filter(function(r){return isRaw(r.prep)&&Wval(r)!=null}).map(Wval);
+    if(!prep.length||!raw.length)return;
+    var pm=stats(prep).mean, rm=stats(raw).mean, d=pm-rm, pctd=rm?100*d/rm:0;
+    cards+='<div class="panel" style="margin:0 0 12px;background:var(--ink-2)"><h2 style="font-size:15px">'+esc(k)+'</h2>'+
+      '<div class="deltacard">'+
+      '<div class="dc"><div class="k">Uncrushed W̄</div><div class="v">'+fmt(rm,2)+'%</div></div>'+
+      '<div class="dc"><div class="k">Prepared W̄</div><div class="v">'+fmt(pm,2)+'%</div></div>'+
+      '<div class="dc"><div class="k">Difference</div><div class="v" style="color:'+(d>=0?'var(--green)':'var(--red)')+'">'+(d>=0?'+':'')+fmt(d,2)+'% <span class="mini">('+(pctd>=0?'+':'')+fmt(pctd,0)+'%)</span></div></div>'+
+      '</div></div>';
+  });
+  wrap.innerHTML=cards||'<div class="empty" style="padding:24px">No sample has both a raw and a prepared reading yet. Read a rock face, then crush the same interval and re-read to build this comparison.</div>';
+}
+
+/* ---------- CSV export ---------- */
+function csvCell(s){ s=String(s==null?'':s); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+function download(name,text){ var b=new Blob([text],{type:'text/csv'}); var u=URL.createObjectURL(b); var a=document.createElement('a'); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u); }
+function exportCSV(){
+  var cols=['ReadingNo','SampleID','Site','Feature','From_m','To_m','SampleType','Prep','PrepRaw','Mode','CountTime_s','Operator','GPS','QC','DateTime',
+    'W_pct','W_2sigma','WO3_pct','MTU_per_t','Tier','Confidence'];
+  ELEMENTS.forEach(function(s){ if(s!=='W'){cols.push(s+'_pct');cols.push(s+'_2sigma');} });
+  cols.push('Notes');
+  var lines=[cols.join(',')];
+  DATA.forEach(function(r){
+    var w=Wval(r),e=Werr(r),g=wo3(w);
+    var row=[r.readingNo,r.sampleId,r.site,r.feature,r.from,r.to,r.type,PREP[r.prep]?PREP[r.prep].lbl:r.prep,isRaw(r.prep)?'Y':'N',r.mode,r.count,r.operator,r.gps,r.qc,r.dateTime,
+      fmt(w,3),e==null?'':fmt(e,4),g==null?'':fmt(g,3),g==null?'':fmt(mtu(g),2),tier(g).lbl,confidence(w,e).lbl];
+    ELEMENTS.forEach(function(s){ if(s!=='W'){var c=r.el[s]||{};row.push(c.v==null?'':c.v);row.push(c.e==null?'':c.e);} });
+    row.push(r.notes);
+    lines.push(row.map(csvCell).join(','));
+  });
+  download('tungsten-xrf-register-'+new Date().toISOString().slice(0,10)+'.csv',lines.join('\n'));
+  toast('Exported '+DATA.length+' readings');
+}
+function exportSamplesCSV(){
+  var g=groupSamples(); var lines=[['SampleID','Feature','n','Prepared_meanW_pct','WO3_pct','MTU_per_t','RSD_pct','min_W','max_W','Raw_meanW_pct','Delta_prep_minus_raw'].join(',')];
+  Object.keys(g).sort().forEach(function(k){
+    var arr=g[k];
+    var prep=arr.filter(function(r){return !isRaw(r.prep)&&Wval(r)!=null}).map(Wval);
+    var raw=arr.filter(function(r){return isRaw(r.prep)&&Wval(r)!=null}).map(Wval);
+    var ps=stats(prep), rs=stats(raw);
+    var mg=ps.n?wo3(ps.mean):null;
+    lines.push([k,arr[0].feature||arr[0].site,arr.length,ps.n?fmt(ps.mean,3):'',mg==null?'':fmt(mg,3),mg==null?'':fmt(mtu(mg),2),ps.n>1?fmt(ps.rsd,1):'',ps.n?fmt(ps.min,3):'',ps.n?fmt(ps.max,3):'',rs.n?fmt(rs.mean,3):'',(ps.n&&rs.n)?fmt(ps.mean-rs.mean,3):''].map(csvCell).join(','));
+  });
+  download('tungsten-sample-summary-'+new Date().toISOString().slice(0,10)+'.csv',lines.join('\n'));
+  toast('Sample summary exported');
+}
+
+/* ---------- import ---------- */
+var quickMode=false;
+function openImport(){ quickMode=false; $('importTitle').textContent='Import Niton CSV export'; $('importText').placeholder='Paste the CSV/TSV exported from the Niton NDT software…'; showImport(); }
+function openQuickPaste(){ quickMode=true; $('importTitle').textContent='Paste on-screen panel'; $('importText').placeholder='Paste the readout lines, e.g.\nW  6.04  0.079\nAu 0.021 0.004\nSi 18.08 2.31'; showImport(); }
+function showImport(){ $('importText').value=''; $('importPreview').textContent=''; $('importbox').style.display='block'; $('scrim').style.display='block'; }
+function closeImport(){ $('importbox').style.display='none'; $('scrim').style.display='none'; }
+function runImport(){
+  var txt=$('importText').value.trim(); if(!txt){toast('Nothing to parse');return;}
+  var added = quickMode ? importPanel(txt) : importNiton(txt);
+  if(added>0){
+    if(SB_ON){ for(var i=0;i<added;i++){ DATA[i].id=uuid(); sbUpsert(DATA[i]); } }
+    save(DATA); closeImport(); toast('Added '+added+' reading'+(added>1?'s':'')+(SB_ON?' · syncing':'')); go('register');
+  }
+  else toast('Could not parse — check format');
+}
+// quick panel: element rows -> one reading (prefilled prep=crushed, no sample id yet -> user edits)
+function importPanel(txt){
+  var el={}; ELEMENTS.forEach(function(s){el[s]={v:null,e:null}});
+  var found=0;
+  txt.split(/\n/).forEach(function(ln){
+    var m=ln.trim().split(/[\s,\t]+/);
+    if(m.length>=2){
+      var sym=m[0].replace(/[^A-Za-z]/g,''); sym=sym.charAt(0).toUpperCase()+sym.slice(1);
+      if(sym==='Cao')sym='Ca'; if(ELEMENTS.indexOf(sym)>=0){ el[sym]={v:parseNum(m[1]), e:parseNum(m[2])}; found++; }
+    }
+  });
+  if(!found)return 0;
+  var rec=mk({readingNo:'',sampleId:'PANEL-'+new Date().toISOString().slice(11,16).replace(':',''),prep:'crushed',dateTime:$('f_dateTime').value||''});
+  rec.el=el; DATA.unshift(rec); editingId=null;
+  return 1;
+}
+// Niton CSV: one row per reading, element value cols + "<El> Err"/"2σ" cols
+function importNiton(txt){
+  var delim = (txt.split('\n')[0].split('\t').length > txt.split('\n')[0].split(',').length) ? '\t' : ',';
+  var lines=txt.split(/\r?\n/).filter(function(l){return l.trim()!==''});
+  if(lines.length<2)return 0;
+  var hdr=splitCSV(lines[0],delim).map(function(h){return h.trim()});
+  var low=hdr.map(function(h){return h.toLowerCase()});
+  function findCol(re){ for(var i=0;i<low.length;i++)if(re.test(low[i]))return i; return -1; }
+  var iNo=findCol(/^(reading|index|no\.?|reading no|sample no)$/)||findCol(/reading|index/);
+  var iDate=findCol(/date/), iTime=findCol(/^time$/), iDur=findCol(/duration|elapsed|test time|^time\(/), iMode=findCol(/mode|method|application/);
+  // element columns: header exactly an element symbol; error col = "<El> Err"/"<El> 2σ"/"<El> Error" or a col named just "Err"/"2σ" right after
+  var elCols={};
+  ELEMENTS.concat(['Cao','CaO','Mg','Al','P','Cl','Nb','Rh']).forEach(function(s){
+    var sym=s; if(s==='Cao'||s==='CaO')sym='Ca';
+    var vi=-1; for(var i=0;i<hdr.length;i++){ if(hdr[i].trim().toLowerCase()===s.toLowerCase()){vi=i;break;} }
+    if(vi<0)return;
+    var ei=-1;
+    for(var j=0;j<hdr.length;j++){ var h=hdr[j].trim().toLowerCase(); if(h===s.toLowerCase()+' err'||h===s.toLowerCase()+' error'||h===s.toLowerCase()+' 2σ'||h===s.toLowerCase()+' 2 sigma'||h===s.toLowerCase()+'err'){ei=j;break;} }
+    if(ei<0 && vi+1<hdr.length && /^(err|error|2σ|2 ?sigma|\+\/-)$/.test(low[vi+1])) ei=vi+1;
+    if(ELEMENTS.indexOf(sym)>=0) elCols[sym]={v:vi,e:ei};
+  });
+  var added=0;
+  for(var r=1;r<lines.length;r++){
+    var c=splitCSV(lines[r],delim); if(c.length<2)continue;
+    var el={}; ELEMENTS.forEach(function(s){el[s]={v:null,e:null}});
+    var any=false;
+    Object.keys(elCols).forEach(function(sym){ var m=elCols[sym]; var v=parseNum(c[m.v]); var e=m.e>=0?parseNum(c[m.e]):null; el[sym]={v:v,e:e}; if(v!=null)any=true; });
+    if(!any && iNo<0)continue;
+    var rec=mk({
+      readingNo: iNo>=0?(c[iNo]||'').trim():'',
+      sampleId: (iNo>=0?(c[iNo]||'').trim():'')||('IMP-'+r),
+      dateTime: (iDate>=0?(c[iDate]||''):'')+(iTime>=0?('T'+(c[iTime]||'')):''),
+      mode: iMode>=0?(c[iMode]||'Mining Ta/Hf'):'Mining Ta/Hf',
+      count: iDur>=0?(c[iDur]||''):'', prep:'crushed'
+    });
+    rec.el=el; DATA.unshift(rec); added++;
+  }
+  return added;
+}
+function splitCSV(line,delim){
+  if(delim==='\t')return line.split('\t');
+  var out=[],cur='',q=false;
+  for(var i=0;i<line.length;i++){var ch=line[i];
+    if(q){ if(ch==='"'){ if(line[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=ch; }
+    else { if(ch==='"')q=true; else if(ch===',')( out.push(cur),cur=''); else cur+=ch; }
+  }
+  out.push(cur); return out;
+}
+
+/* ---------- guide ---------- */
+function renderGuide(){
+  $('guidebody').innerHTML=[
+  '<p class="lead">The XRF gives you a number in 30 seconds. The value is only as good as the sample under the window and the record around it. This is the loop that makes those numbers bankable for grade control, ore/waste calls and blending to concentrate spec.</p>',
+  '<h3>1 · How grade is calculated</h3>',
+  '<p>The Niton reports <b>elemental tungsten (W%)</b>. Tungsten ore and concentrate are traded as <b>WO₃</b> (tungsten trioxide):</p>',
+  '<ul><li><span class="mono">WO₃ % = W % × 1.2611</span> &nbsp;(molar mass WO₃ 231.84 / W 183.84 = 1.26107). Multiply the ±2σ error by the same factor.</li>',
+  '<li><span class="mono">MTU/t = WO₃ %</span> &nbsp;— one metric tonne unit = 10 kg of WO₃ = 0.01 % WO₃ per tonne, so a %WO₃ figure reads straight across as MTU per tonne.</li>',
+  '<li>Saleable first-grade concentrate (APT feed) is typically <b>≥65 % WO₃</b> (acceptable range ~62–72 %). Concentrate sells at a <b>payable %</b> of the quoted APT price ($/mtu WO₃, 88.5 % basis) — build a payability factor into any revenue model rather than applying the APT price to concentrate directly.</li></ul>',
+  '<div class="note"><b>Reading confidence.</b> Trust a value only when it clears roughly <b>3× its ±2σ</b> error; between 1.5× and 3× it is detected-but-marginal; below ~1.5× it is effectively <b>&lt; LOD</b>. In your #1655 read, W 6.04 % vs ±0.079 → ratio ~76 → rock-solid <i>counting statistics</i>. That is precision, not proof of accuracy — only lab check-assays prove accuracy.</div>',
+
+  '<h3>2 · Crushed vs uncrushed — why it is the whole game</h3>',
+  '<p>Handheld XRF interrogates a tiny spot only a few mm² across and tens of microns to ~2 mm deep. On a raw rock face you fight particle-size effects, surface roughness and the <b>nugget effect</b> — and it bites hard for tungsten: wolframite (SG ~7.1–7.5) and scheelite (SG ~5.9–6.1) are dense and coarse, so one grain in the window spikes the reading and the same density makes the minerals segregate during handling. Preparation is a hierarchy from worst to best:</p>',
+  '<ol class="steps"><li><b>In-situ rock face</b> — <span class="tag">qualitative only</span> can be off by ×2–×10. Use for vectoring (where to sample next), never for grade.</li>',
+  '<li><b>Grab / rock chip</b> — qualitative→semi-quant, ±50–100 %+.</li>',
+  '<li><b>Crushed (&lt;2 mm)</b> — semi-quantitative (~±30–50 % with averaging); a triage tool <i>once locally calibrated</i> to your lab.</li>',
+  '<li><b>Pulverised (&lt;75 µm / 200 mesh)</b> — <span class="tag">quantitative</span> the practical sweet spot; commonly r² &gt; 0.9, ±10–20 % vs lab.</li>',
+  '<li><b>Pressed pellet</b> — best practical pXRF repeatability. <b>Fused bead</b> (lab) is definitive.</li></ol>',
+  '<p>This tool tags every reading <span class="prep raw">⚠ RAW</span> or <span class="prep prep-ok">✓ prepared</span> and keeps raw readings out of the grade averages. Read a face, then crush the same interval and re-read — the <b>Samples</b> tab shows the gap so you learn how far to trust field numbers.</p>',
+  '<div class="note"><b>Tungsten spectral caution.</b> The XL2 cannot excite W K-lines, so it reads W on its <b>L-lines (~8.4 keV)</b> — a congested region overlapping <b>Zn Kα (8.64 keV) and Cu Kβ</b>. In Cu/Zn-bearing ore, apparent W can be inflated. The register flags high-W readings that also show elevated Cu/Zn with a ⚠ — always confirm those at the lab.</div>',
+  '<h3>Gold (Au) — do not trust the XRF number</h3>',
+  '<p>This is the single most important caveat in the whole dataset. <b>Gold Lα is at 9.713 keV; tungsten Lβ is at 9.672 keV</b> — about 40 eV apart, which no handheld detector can separate. In a tungsten-rich sample the strong W Lβ peak spills straight into the gold channel and the instrument reports <b>phantom gold roughly proportional to the tungsten grade</b>.</p>',
+  '<ul><li>In your 22 Jul batch the apparent Au correlates with W at <b>r ≈ 0.92</b> and averages <b>~114 ppm (≈114 g/t)</b> — a uniform bonanza grade across every sample, which is geologically impossible. That is the fingerprint of a spectral artifact, not gold.</li>',
+  '<li>Real free gold shows a violent <b>nugget effect</b> — wildly erratic spot-to-spot — never a smooth line with tungsten.</li>',
+  '<li>Handheld XRF also cannot see economic gold anyway: pay grades are ~1–10 g/t (0.0001–0.001 %), far below its detection limit.</li></ul>',
+  '<div class="note"><b>Gold policy:</b> the XL2 Au column is a <u>screening curiosity only</u> in W ore. The register shows it with a ⚠ and never uses it for grade. <b>Gold is proven only by fire assay</b> (± gravimetric/AAS finish) at a certified lab. If you want to know whether these samples carry gold, send a split for fire assay — do not act on the XRF Au figure.</div>',
+
+  '<h3>3 · Sample labeling &amp; chain of custody</h3>',
+  '<p>Label <b>before</b> anything else and keep the ID unique, sortable, zero-padded and space-free. A workable scheme:</p>',
+  '<p><span class="mono">PRJ-TYPE-FEATURE-FROM-TO-PREP</span></p>',
+  '<ul><li><b>PRJ</b> site code · <b>TYPE</b> TRN/PIT/DDH/RCH/CHN/GRB/STK (+ QC: STD/BLK/DUP) · <b>FEATURE</b> zero-padded no. · <b>FROM-TO</b> interval in cm zero-padded · <b>PREP</b> R/C/P (raw/crushed/pulverised)</li>',
+  '<li>e.g. <span class="mono">KAB-DDH-0042-01500-01800-P</span> (hole 42, 15.00–18.00 m, pulverised); <span class="mono">KAB-TRN-0007-00200-00300-C</span> (trench 7, 2–3 m, crushed)</li></ul>',
+  '<p>Every reading must carry: SampleID · ReadingNo · date/time · operator · instrument S/N · mode &amp; count time · GPS (WGS84) · feature &amp; interval · <b>prep state</b> · QC flag · full element suite · notes. Keep a signed transfer log at each handover (field → prep → measure → lab).</p>',
+
+  '<h3>4 · Recommended sample &amp; measurement workflow</h3>',
+  '<ol class="steps"><li><b>Label &amp; log</b> (scheme above); photograph the spot with the ticket, record GPS + interval.</li>',
+  '<li><b>Dry</b> the sample (~105 °C) — moisture depresses and scatters readings; never measure damp W.</li>',
+  '<li><b>Crush</b> to &lt;2 mm; clean the crusher between samples (dense W grains carry over).</li>',
+  '<li><b>Riffle-split</b> (not hand cone-and-quarter) to a representative ~200–300 g sub-sample — this is where the nugget effect is won or lost.</li>',
+  '<li><b>Pulverise</b> to &lt;75 µm where grade matters; clean the mill between samples.</li>',
+  '<li><b>Present a flat, homogeneous surface</b> in a clean XRF cup with fresh film, seated flat on the test stand with no air-gap. Never read through thick bagging.</li>',
+  '<li><b>Take 3 reads</b> re-presenting the cup between each, at <b>≥60 s</b> per read for grade work (30 s is screening-only). The app averages them per sample and reports RSD. On a raw face take 5+ spots and report the range.</li></ol>',
+
+  '<h3>5 · QA/QC — the numbers that keep you honest</h3>',
+  '<ul><li><b>CRM / standard</b> (ideally W matrix-matched, e.g. OREAS) every ~20 samples (5 %); recovery within <b>±2 SD / ~90–110 %</b>. Two consecutive fails → stop, re-standardise, re-run the batch.</li>',
+  '<li><b>Blank</b> (barren silica) ~1 in 40–65 — should read below ~2–3× the detection limit; a hot blank means clean the window and re-check recent samples for carry-over.</li>',
+  '<li><b>Field duplicate</b> ~1 in 20 — a second independent split; large disagreement means a heterogeneous zone, not a bad instrument.</li>',
+  '<li><b>Instrument replicate</b> (re-read same cup) checks precision alone — built into the 3-read protocol. <b>Daily + 4-hourly</b> run the Niton system/energy check.</li>',
+  '<li>Precision target: <b>RSD &lt;10 % good, &lt;20 % acceptable</b>. Tag all controls on capture so they filter out of production grades and into control charts.</li></ul>',
+
+  '<h3>6 · What the mining division should DO with the database</h3>',
+  '<ul><li><b>Calibrate to the lab first.</b> Send a low→high spread to a certified lab and regress lab-W vs pXRF-W to get a <b>site correction factor</b>. Until that exists, pXRF grade is relative, not absolute. Re-check monthly and whenever ore type changes.</li>',
+  '<li><b>Grade control / ore–waste.</b> Once calibrated, crushed/pulverised readings drive same-shift dig-line calls against your cut-off — dig to the WO₃, not the eye. Raw readings are for vectoring only.</li>',
+  '<li><b>High-grade intercepts.</b> The dashboard ranks best prepared WO₃; plot W down-hole/along-trench, chase and infill those zones.</li>',
+  '<li><b>Stockpile blending.</b> Each stockpile carries an averaged grade tag; blend high and low piles to hold a steady head grade toward the ~65 % WO₃ concentrate target.</li>',
+  '<li><b>Umpire assays.</b> Send to a certified lab: every decision-critical/high-grade sample, all resource intervals, a routine 5–10 % umpire batch, and anything with the W/Cu/Zn interference flag. pXRF is the fast screen that tells you which samples deserve the lab spend.</li>',
+  '<li><b>Back up.</b> Data lives in this browser only. Export CSV every shift and keep it off-device — that CSV is your assay record of account.</li></ul>',
+  '<div class="note"><b>One-line policy:</b> label → dry → crush → riffle-split → pulverise &lt;75 µm → 3 reads ≥60 s averaged → CRM every 20 → lab-calibrate &amp; reconcile → export CSV every shift → certified-lab umpire before any sale.</div>'
+  ].join('');
+}
+
+/* ================= optional Supabase backend ================= */
+var SB=null, SB_USER=null, SB_ROLE='capturer', SB_ON=false, authMode='login';
+function sbConfigured(){
+  return window.XRF_CONFIG && window.XRF_CONFIG.SUPABASE_URL &&
+         window.XRF_CONFIG.SUPABASE_URL.indexOf('YOUR-PROJECT')<0 &&
+         window.supabase && typeof window.supabase.createClient==='function';
+}
+function uuid(){
+  if(window.crypto&&crypto.randomUUID) return crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16)});
+}
+function refreshAll(){ renderDash(); renderRegister(); renderSamples(); }
+
+function recToRow(r){
+  return { id:r.id, reading_no:r.readingNo||null, sample_id:r.sampleId, site:r.site||null, feature:r.feature||null,
+    from_m:(r.from===''||r.from==null)?null:Number(r.from), to_m:(r.to===''||r.to==null)?null:Number(r.to),
+    sample_type:r.type||null, prep:r.prep||'crushed', mode:r.mode||null,
+    count_time:(r.count===''||r.count==null)?null:Number(r.count), gps:r.gps||null, qc:r.qc||null,
+    operator:r.operator||null, notes:r.notes||null, reading_at:r.dateTime?r.dateTime:null,
+    elements:r.el||{}, w_pct:Wval(r), w_2sigma:Werr(r), wo3_pct:wo3(Wval(r)) };
+}
+function rowToRec(row){
+  var el={}; ELEMENTS.forEach(function(s){el[s]={v:null,e:null}});
+  if(row.elements){ Object.keys(row.elements).forEach(function(s){ var c=row.elements[s]||{}; el[s]={v:c.v==null?null:c.v, e:c.e==null?null:c.e}; }); }
+  return { id:row.id, readingNo:row.reading_no||'', sampleId:row.sample_id||'', site:row.site||'', feature:row.feature||'',
+    from:row.from_m==null?'':String(row.from_m), to:row.to_m==null?'':String(row.to_m), type:row.sample_type||'Rock chip',
+    prep:row.prep||'crushed', mode:row.mode||'', count:row.count_time==null?'':String(row.count_time),
+    gps:row.gps||'', qc:row.qc||'', operator:row.operator||'', notes:row.notes||'',
+    dateTime:row.reading_at?String(row.reading_at).slice(0,16):'', el:el, createdAt:row.created_at||nowISO() };
+}
+
+async function sbBoot(){
+  try{
+    SB = window.supabase.createClient(window.XRF_CONFIG.SUPABASE_URL, window.XRF_CONFIG.SUPABASE_ANON_KEY);
+    var res = await SB.auth.getSession(); var session=res.data?res.data.session:null;
+    if(session && session.user){ await sbAfterLogin(session.user); }
+    else { showLogin(); }
+  }catch(e){ toast('Backend error — running local. '+(e.message||e)); }
+}
+function showLogin(){ $('loginOverlay').style.display='grid'; }
+function hideLogin(){ $('loginOverlay').style.display='none'; }
+function authTab(m){ authMode=m; $('tab_login').classList.toggle('on',m==='login'); $('tab_signup').classList.toggle('on',m==='signup');
+  $('nameRow').style.display=m==='signup'?'block':'none'; $('authBtn').textContent=m==='signup'?'Create account':'Log in'; $('li_msg').textContent=''; }
+async function authSubmit(){
+  var email=$('li_email').value.trim(), pw=$('li_pw').value;
+  if(!email||!pw){ $('li_msg').textContent='Enter email and password.'; return; }
+  $('authBtn').disabled=true;
+  try{
+    if(authMode==='signup'){
+      var r=await SB.auth.signUp({email:email,password:pw,options:{data:{full_name:$('li_name').value.trim()}}});
+      if(r.error){ $('li_msg').textContent=r.error.message; }
+      else if(r.data.session){ await sbAfterLogin(r.data.user); }
+      else { $('li_msg').textContent='Account created. If email confirmation is on, confirm then log in.'; authTab('login'); }
+    } else {
+      var l=await SB.auth.signInWithPassword({email:email,password:pw});
+      if(l.error){ $('li_msg').textContent=l.error.message; }
+      else { await sbAfterLogin(l.data.user); }
+    }
+  }catch(e){ $('li_msg').textContent=e.message||String(e); }
+  $('authBtn').disabled=false;
+}
+async function sbAfterLogin(user){
+  SB_USER=user; SB_ON=true; hideLogin();
+  try{ var p=await SB.from('profiles').select('role,full_name').eq('id',user.id).single(); if(p.data){ SB_ROLE=p.data.role||'capturer'; user._name=p.data.full_name; } }catch(e){}
+  await sbReload(); renderAuthBar();
+}
+async function sbReload(){
+  try{
+    var r=await SB.from('readings').select('*').order('reading_at',{ascending:false,nullsFirst:false});
+    if(r.error){ toast('Load error: '+r.error.message); return; }
+    DATA=(r.data||[]).map(rowToRec); save(DATA); refreshAll();
+  }catch(e){ toast('Load error: '+(e.message||e)); }
+}
+async function sbUpsert(rec){ try{ var r=await SB.from('readings').upsert(recToRow(rec)); if(r.error) toast('Sync failed: '+r.error.message); }catch(e){ toast('Sync failed: '+(e.message||e)); } }
+async function sbDelete(id){ try{ var r=await SB.from('readings').delete().eq('id',id); if(r.error) toast('Delete blocked (managers only): '+r.error.message); }catch(e){ toast('Delete failed'); } }
+async function sbLogout(){ try{ await SB.auth.signOut(); }catch(e){} location.reload(); }
+function renderAuthBar(){
+  var nm=(SB_USER&&(SB_USER._name||SB_USER.email))||'User';
+  $('modeline').innerHTML='<span class="syncdot"></span>Live — synced to the shared database.';
+  $('authbar').style.display='block';
+  $('authbar').innerHTML='<div class="who"><div class="av">'+esc(nm.slice(0,1).toUpperCase())+'</div><div><div class="nm2">'+esc(nm)+'</div><div class="rl">'+esc(SB_ROLE)+'</div></div></div>'+
+    '<button class="btn sm gho" style="margin-top:10px;width:100%" onclick="sbLogout()">Sign out</button>';
+}
+
+/* ---------- init ---------- */
+buildElGrid(); resetForm(); renderDash();
+if(sbConfigured()){ sbBoot(); }
+else if(window.XRF_CONFIG && window.XRF_CONFIG.SUPABASE_URL && window.XRF_CONFIG.SUPABASE_URL.indexOf('YOUR-PROJECT')>=0){
+  $('modeline').innerHTML='<span class="syncdot local"></span>Local mode — edit <b>config.js</b> with your Supabase keys to go live.';
+}
+</script>
+</body>
+</html>

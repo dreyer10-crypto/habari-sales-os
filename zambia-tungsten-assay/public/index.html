@@ -170,6 +170,7 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
       <a data-v="capture"><span class="ic">＋</span> Capture reading</a>
       <a data-v="register"><span class="ic">▤</span> Assay register</a>
       <a data-v="samples"><span class="ic">⛃</span> Samples &amp; QA/QC</a>
+      <a data-v="vector"><span class="ic">⛏</span> Mineral vectoring</a>
       <a data-v="guide"><span class="ic">◇</span> Field &amp; data protocol</a>
     </nav>
     <div class="foot">
@@ -334,6 +335,19 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
       </div>
     </section>
 
+    <!-- VECTORING -->
+    <section class="view" id="v-vector">
+      <div class="topbar">
+        <div>
+          <h1>Mineral vectoring</h1>
+          <div class="sub">The element suite of each sample, read as a geologist would: which mineral you're on, and which <b>other</b> minerals to pursue to expand the base. Every call is an XRF inference — confirm with the UV lamp, a magnet, and lab work as flagged.</div>
+        </div>
+      </div>
+      <div id="pursueSummary"></div>
+      <div id="vectorCards"></div>
+      <div class="note" style="margin-top:16px"><b>Read this like a compass, not a verdict.</b> Bulk XRF gives diluted ore proxies, so ratios and co-occurrence matter more than any single number. The wolframite/scheelite split, and every Li / REE / gold / base-metal call, are the ones most likely to be wrong from XRF alone — route those to UV, magnet and certified-lab confirmation. Thresholds are starting points; tune them to your own background.</div>
+    </section>
+
     <!-- GUIDE -->
     <section class="view guide" id="v-guide">
       <div class="topbar"><div><h1>Field &amp; data protocol</h1><div class="sub">The best-practice loop that turns XRF spot-readings into decisions a mining division can bank on.</div></div></div>
@@ -374,9 +388,10 @@ td.num,th.num{text-align:right;font-family:var(--mono)}
 <script>
 /* ---------- constants & domain math ---------- */
 var W_TO_WO3 = 1.2611;                 // WO3 231.84 / W 183.84 (231.837/183.84 = 1.26107)
-var STORE = 'zam_tungsten_xrf_v2';
+var STORE = 'zam_tungsten_xrf_v3';
 var SETT  = 'zam_tungsten_xrf_settings_v1';
-var ELEMENTS = ['W','Au','Sn','Fe','Mn','Cu','Zn','As','Pb','Bi','Sr','Zr','Al','Si','Cl','Ca','S','Ti','Bal'];
+// pay metals · W-mineral chemistry · pathfinders (vectoring) · matrix · balance
+var ELEMENTS = ['W','Au','Sn','Fe','Mn','Ca','Mo','Bi','Cu','Zn','Pb','As','Sb','Nb','Ta','Rb','Sr','Th','U','Y','Zr','La','Ce','Al','Si','Cl','S','Ti','Bal'];
 var settings = loadSettings();
 
 function loadSettings(){ try{return JSON.parse(localStorage.getItem(SETT))||{}}catch(e){return{}} }
@@ -389,6 +404,70 @@ function auPpm(auPct){ return (auPct==null||isNaN(auPct))?null:auPct*10000; } //
 // Au Lα (9.713 keV) is only ~40 eV from W Lβ (9.672 keV) — unresolvable on a handheld.
 // So ANY apparent Au in a W-rich sample is a likely tungsten artifact, not real gold.
 function auSuspect(r){ var au=r.el&&r.el.Au?r.el.Au.v:null, w=r.el&&r.el.W?r.el.W.v:null; return au!=null&&w!=null&&w>=0.5; }
+
+/* ============================================================================
+   MINERAL VECTORING ENGINE
+   Turns the element suite of a reading into "likely mineral + what to pursue".
+   Rules R1–R13 from exploration-geochemistry sources; thresholds are in % and
+   are STARTING points — calibrate to your own background/CRM data.
+   All calls are inferences from bulk XRF, not identifications: confirm by
+   UV lamp (scheelite glows blue-white), a magnet (wolframite is magnetic),
+   and lab XRD/ICP for the high-value / low-confidence calls.
+   ============================================================================ */
+function ev(r,s){ return (r.el&&r.el[s]&&r.el[s].v!=null)?r.el[s].v:null; }
+function ge(r,s,t){ var v=ev(r,s); return v!=null&&v>=t; }
+function vector(r){
+  var out=[], W=ev(r,'W');
+  if(W==null||W<0.1) return out;
+  var Mn=ev(r,'Mn'),Fe=ev(r,'Fe'),Ca=ev(r,'Ca'),Sn=ev(r,'Sn'),Bi=ev(r,'Bi'),Mo=ev(r,'Mo'),
+      Nb=ev(r,'Nb'),Ta=ev(r,'Ta'),Rb=ev(r,'Rb'),Cu=ev(r,'Cu'),Zn=ev(r,'Zn'),Pb=ev(r,'Pb'),
+      As=ev(r,'As'),Sb=ev(r,'Sb'),La=ev(r,'La'),Ce=ev(r,'Ce'),Y=ev(r,'Y'),Th=ev(r,'Th'),Zr=ev(r,'Zr');
+  function add(key,m,a,c,k,conf){ out.push({key:key,mineral:m,action:a,conf:c,confirm:k,kind:conf}); }
+
+  // R1 / R2 — the primary tungsten mineral (wolframite vs scheelite)
+  if(Mn!=null&&Mn>=0.05){ add('wt','Wolframite (ferberite-rich)','Primary W ore — map W·Mn highs together','high','No UV glow · weakly magnetic','ore'); }
+  else if(Ca!=null&&(Mn==null||Mn<0.05)&&(Fe==null||Fe<2)){ add('wt','Scheelite (likely)','Primary W ore','med','Blue-white under shortwave UV · non-magnetic','ore'); }
+  else { add('wt','Wolframite or scheelite — ambiguous','XRF can’t split these (Ca reads poorly, Mn low)','low','UV lamp + magnet resolves it on the spot','ore'); }
+
+  // R4 — cassiterite / Sn-W system
+  if(Sn!=null&&Sn>=0.3) add('sn','Cassiterite — possible standalone Sn shoot','Delineate; consider a tin circuit','high','Gravity-separable with wolframite','coproduct');
+  else if(Sn!=null&&Sn>=0.1) add('sn','Cassiterite (Sn co-product)','Assay Sn recovery — gravity by-product with W','high','Fertile Sn-W system','coproduct');
+  else if(Sn!=null&&Sn>=0.05) add('sn','Cassiterite present','Log Sn on every reading; map Sn highs','high','Fertile Sn-W greisen/vein confirmed','coproduct');
+
+  // R5 — coltan / pegmatite zoning
+  if((Sn!=null&&Sn>=0.1)&&(ge(r,'Nb',0.02)||ge(r,'Ta',0.02))) add('nbta','Columbite-tantalite (coltan)','High-value — assay Nb-Ta; you may be zoning to a pegmatite core','med','Lab / XRD confirm','expand');
+
+  // R6 — Li-fertile granite (Li is XRF-invisible → Rb proxy)
+  if(Rb!=null&&Rb>=0.01) add('li','Li-fertile fractionated granite','Sample for lithium (lepidolite/spodumene) — Li is XRF-invisible','med','Li by ICP / LIBS (Rb is only a proxy)','expand');
+
+  // R7 — Bi+Mo → near the fertile cupola
+  if((Bi!=null&&Bi>=0.01)&&Mo!=null) add('bimo','Bismuthinite + molybdenite','You are near the fertile intrusive core — vector toward it; Mo/Bi by-products','med','—','expand');
+  else if(Bi!=null&&Bi>=0.01) add('bimo','Bismuthinite (proximal tell)','Bi rising = closer to the hot cupola — tighten sampling here','med','—','expand');
+
+  // R8 — skarn triad
+  if(Mo!=null&&Cu!=null&&Zn!=null&&Ca!=null) add('skarn','Skarn (W-Mo-Cu-Zn)','Chase the carbonate contact; Mo-Cu credits','med','—','expand');
+
+  // R9 / R10 — REE
+  if((La!=null||Ce!=null)&&Th!=null) add('monazite','Monazite (light REE)','REE assay; handle Th (radiometric)','med','ICP / XRD','expand');
+  if(Y!=null&&Y>=0.01&&Th!=null) add('xenotime','Xenotime (heavy REE — high value)','HREE assay','med','ICP-MS','expand');
+
+  // R11 — base-metal sulphides
+  if((Zn!=null&&Zn>=0.1)||(Pb!=null&&Pb>=0.1)||(As!=null&&As>=0.05)) add('sulphide','Base-metal sulphides (Pb-Zn-Cu-As)','Follow-up sampling — polymetallic vein / distal skarn','low','Cu/Zn/As/Pb are interference-prone here — lab confirm','expand');
+
+  // R12 — real-gold pathfinder halo (XRF cannot see economic Au)
+  if((As!=null&&As>=0.05)&&(Sb!=null||Bi!=null)) add('aupath','Gold pathfinder halo (As-Sb ± Bi)','Send for FIRE ASSAY — the only way to prove gold','med','XRF Au is an artifact, never a grade','gold');
+
+  // R13 — zircon / HFSE carrier
+  if(Zr!=null&&Zr>=0.05) add('zircon','Zircon (± Hf/Nb/REE carrier)','Note in heavy-mineral / critical-metal context','low','—','expand');
+
+  return out;
+}
+// which pathfinders are NOT yet being logged but should be, given a fertile Sn-W system
+function pathfinderGaps(){
+  var want=[['Nb','columbite-tantalite'],['Ta','coltan'],['Bi','proximity to the fertile cupola'],['Mo','molybdenite / skarn-porphyry'],['Rb','Li-fertility (Li is XRF-invisible)']];
+  var seen={}; DATA.forEach(function(r){ Object.keys(r.el||{}).forEach(function(s){ if(r.el[s].v!=null) seen[s]=1; }); });
+  return want.filter(function(w){ return !seen[w[0]]; });
+}
 
 function tier(wo3Pct){
   if(wo3Pct==null) return {k:'nd',lbl:'—',cls:'b-below'};
@@ -476,7 +555,7 @@ function go(v){
   $('v-'+v).classList.add('on');
   document.querySelectorAll('#nav a').forEach(function(a){a.classList.toggle('on',a.dataset.v===v)});
   window.scrollTo(0,0);
-  if(v==='dash')renderDash(); if(v==='register')renderRegister(); if(v==='samples')renderSamples(); if(v==='guide')renderGuide();
+  if(v==='dash')renderDash(); if(v==='register')renderRegister(); if(v==='samples')renderSamples(); if(v==='vector')renderVectoring(); if(v==='guide')renderGuide();
 }
 document.querySelectorAll('#nav a').forEach(function(a){a.onclick=function(){go(a.dataset.v)}});
 
@@ -686,6 +765,46 @@ function renderSamples(){
       '</div></div>';
   });
   wrap.innerHTML=cards||'<div class="empty" style="padding:24px">No sample has both a raw and a prepared reading yet. Read a rock face, then crush the same interval and re-read to build this comparison.</div>';
+}
+
+/* ---------- mineral vectoring view ---------- */
+function confPill(c){ var m={high:['strong','var(--green)'],med:['likely','var(--gold-soft)'],low:['tentative','var(--amber)']}; var x=m[c]||m.low; return '<span class="conf '+(c==='high'?'strong':c==='med'?'ok':'low')+'">'+x[0]+'</span>'; }
+function renderVectoring(){
+  var g=groupSamples(); var keys=Object.keys(g).sort();
+  var rank={high:3,med:2,low:1};
+  // aggregate pursue signals across the whole dataset — count each reading once per key
+  var tally={}; var kinds={};
+  DATA.forEach(function(r){ var seen={}; vector(r).forEach(function(f){ if(seen[f.key])return; seen[f.key]=1;
+    tally[f.key]=(tally[f.key]||0)+1; if(!kinds[f.key]||rank[f.conf]>rank[kinds[f.key].conf]) kinds[f.key]=f; }); });
+  var order=Object.keys(tally).sort(function(a,b){return tally[b]-tally[a]});
+  var chips=order.map(function(key){ var f=kinds[key]; var col=f.kind==='ore'?'var(--gold)':f.kind==='coproduct'?'var(--green)':f.kind==='gold'?'var(--red)':'var(--blue)';
+    return '<span class="pill on" style="background:transparent;border-color:'+col+';color:'+col+'">'+esc(f.mineral.split(' (')[0].split(' —')[0])+' · '+tally[key]+'</span>'; }).join('');
+  var gaps=pathfinderGaps();
+  var gapNote = gaps.length? '<div class="note" style="margin:0 0 16px"><b>Expand your panel.</b> Your Sn-W signature is a fertile rare-metal system, but you are not yet logging: '+
+    gaps.map(function(x){return '<b>'+x[0]+'</b> ('+x[1]+')'}).join(', ')+'. Add these to the element panel (or the Niton method) so the engine can vector toward columbite-tantalite, molybdenite and lithium.</div>' : '';
+  $('pursueSummary').innerHTML='<div class="panel hl"><h2>Pursue signals <span class="tag">across '+DATA.length+' readings</span></h2>'+
+    '<div class="ph">What the whole dataset is telling you to chase. Gold = tungsten ore · green = co-product · blue = expansion target · red = confirm-only.</div>'+
+    '<div class="pillrow" style="margin-bottom:0">'+(chips||'<span class="mini">No signals yet</span>')+'</div></div>'+gapNote;
+
+  var cards=keys.map(function(k){
+    var arr=g[k];
+    // union of findings across the sample's readings (take highest-conf instance of each mineral)
+    var best={};
+    arr.forEach(function(r){ vector(r).forEach(function(f){ var cur=best[f.key];
+      if(!cur||rank[f.conf]>rank[cur.conf]) best[f.key]=f; }); });
+    var fs=Object.keys(best).map(function(m){return best[m]});
+    if(!fs.length) return '';
+    var f0=arr[0];
+    var meanW=stats(arr.filter(function(r){return !isRaw(r.prep)&&Wval(r)!=null}).map(Wval));
+    var rows=fs.map(function(f){
+      var col=f.kind==='ore'?'var(--gold)':f.kind==='coproduct'?'var(--green)':f.kind==='gold'?'var(--red)':'var(--blue)';
+      return '<tr><td style="border-left:3px solid '+col+'"><b>'+esc(f.mineral)+'</b></td><td>'+esc(f.action)+'</td><td>'+confPill(f.conf)+'</td><td class="mini">'+esc(f.confirm)+'</td></tr>';
+    }).join('');
+    return '<div class="panel"><h2 style="font-size:17px">'+esc(k)+' <span class="tag">'+(meanW.n?fmt(wo3(meanW.mean),1)+'% WO₃':'')+'</span></h2>'+
+      '<div class="ph">'+esc(f0.feature||f0.site)+' · '+arr.length+' reading'+(arr.length>1?'s':'')+'</div>'+
+      '<div class="tw"><table><thead><tr><th>Signal</th><th>Pursue</th><th>Confidence</th><th>Confirm by</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+  }).join('');
+  $('vectorCards').innerHTML=cards||'<div class="empty">No W readings to vector yet</div>';
 }
 
 /* ---------- CSV export ---------- */

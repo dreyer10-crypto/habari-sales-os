@@ -31,7 +31,8 @@ XL2** handheld-XRF readings into a shared, controlled, auditable grade database.
 ## Layout
 
 ```
-public/index.html          the dashboard
+public/index.html          the dashboard (register, grade, QA/QC, mineral vectoring)
+public/strategy.html       render-app strategy & architecture (workflow, camera, roadmap)
 public/config.example.js   copy to config.js, add your Supabase keys
 supabase/schema.sql        tables + roles + row-level security  (run once)
 supabase/seed.sql          the real 22 Jul 2026 batch (11 readings)

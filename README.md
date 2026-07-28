@@ -65,11 +65,58 @@ The deployable site is in [`public/`](public/):
 | `habari-media-dashboard.html` | **Manager Dashboard** — leads, funnel, hit rate, roll-overs, sales competition (+ prize config), escalation ladder (access code: `habari2026`) |
 | `habari-operating-dashboard.html` | **Sales Operating Dashboard** — the rep's desk: report generator, raise-a-booking, top-sheet library, rate card |
 | `campaign-report.html` | Live campaign report (embeds the R25,000 Network Special) |
+| `xrf-assay-register.html` | **Tungsten Assay OS** (mining division) — captures Niton XL2 XRF readings, computes WO₃ grade / MTU/t, tags crushed-vs-uncrushed, QA/QC per sample, CSV in/out |
 | `_headers` | `X-Robots-Tag: noindex, nofollow` applied to every page |
 
 Repo root: `netlify.toml` (publish = `public`), `.gitignore`, this README.
 
 ---
+
+## Mining division — Tungsten Assay OS (Zambia XRF)
+
+`xrf-assay-register.html` is a standalone tool for the Zambian tungsten project. It turns raw
+**Thermo Niton XL2** handheld-XRF spot-readings (the *Mining Ta/Hf* mode) into a bankable assay
+database. It shares the visual system but has its own store (`localStorage: zam_tungsten_xrf_v1`)
+and is independent of the sales pipeline.
+
+**What it captures & computes**
+
+- One record per reading: Niton reading #, sample label, site / feature / depth interval, GPS,
+  operator, count time, QA/QC tag, and the full element panel (value **%** + **±2σ**), mirroring the
+  instrument readout.
+- **Grade math:** `WO₃ % = W % × 1.2611` (the traded tungsten unit) and `MTU/t = WO₃ %`
+  (1 MTU = 10 kg WO₃ = 0.01 % WO₃ per tonne). Grade **tier** (below cut-off → concentrate) and a
+  **reading-confidence** flag from the value-vs-2σ ratio (robust > 3×, `< LOD` below ~1.5×).
+- **Crushed vs uncrushed** is first-class. Every reading is tagged by prep state (in-situ / grab /
+  crushed / pulverised / pellet). Uncrushed = *indicative only* and is kept out of grade averages;
+  the **Samples** tab shows the crushed-vs-uncrushed gap so field numbers can be trusted correctly.
+- **QA/QC:** readings group by sample label → mean W̄ / WO₃, spread (RSD %), heterogeneity flag,
+  and QA/QC tags (CRM / blank / duplicate / repeat). Cut-off grade is **configurable** (site-specific).
+- A **W L-line / Cu-Zn spectral-interference** ⚠ flag on high-W readings that also show elevated
+  Cu/Zn — confirm those at the lab.
+- **Gold (Au) is not trusted.** Au Lα (9.71 keV) overlaps the tungsten Lβ line (9.67 keV), which a
+  handheld cannot resolve, so a W-rich sample reports phantom gold ∝ tungsten. The dashboard shows
+  the live Au↔W correlation and flags every suspect Au reading; gold is proven only by fire assay.
+  Multi-element (W, Au, Sn, Fe, Mn, Cu, Pb, Bi, Sr, Zr, Al, Si, Cl …) — the panel matches the XL2 export.
+
+The tool ships pre-loaded with the **real XL2-108297 batch of 22 Jul 2026** (11 crushed readings across
+four samples; the 0.24 s misfire is excluded). Clear site data or bump `zam_tungsten_xrf_v2` to reseed.
+
+**Data in / out**
+
+- **Capture:** manual form (mirrors the panel), *Paste panel* quick-add, or *Import Niton CSV* — a
+  tolerant parser for the NDT software export (one row per reading, `<El>` + `<El> Err` pairs, `< LOD`
+  handled as not-detected). Confirm the exact header spelling against a real export from this unit.
+- **Export:** full register CSV and a sample-summary CSV for the geologist / certified lab.
+
+The in-app **Field & data protocol** tab is the operating manual: labeling scheme, dry → crush →
+riffle-split → pulverise <75 µm → 3 reads ≥60 s workflow, the CRM/blank/duplicate QA/QC program, and
+what the mining division should *do* with the data (lab calibration, ore/waste calls, stockpile
+blending to ~65 % WO₃ concentrate spec, umpire assays).
+
+> **XRF is a fast screen, not the legal grade.** Calibrate the XL2 against certified-lab assays before
+> quoting grades, and send decision-critical / high-grade samples for umpire assay. The tool enforces
+> this discipline; it does not replace the lab.
 
 ## Run locally
 

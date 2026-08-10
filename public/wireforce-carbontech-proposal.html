@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Carbontech 4-Toe Clamp — Proposal for Wireforce</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔩</text></svg>">
+</head>
+<body>
+<style>
+  :root{
+    --bg:#eef0f2; --surface:#ffffff; --surface-2:#f6f7f8;
+    --ink:#151a1e; --ink-2:#3f4a53; --muted:#6b7681;
+    --line:#d7dbdf; --line-strong:#c2c8cd;
+    --accent:#e2551f; --accent-ink:#b23e12;
+    --steel:#3a5164; --steel-soft:#e6ebef;
+    --good:#2f7d52;
+    --shadow:0 1px 2px rgba(20,26,30,.05),0 8px 24px rgba(20,26,30,.06);
+    --mono:ui-monospace,"SF Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1214; --surface:#161c20; --surface-2:#12171a;
+      --ink:#eef2f4; --ink-2:#c0c9d0; --muted:#8b96a0;
+      --line:#28313700; --line:#293237; --line-strong:#3a464d;
+      --accent:#ff6a34; --accent-ink:#ff8158;
+      --steel:#8fb0c6; --steel-soft:#1c262c;
+      --good:#57b784;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1214; --surface:#161c20; --surface-2:#12171a;
+    --ink:#eef2f4; --ink-2:#c0c9d0; --muted:#8b96a0;
+    --line:#293237; --line-strong:#3a464d;
+    --accent:#ff6a34; --accent-ink:#ff8158;
+    --steel:#8fb0c6; --steel-soft:#1c262c;
+    --good:#57b784;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased;font-size:17px}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px}
+  a{color:var(--accent-ink)}
+  h1,h2,h3{text-wrap:balance;line-height:1.12;letter-spacing:-.02em;margin:0}
+  .eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.18em;
+    font-size:12px;font-weight:600;color:var(--accent-ink)}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* hazard rule */
+  .hazard{height:6px;width:100%;
+    background:repeating-linear-gradient(135deg,var(--accent) 0 14px,transparent 14px 28px);
+    opacity:.9}
+
+  /* top bar */
+  header.bar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 88%,transparent);
+    backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--line)}
+  .bar .wrap{display:flex;align-items:center;gap:16px;height:56px}
+  .lock{font-family:var(--mono);font-weight:600;letter-spacing:.04em;font-size:13px;
+    display:flex;align-items:center;gap:9px;color:var(--ink)}
+  .lock .x{color:var(--muted)}
+  .bar .spacer{flex:1}
+  .bar .meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+  .btn{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;border:1px solid var(--line-strong);background:var(--surface);
+    color:var(--ink);padding:8px 14px;border-radius:7px;cursor:pointer;text-decoration:none}
+  .btn:hover{border-color:var(--accent);color:var(--accent-ink)}
+  .btn.solid{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.solid:hover{background:var(--accent-ink);color:#fff}
+
+  /* hero */
+  .hero{padding:64px 0 40px;border-bottom:1px solid var(--line);
+    background:radial-gradient(120% 90% at 85% -10%,var(--steel-soft) 0%,transparent 55%)}
+  .hero h1{font-size:clamp(32px,6vw,58px);font-weight:800;margin:18px 0 0}
+  .hero h1 .em{color:var(--accent)}
+  .hero .sub{font-size:clamp(17px,2.4vw,21px);color:var(--ink-2);max-width:62ch;margin:20px 0 0}
+  .prepared{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 26px;font-family:var(--mono);
+    font-size:12px;color:var(--muted);letter-spacing:.03em}
+  .prepared b{color:var(--ink);font-weight:600}
+
+  /* stat band */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:34px 0 4px}
+  .stat{background:var(--surface);padding:20px 18px}
+  .stat .n{font-family:var(--mono);font-weight:700;font-size:clamp(24px,3.4vw,32px);
+    letter-spacing:-.02em;color:var(--ink)}
+  .stat .n .u{font-size:.5em;color:var(--muted);font-weight:600;margin-left:3px}
+  .stat .l{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+  section{padding:52px 0;border-bottom:1px solid var(--line)}
+  section.alt{background:var(--surface-2)}
+  .kicker{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+  .kicker .no{font-family:var(--mono);font-size:12px;color:var(--accent-ink);font-weight:700}
+  h2{font-size:clamp(23px,3.4vw,32px);font-weight:750}
+  .lead{color:var(--ink-2);max-width:66ch;margin:14px 0 0;font-size:18px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:20px 20px;box-shadow:var(--shadow)}
+  .card h3{font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px}
+  .card p{margin:9px 0 0;color:var(--ink-2);font-size:15.5px}
+  .tag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--accent-ink);background:var(--steel-soft);
+    border:1px solid var(--line);padding:3px 8px;border-radius:20px;white-space:nowrap}
+
+  /* comparison table */
+  .tablewrap{overflow-x:auto;margin-top:26px;border:1px solid var(--line);border-radius:12px}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:15px}
+  thead th{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--muted);font-weight:700;padding:14px 16px;
+    background:var(--surface-2);border-bottom:1px solid var(--line-strong)}
+  thead th.hi{color:var(--accent-ink)}
+  tbody td{padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+  tbody tr:last-child td{border-bottom:0}
+  td.crit{color:var(--ink);font-weight:600;font-family:var(--mono);font-size:13px;
+    letter-spacing:.01em;width:26%}
+  td.frp{background:color-mix(in srgb,var(--accent) 7%,var(--surface));color:var(--ink)}
+  .yes{color:var(--good);font-weight:700}
+  .no{color:var(--accent-ink);font-weight:700}
+
+  ul.clean{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:11px}
+  ul.clean li{display:flex;gap:11px;color:var(--ink-2);font-size:16px}
+  ul.clean li::before{content:"";flex:0 0 8px;height:8px;margin-top:9px;border-radius:2px;
+    background:var(--accent);transform:rotate(45deg)}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px;counter-reset:s}
+  @media(max-width:720px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 20px;
+    position:relative;box-shadow:var(--shadow)}
+  .step::before{counter-increment:s;content:counter(s,decimal-leading-zero);font-family:var(--mono);
+    font-weight:700;font-size:13px;color:var(--accent);letter-spacing:.05em}
+  .step h3{font-size:16.5px;font-weight:700;margin:8px 0 0}
+  .step p{margin:9px 0 0;color:var(--ink-2);font-size:15px}
+
+  /* spec grid */
+  .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:26px}
+  @media(max-width:640px){.specs{grid-template-columns:1fr}}
+  .spec{background:var(--surface);padding:15px 18px;display:flex;justify-content:space-between;gap:14px;align-items:baseline}
+  .spec .k{color:var(--muted);font-size:14px}
+  .spec .v{font-family:var(--mono);font-weight:600;color:var(--ink);font-size:14px;text-align:right}
+
+  /* safety factor feature */
+  .sf{display:flex;gap:22px;align-items:center;margin-top:26px;flex-wrap:wrap;
+    background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:12px;padding:22px 24px;box-shadow:var(--shadow)}
+  .sf .big{font-family:var(--mono);font-weight:800;font-size:clamp(44px,8vw,72px);
+    line-height:.9;color:var(--accent);letter-spacing:-.03em}
+  .sf .txt{flex:1;min-width:240px}
+  .sf .txt b{color:var(--ink)}
+
+  /* CTA */
+  .cta{background:var(--steel);color:#fff;border-radius:16px;padding:36px 32px;margin:34px 0 8px;
+    text-align:center;background-image:
+      radial-gradient(90% 120% at 100% 0,rgba(255,255,255,.08),transparent 60%)}
+  :root[data-theme="dark"] .cta,:root:not([data-theme="light"]) .cta{color:#eef2f4}
+  .cta h2{color:#fff;font-size:clamp(22px,3.6vw,30px)}
+  :root[data-theme="dark"] .cta h2{color:#eef2f4}
+  .cta p{color:rgba(255,255,255,.82);max-width:56ch;margin:12px auto 0}
+  .cta .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  .cta .btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+  .cta .btn:hover{border-color:#fff;color:#fff}
+  .cta .btn.solid{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  footer{padding:30px 0 60px;color:var(--muted);font-family:var(--mono);font-size:11.5px;
+    letter-spacing:.03em;line-height:1.7}
+  .disc{margin-top:8px;max-width:80ch}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  @media print{header.bar{display:none}.reveal{opacity:1;transform:none}
+    section{break-inside:avoid;border-color:#ccc}.cta{background:#eee;color:#111}.cta h2,.cta p{color:#111}}
+</style>
+
+<div class="hazard"></div>
+<header class="bar">
+  <div class="wrap">
+    <span class="lock">STRONGHOLD<span class="x">×</span>WIREFORCE</span>
+    <span class="spacer"></span>
+    <span class="meta">FRP ACCESSORY PROPOSAL · REV A</span>
+    <a class="btn" href="#" onclick="window.print();return false;">Print / PDF</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow reveal">Stronghold Carbontech · FRP Accessory Proposal</div>
+    <h1 class="reveal">The clamp that fixes mesh to post —<br><span class="em">without the metal.</span></h1>
+    <p class="sub reveal">A corrosion-proof, non-conductive, glass-reinforced-polymer fence clamp,
+      engineered and load-tested to secure welded wire mesh to posts. Purpose-built for the exact
+      job Wireforce's Wirewall, mining and security systems do every day — with none of the rust,
+      conductivity or scrap-theft risk of galvanised steel fixings.</p>
+
+    <div class="stats reveal">
+      <div class="stat"><div class="n tnum">&gt;230<span class="u">kg</span></div><div class="l">Tested failure load per clamp</div></div>
+      <div class="stat"><div class="n tnum">3.31<span class="u">SF</span></div><div class="l">Safety factor vs 1-in-50-yr wind event</div></div>
+      <div class="stat"><div class="n tnum">0<span class="u">scrap</span></div><div class="l">Non-metallic — no theft incentive</div></div>
+      <div class="stat"><div class="n tnum">100k<span class="u">/10 days</span></div><div class="l">Production capacity, locally moulded</div></div>
+    </div>
+
+    <div class="prepared reveal">
+      <span>Prepared for&nbsp; <b>Wireforce (Pty) Ltd</b>, Germiston</span>
+      <span>Product&nbsp; <b>Carbontech 4-Toe Fence Clamp</b></span>
+      <span>From&nbsp; <b>Stronghold Carbontech</b></span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="kicker"><span class="no">01</span><div class="eyebrow">Why Wireforce</div></div>
+    <h2 class="reveal">You already build the fence. This is the fixing that belongs on it.</h2>
+    <p class="lead reveal">Wireforce is the largest wire converter in sub-Saharan Africa and the only
+      fully integrated manufacturer of high-security fencing systems in South Africa — serving
+      construction, security, agriculture, engineering and mining. The Carbontech 4-Toe clamp does
+      one thing: it secures wire mesh to posts. That is Wireforce's core product line, which makes
+      this an accessory that slots directly into what you already sell — not a bolt-on from another category.</p>
+
+    <div class="grid2">
+      <div class="card reveal"><h3><span class="tag">Wirewall</span> A native fit</h3>
+        <p>Wirewall is a high-security welded-mesh system (3 / 4 / 5.6&nbsp;mm wire, 12.7&nbsp;×&nbsp;75&nbsp;mm aperture)
+          built around concealed, tamper-resistant fixings. A non-conductive FRP clamp with zero scrap value
+          reinforces exactly that anti-tamper, anti-theft story.</p></div>
+      <div class="card reveal"><h3><span class="tag">Mining</span> Your toughest environment</h3>
+        <p>Wireforce supplies international mining houses and mining-support products. Mine perimeters are
+          corrosive and electrically sensitive — the two conditions where galvanised fixings fail first and
+          FRP wins outright.</p></div>
+      <div class="card reveal"><h3><span class="tag">Security</span> Substations &amp; live perimeters</h3>
+        <p>Around substations, power plants and electrified boundaries, a non-conductive clamp is a safety
+          feature, not just a spec — a differentiator for Wireforce's security-sector tenders.</p></div>
+      <div class="card reveal"><h3><span class="tag">Agri &amp; Coastal</span> Long life, low upkeep</h3>
+        <p>Standards, droppers and stock fencing in humid, coastal and high-UV conditions last longer with a
+          clamp that cannot rust and will not degrade in sunlight — fewer replacement cycles for the end user.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="kicker"><span class="no">02</span><div class="eyebrow">The deepsearch · fixing options compared</div></div>
+    <h2 class="reveal">Where a material change removes several problems at once</h2>
+    <p class="lead reveal">We reviewed Wireforce's current mesh-fixing options — galvanised standards &amp;
+      droppers, wire ties and concealed steel fixings. They are proven and cost-effective in benign
+      conditions. The Carbontech clamp is not a replacement for all of them; it is the premium,
+      non-metallic tier for the jobs where steel's weaknesses cost the most.</p>
+
+    <div class="tablewrap reveal">
+      <table>
+        <thead><tr>
+          <th class="crit">Selection criterion</th>
+          <th>Conventional galvanised-steel fixing</th>
+          <th class="hi">Carbontech 4-Toe FRP clamp</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="crit">Corrosion — mining / coastal / humid</td>
+            <td>Zinc coating abrades and wears; rusts from cut ends and scratches</td>
+            <td class="frp"><span class="yes">Inherently corrosion-proof</span> — no coating to fail</td></tr>
+          <tr><td class="crit">Electrical environments</td>
+            <td>Conductive — a hazard near substations &amp; live perimeters</td>
+            <td class="frp"><span class="yes">Non-conductive</span> glass-reinforced nylon</td></tr>
+          <tr><td class="crit">Theft &amp; vandalism</td>
+            <td>Steel carries scrap value — an incentive to strip</td>
+            <td class="frp"><span class="yes">Zero scrap value</span> — low theft incentive</td></tr>
+          <tr><td class="crit">Verified load</td>
+            <td>Varies by gauge; rarely load-certified per fixing</td>
+            <td class="frp"><b>&gt;230&nbsp;kg failure</b>, FEA + physical test, SF&nbsp;3.31</td></tr>
+          <tr><td class="crit">Handling on site</td>
+            <td>Heavier; more awkward to place and adjust</td>
+            <td class="frp">Lightweight — single-hand fit, no special tools</td></tr>
+          <tr><td class="crit">Fire &amp; heat</td>
+            <td>—</td>
+            <td class="frp">UL94 <b>HB</b>, heat-deflection &gt;200&nbsp;°C</td></tr>
+          <tr><td class="crit">Lifecycle cost</td>
+            <td>Lower unit price, higher replacement &amp; maintenance in harsh sites</td>
+            <td class="frp">Premium unit price, offset by longer service life</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead reveal" style="margin-top:18px">Net: for Wireforce's corrosion-heavy, electrically
+      sensitive and high-security jobs, the FRP clamp turns four separate steel liabilities —
+      rust, conductivity, scrap-theft and un-certified load — into a single specifiable part.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker"><span class="no">03</span><div class="eyebrow">Technical validation</div></div>
+    <h2 class="reveal">Strength is not a claim — it is measured</h2>
+    <p class="lead reveal">The Carbontech 4-Toe clamp has been validated through physical load testing and
+      finite element analysis (Autodesk Inventor, von Mises criterion). Both methods agreed on failure
+      load and failure location.</p>
+
+    <div class="sf reveal">
+      <div class="big tnum">3.31</div>
+      <div class="txt"><b>Safety factor against a 1-in-50-year extreme wind event.</b> At five clamps per
+        post, a modelled 3.456&nbsp;kN post load puts just 691&nbsp;N on each clamp — against a tested
+        failure load of 2,285&nbsp;N. The clamp is over three times stronger than the worst weather it
+        is likely to see.</div>
+    </div>
+
+    <div class="specs reveal">
+      <div class="spec"><span class="k">Material</span><span class="v">Glass-reinforced nylon (FRP)</span></div>
+      <div class="spec"><span class="k">Process</span><span class="v">Injection moulded</span></div>
+      <div class="spec"><span class="k">Failure load (tested)</span><span class="v">&gt;230 kg · 2,285 N</span></div>
+      <div class="spec"><span class="k">Tensile stress at break</span><span class="v">165 MPa · ISO 527</span></div>
+      <div class="spec"><span class="k">Flexural strength</span><span class="v">235 MPa · ISO 178</span></div>
+      <div class="spec"><span class="k">Tensile modulus</span><span class="v">10,500 MPa</span></div>
+      <div class="spec"><span class="k">Heat deflection (HDT)</span><span class="v">210–220 °C</span></div>
+      <div class="spec"><span class="k">Flammability</span><span class="v">UL94 HB</span></div>
+      <div class="spec"><span class="k">Conductivity</span><span class="v">Non-conductive</span></div>
+      <div class="spec"><span class="k">UV / corrosion</span><span class="v">Stabilised · resistant</span></div>
+      <div class="spec"><span class="k">Dimensions</span><span class="v">45 × 6 × 35 mm</span></div>
+      <div class="spec"><span class="k">Recommended service load</span><span class="v">50–75 kg / clamp</span></div>
+    </div>
+    <p class="lead reveal" style="margin-top:16px">Recommended installation is five clamps per post —
+      confirmed to give optimal load distribution and system redundancy even under extreme conditions.</p>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="kicker"><span class="no">04</span><div class="eyebrow">Commercial path</div></div>
+    <h2 class="reveal">A low-friction route from sample to supply</h2>
+    <p class="lead reveal">No channel-switching, no retooling of your systems. Qualify the part on your own
+      product, prove it on one hard site, then scale it the way that suits Wireforce best.</p>
+
+    <div class="steps">
+      <div class="step reveal"><h3>Sample &amp; fitment</h3>
+        <p>Confirm fit on Wirewall 3 / 4 / 5.6&nbsp;mm mesh and standard posts, using the same screw fixing
+          you install today. Sample units and drawings supplied on request.</p></div>
+      <div class="step reveal"><h3>Field pilot</h3>
+        <p>Deploy on one mining or coastal-security site at five clamps per post. Validate installation
+          speed, in-service performance and end-client response over a defined window.</p></div>
+      <div class="step reveal"><h3>Supply model</h3>
+        <p>Scale as a Wireforce-branded / private-label accessory SKU, or as wholesale supply into your
+          range. Local moulding supports up to 100,000 units in ~10 days.</p></div>
+    </div>
+
+    <ul class="clean reveal">
+      <li>Uses your existing fixing method and installation crews — nothing new to train.</li>
+      <li>Positions Wireforce as the first SA fencing manufacturer to offer a load-certified, non-metallic clamp.</li>
+      <li>Targets the exact tenders — mining, substation, coastal — where an FRP spec wins on merit, not price.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>Let's put samples on a Wirewall panel.</h2>
+      <p>We propose a short technical–commercial review with Wireforce to select target systems, agree a
+        first pilot site (mining or coastal security), and set the validation criteria for rollout.
+        Sample clamps, engineering drawings and the full stress-analysis report are ready to send.</p>
+      <div class="row">
+        <a class="btn solid" href="mailto:info@wireforce.co.za?subject=Carbontech%204-Toe%20FRP%20clamp%20%E2%80%94%20sample%20%26%20pilot%20proposal">Discuss pilot scope</a>
+        <a class="btn" href="#" onclick="window.print();return false;">Download as PDF</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    STRONGHOLD · CARBONTECH 4-TOE FENCE CLAMP&nbsp;&nbsp;·&nbsp;&nbsp;Prepared for WIREFORCE (Pty) Ltd, Germiston
+    <div class="disc">Product data from Stronghold Carbontech product guide, brochure and the 4-Toe Fence
+      Clamp stress-analysis report. Wireforce company and Wirewall product details from public sources
+      (wireforce.co.za, SAWA). Figures are validated test/FEA results; site performance to be confirmed at
+      pilot. Confidential — for Wireforce evaluation only.</div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(en){en.forEach(function(x){
+      if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{threshold:.12});
+    els.forEach(function(e){io.observe(e);});
+  })();
+</script>
+</body>
+</html>

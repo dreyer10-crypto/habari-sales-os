@@ -5,7 +5,7 @@
 **Client:** Dromex South Africa · booked through Metamedia
 **Platform:** SA Rugby Magazine (sarugbymag.co.za + Facebook / Instagram)
 **Flight proposed:** Friday 21 August – 21 October 2026 (2 months)
-**Rate proposed:** R50,000 per month excl. VAT · R100,000 total
+**Rate proposed:** R50,000 per month net of agency commission, excl. VAT · R100,000 total
 **Previous booking:** June 2026, R65,000 — status *won*, campaign complete, goal met
 
 ---
@@ -34,9 +34,9 @@ I would like to keep Dromex live right through it.
   ROS on sarugbymag.co.za, plus a boosted social post across the SA Rugby
   magazine Facebook and Instagram channels each month.
 - Flight: Friday 21 August to 21 October 2026, live before the first whistle.
-- Rate: R50,000 per month excl. VAT, down from the R65,000 June rate.
-  R100,000 for the full two-month flight — a R30,000 saving against what the
-  same two months would have cost at June's rate.
+- Rate: R50,000 per month, net of agency commission and excl. VAT — down from
+  the R65,000 June rate. R100,000 net for the full two-month flight, against
+  R130,000 at June's rate.
 
 **What June delivered**
 
@@ -83,7 +83,7 @@ www.habarimedia.com
 
 ## Open points for Dreyer before sending
 
-1. **Net or gross of agency commission.** June's R65,000 carried R10,036.25 commission (~15.4%). The email states R50,000 excl. VAT without specifying net/gross — confirm which applies before sending.
+1. **Like-for-like comparison.** Confirmed by Dreyer: R50,000 is net of agency commission. June's R65,000 carried R10,036.25 commission (~15.44%), so if that R65,000 was the gross figure Dromex paid, the "down from R65,000" line is not strictly like-for-like — at June's commission rate, R50,000 net grosses up to roughly R59,100. Decide whether to quote the net rate (as drafted) or the grossed-up figure to Lara.
 2. **Fixture detail.** The email says "four Tests ... the All Blacks fixtures among them" without naming dates. Add the exact fixtures and dates if you want the rivalry hook to land harder.
 3. **Impression volume.** The email cites June's delivery as a benchmark, not a guarantee. If you want to contract a monthly impression volume, that must go on the booking order.
 4. **Inventory.** Confirm the 728x90 and 300x250 ROS positions are available for the full 21 Aug – 21 Oct window before committing to the flight dates.
@@ -96,8 +96,8 @@ REQUIRED HUMAN APPROVAL
 • Approver: Dreyer Hoffman (principal)
 • Adviser sign-off needed: none — standard media booking, no legal/tax content
 • Live holds affecting this: none
-• Figures to verify before use: net vs gross of agency commission on R50,000;
-  fixture count and dates; inventory availability for the full flight
+• Figures to verify before use: basis of the June R65,000 (gross vs net) for a
+  like-for-like comparison; fixture count and dates; inventory availability
 • This draft is NOT executed, sent, or committed.
 ─────────────────────────────────────────
 ```

@@ -34,8 +34,10 @@ The three things that matter most:
 1. **The Sale of Shares proceeds are ceded to Plane Tree "out and out" — outright, not as security.**
    That is a transfer of ownership of the claim from signature date. There is **no clause returning
    the claim to Tyron when the loan is repaid**, and **no clause obliging Plane Tree to pay back any
-   surplus** above what we owe. If the De Jongh / Nel share sale is worth more than R2.4m, the excess
-   is, on the face of the drafting, gone. *(Pledge cl 4.2, and Annexure A.)*
+   surplus** above what we owe. And the risk that is easy to miss: on the out‑and‑out construction the
+   claim **falls into Plane Tree's estate if they become insolvent**, leaving Tyron a *concurrent*
+   creditor for the whole excess. If the De Jongh / Nel share sale is worth more than R2.4m, that
+   excess is exposed twice over. *(Pledge cl 4.2 and Annexure A; see §5.1.)*
 
 2. **There is no "ordinary course of business" carve‑out anywhere in the security document.** All
    present and future book debts, *and the credit balance in Tyron's bank account*, are ceded; and
@@ -77,12 +79,18 @@ interest first per cl 8.3):
   loan; it is not. Our refinancing/exit plan has to be built around a ~R1.63m bullet, not around
   twelve instalments.
 
-- **"21% compounded daily" is not 21%.** Compounded daily, the effective annual rate is
-  **23.36%**, not 21%. Their own attorney twice notes (comments 8 and 19) that "the maximum interest
-  rate which can be charged is the Repo Rate plus 14%. That is 21% at the moment and we cannot charge
-  24%." **They have written a 21% headline that compounds to 23.36% — which is the very outcome the
-  comment says they cannot have.** Demand either simple interest or, at most, monthly capitalisation,
-  and demand the effective annual rate be stated on the face of the agreement.
+- **"21% compounded daily" is not 21% — but argue it under Regulation 40, not the rate cap.**
+  Compounded daily the effective annual rate is **23.36%**. Their attorney twice notes (comments 8 and
+  19) that "the maximum interest rate which can be charged is the Repo Rate plus 14%. That is 21% at
+  the moment and we cannot charge 24%" — and they have then written a 21% headline that compounds to
+  23.36%.
+
+  The temptation is to argue "23.36% exceeds the 21% cap". **Don't** — whether the Regulation 42 cap
+  bites on the nominal or the effective rate is genuinely unresolved (see §9.1). The stronger and
+  cleaner point is **Regulation 40**: interest must be *calculated* daily but may be *added to the
+  deferred amount only once a month*. **Daily capitalisation is not permitted at all**, whatever the
+  headline rate. Demand simple interest or, at most, monthly capitalisation, and demand the effective
+  annual rate on the face of the agreement.
 
 - **The dates are hard‑coded and will break.** cl 8.1.1 fixes the first R100 000 instalment at
   **31 August 2026**. But cl 5.1 gives 14 calendar days from signature for suspensive conditions
@@ -100,14 +108,26 @@ interest first per cl 8.3):
 Toivo's email asks us to send **"your company details to be used in the AOD/invoice for legal fees."**
 Do not send them. Three reasons, in ascending order of seriousness:
 
-**(a) We are probably not liable for these fees at all.** Loan cl 16 and Pledge cl 9 say the Borrower
-pays all costs of drafting and implementing the agreements. Their own attorney's **comment 49** says
-in terms:
+**(a) We are probably not liable for these fees at all — and there is now binding SCA authority.**
+Loan cl 16 and Pledge cl 9 say the Borrower pays all costs of drafting and implementing the
+agreements. Their own attorney's **comment 49** says otherwise, in terms:
 
 > *"In terms of section 100 of the National Credit Act a credit provider must not charge an amount to
 > the consumer in respect of any fee, charge, commission, expense or other amount payable by the
 > credit provider to any third party… We will need to address this as we cannot charge the consumer
 > the costs for the preparation of this agreement."*
+
+He is right, and the position hardened last year. In **National Credit Regulator v National Consumer
+Tribunal** [2025] ZASCA 132; 2026 (2) SA 455 (SCA) (12 September 2025) — the "on‑the‑road fees" case —
+the SCA held that **s101(1) read with s102(1) contains a closed list of the permissible charges** a
+credit provider may require a consumer to pay, and that **each charge must be examined on its
+substance, not its label**. Drafting fees are not on that list. The **initiation fee** under s101(1)(b)
+is the statutorily permitted, capped recovery for originating a credit agreement — and Plane Tree has
+disclosed that as **NIL**.
+
+Note the distinction they may try: legal fees *are* recoverable as **collection costs** under
+s101(1)(g) — but that covers fees incurred in **enforcing** the consumer's obligations, not in
+originating the agreement.
 
 **(b) The company‑invoice route is that same attorney's stated workaround — and he flagged it as
 improper.** Comment 49 continues:
@@ -115,14 +135,30 @@ improper.** Comment 49 continues:
 > *"We can possibly have his company pay these amounts but it is not strictly permitted."*
 
 The request in Toivo's email is the execution of that workaround. If we supply company details we
-become a knowing participant in routing a charge around a statutory prohibition. That is bad for us
-twice over: we pay money we may not owe, **and** we create a paper trail showing both parties knew.
+become a knowing participant in routing a charge around a statutory prohibition. Bad for us twice
+over: we pay money we may not owe, **and** we create a paper trail showing both parties knew.
 
-**(c) An AOD is a separate, independently enforceable debt.** An Acknowledgement of Debt is typically
-a liquid document — it can support provisional sentence or summary judgment, often with a consent to
-judgment attached, and it sits **outside** the NCA protections (s129 notice, debt review, in duplum)
-that the loan agreement itself gives us. Signing one for legal fees hands Plane Tree a fast‑track
-judgment route for a debt that has nothing to do with the facility.
+**In fairness, this route is not automatically fatal.** In *Uys NO v National Credit Regulator*
+[2025] ZASCA 34 (1 April 2025) the SCA held there is **nothing unlawful in structuring transactions so
+as to avoid the application of the NCA**, and that a transaction is not simulated merely because it was
+arranged to avoid regulatory consequences — simulation requires a **shared dishonest intention to
+disguise**. So if our company genuinely receives a genuine service and genuinely owes the fee, *Uys*
+protects the arrangement. If it is a pass‑through so that Tyron ultimately bears the cost of drafting
+**his own** credit agreement, s100(1) and the substance‑over‑label approach in *NCR v NCT* apply.
+That is a question of fact — which is precisely why we should ask the questions rather than assume, and
+why we should not sign anything before our attorney has seen it.
+
+**(c) An AOD is a separate, independently enforceable debt — and this exact device has been struck
+down.** An Acknowledgement of Debt is typically a liquid document: it can support provisional sentence
+or summary judgment, often with a consent to judgment attached. Worse, where an AOD contains a
+**deferral of payment plus interest, fees or charges**, it is likely **itself a credit agreement**,
+which drags in registration, the s101 closed list and the Reg 42 caps.
+
+And in **Absa Bank Ltd v Serfontein** (SCA, 10 February 2025) an AOD concluded **separately** from the
+credit agreement, incorporating a power of attorney permitting execution without court process, was
+held to be an unlawful **supplementary agreement** under **s91** — unlawful under s90(2)(j), (k) and
+(a)(i), **unseverable**, with the agreement declared unlawful and the resulting sale void from the
+outset. *(Citation to be confirmed — see §9.3.)*
 
 **Note also:** the Cost of Credit table records **INITIATION FEE: NIL** and **SERVICE FEE: NIL**.
 They have contractually agreed to charge us nothing, and are now seeking the same money through a
@@ -187,11 +223,17 @@ arithmetical error". Layered on top of:
 - `14.4` — a **certificate signed by any director of Plane Tree** is *prima facie* proof of what we owe;
 - `8.6.2` / `8.1` — payment "without deduction, set‑off, demand or delay by counterclaim".
 
-Together these leave us with almost no practical route to challenge a balance. **Fix:** independent
-expert nominated by SAICA (or the chairman of the relevant professional body) if the parties cannot
-agree; costs shared; both parties entitled to make written representations; carve out manifest error
-generally, not just arithmetic. And the certificate should be signed by an **independent auditor**,
-not a director, and be *prima facie* proof only for interim relief.
+Together these leave us with almost no practical route to challenge a balance — and the cl 18 mechanic
+is probably **void**. In *Ex parte Minister of Justice: In re Nedbank v Abstein Distributors* 1995 (3)
+SA 1 (A) the Appellate Division held that a **conclusive-proof clause of which the creditor is the
+author is *per se* contrary to public policy and void**, because it precludes the debtor from
+challenging quantum. "The Lender's accountant… final and binding" is the creditor's own instrument
+producing a binding number. *(Distinguish cl 14.4: it says "*prima facie* proof", which leaves
+rebuttal open and on *Abstein* survives. That one we can live with.)*
+
+**Fix:** independent expert nominated by SAICA (or the chairman of the relevant professional body) if
+the parties cannot agree; costs shared; both parties entitled to make written representations; manifest
+error generally, not just arithmetic.
 
 ### 🟠 4.6 Suspensive conditions run entirely their way *(cl 5)*
 - 5.1 — conditions must be fulfilled "**to the reasonable satisfaction of the Lender**" within 14 days,
@@ -210,10 +252,20 @@ agreement to lapse, nothing more.
 
 ### 🟠 4.7 Attorney‑and‑own‑client costs "irrespective of whether legal action results" *(cl 14.3)*
 Costs on the highest scale, including pre‑litigation costs, whether or not anything is ever litigated,
-with consent to taxation. This sits uncomfortably with the NCA's limits on collection costs
-(s101(1)(g), and Chapter 6 Part C, which the Cost of Credit table itself cites). **Fix:** reduce to
-attorney‑and‑client scale, delete "irrespective of whether or not legal action results", and make the
-clause expressly subject to the NCA caps.
+with consent to taxation. Two distinct problems, and the law draws a line between them that the clause
+ignores:
+- **Pre‑litigation recovery costs are "collection costs"** under NCA s101(1)(g), capped at the
+  prescribed maximum and counted toward the s103(5) *in duplum* ceiling while we are in default. A term
+  purporting to lift that ceiling is caught by s90(2). A **pre‑agreed consent to enforcement costs** is
+  separately caught by **s90(2)(k)**.
+- **Litigation costs sit outside that machinery** after *Bayport Securitisation v University of
+  Stellenbosch Law Clinic* [2021] ZASCA 156 (leave to appeal refused by the Constitutional Court),
+  which held collection costs do **not** include litigation fees. But an attorney‑and‑own‑client
+  stipulation still does not bind a court — costs remain in the court's discretion, subject to taxation.
+
+**Fix:** split the clause. Pre‑litigation costs "limited to the maximum permitted by ss101 and 103 of
+the NCA"; litigation costs "such costs as a court may award, on taxation"; and delete "irrespective of
+whether or not legal action results".
 
 ### 🟠 4.8 Renunciation of surety benefits, in a loan where we are the principal debtor *(cl 8.4)*
 We renounce **excussion, division and cession of actions**. These are *surety* defences. Tyron is the
@@ -259,9 +311,24 @@ have been given, and notes: *"A credit agreement cannot be entered into without 
 so may render the credit agreement void and/or reckless credit."*
 
 These are defects on **their** side. Two consequences for us: (i) we should not sign until the Cost of
-Credit table is complete and a proper pre‑agreement quotation has been issued — an agreement with
-`R[●]` in it is not a disclosure; and (ii) we should not sign the cl 12.1.3 / 12.1.11 warranties that
-are designed to neutralise these very defects.
+Credit table is complete and a proper pre‑agreement quotation (Form 20.1, reg 28(1)(b)) has been
+issued — an agreement with `R[●]` in it is not a disclosure; and (ii) we should not sign the
+cl 12.1.3 / 12.1.11 warranties that are designed to neutralise these very defects.
+
+**But calibrate the s92 point honestly.** A s92 breach is **not** among the grounds in NCA s89 that
+make a credit agreement unlawful. So it is **prohibited conduct** — NCR complaint, Tribunal referral,
+compliance notice, s151 fine — rather than something that voids the agreement of itself. Real leverage
+in negotiation and a real problem for Plane Tree's compliance record; not a get‑out.
+
+**The reckless‑credit point is the one with teeth.** Under **s80(1)(a)** an agreement is reckless if the
+credit provider failed to conduct the s81(2) assessment, **"irrespective of what the outcome of such an
+assessment might have concluded"**. A warranty from us cannot cure their omission — and **s90(2)(b)**
+makes void any provision purporting to waive or deprive a consumer of a right under the Act, void from
+inception under s90(3). Their s81(4) defence (consumer failed to answer requests for information
+fully and truthfully) requires that requests were actually made in a genuine assessment; a credit
+provider that conducted **no** assessment has no requests to point to. Relief under **s83(2)–(3)** runs
+to setting aside our rights and obligations or suspending the agreement — and during a suspension
+**no interest, fee or charge may be charged at all**.
 
 ---
 
@@ -280,14 +347,31 @@ What that means in practice:
 - Those proceeds stop being Tyron's asset the moment he signs — before a cent is drawn down.
 - **There is no re‑cession clause.** cl 4.9 only says the agreement stays in force until Plane Tree
   "confirms in writing" the obligations are discharged. For a security cession that is enough. For an
-  **out‑and‑out** cession the claim does not simply spring back — it has to be ceded back, and nothing
-  in this document obliges them to do that.
-- **There is no surplus‑accounting clause for this cession.** cl 5.3 obliges Plane Tree to credit net
-  proceeds to us — but cl 5.3 is in the *enforcement* clause and speaks to realising Secured Property
-  after an Event of Default. The cl 4.2 cession operates from signature date and sits outside it.
-  **If the share sale is worth more than the R2.4m facility, the drafting does not require the excess
-  to come back to us.**
-- cl 4.4 then requires that if the De Jonghs pay Tyron directly, he must hand the money to Plane Tree
+- **There is no re‑cession clause, and that matters more than it looks.** SA law recognises two
+  constructions of a security cession (*Grobler v Oosthuizen* [2009] ZASCA 51). Under the **pledge**
+  construction the cedent keeps the reversionary interest and the claim **reverts automatically** on
+  settlement, with no formality. Under the **out‑and‑out** construction the cessionary takes full
+  title and the cedent has only a **personal contractual claim** to have the right re‑ceded. cl 4.9
+  ("until the Lender confirms in writing") is enough for the first and useless for the second.
+  Substance can override a label (*National Bank v Cohen's Trustee* 1911 AD 235), but cl 4.2 says
+  "out and out on an outright basis" — about as clear a contrary intention as can be drafted, so we
+  cannot count on re‑characterisation.
+- **⚠️ The risk nobody has flagged: if Plane Tree becomes insolvent, we lose the lot.** Under the
+  out‑and‑out construction the ceded claim **falls into the cessionary's insolvent estate**, and the
+  cedent ranks as a **concurrent creditor** for its re‑cession claim. Under the pledge construction it
+  does not. If the share sale is worth materially more than R2.4m, Plane Tree's insolvency would cost
+  us the entire excess and leave us queuing with unsecured creditors. This is the strongest single
+  reason to insist on cl 4.2 being changed.
+- **There is no surplus‑accounting clause for this cession.** At common law a cessionary who realises
+  more than the secured debt must refund the excess — but that duty is **default, not peremptory, and
+  can be contracted out of**, and we found no decided case on an out‑and‑out cession that is silent on
+  the point. Note too that cl 5.3 *does* oblige Plane Tree to credit net proceeds — but cl 5.3 sits in
+  the *enforcement* clause and speaks to realising Secured Property after an Event of Default. The
+  cl 4.2 cession operates from signature date and sits outside it. **If the share sale is worth more
+  than R2.4m, the drafting does not require the excess to come back to us.**
+- **We also lose standing to sue the De Jonghs.** On *Picardi Hotels v Thekweni Properties* [2008]
+  ZASCA 128, a security cession deprives the cedent of the right to recover the ceded debt. If Plane
+  Tree is passive and the claim prescribes, Tyron has no direct remedy against the purchasers.
   **within 48 hours** — regardless of whether anything is due.
 
 **Fix — non‑negotiable, in order of preference:**
@@ -319,20 +403,47 @@ proceeds, **until an Event of Default has occurred and is continuing** and Plane
 notice invoking the cession. This is standard in every properly drafted security cession and its
 absence here is conspicuous.
 
-### 🔴 5.3 Enforcement "without notice and without any court" — and the NCA is never mentioned *(cl 5.1)*
+### 🔴 5.3 Enforcement "without notice and without any court" *(cl 5.1)*
 cl 5.1: on an Event of Default the security becomes *"immediately enforceable by the Lender in its
 discretion **without the need for prior notice to the Borrower or any prior authorisation from any
 court or arbitrator**."*
 
-This flatly contradicts:
-- **Loan cl 19.2–19.3**, which requires a s129 notice, 20 business days of default and 10 business days from the notice; and
-- the **NCA itself** — s129/s130, and s131 for attachment of goods.
+**This clause is unenforceable, and probably void. Three independent reasons:**
 
-Critically: **the word "NCA" and the phrase "National Credit Act" do not appear once in the entire
-Pledge and Cession.** The Loan Agreement protects itself with cl 1's statement that the NCA
-disclosures prevail over conflicting provisions — but **that prevalence clause lives in the Loan
-Agreement and does not reach the Pledge**, which is a separate contract. So on its own four corners
-the security document purports to authorise self‑help enforcement against a natural‑person consumer.
+1. **NCA s130(3) overrides it by its own terms.** It provides that *"despite any provision of law **or
+   contract** to the contrary"*, a court may determine a matter on an NCA credit agreement **only** if
+   satisfied that the s127, s129 or s131 procedures have been complied with; s130(4) requires the court
+   to adjourn otherwise. No drafting can get around a provision that expressly anticipates contrary
+   drafting.
+2. **Self‑help seizure is unconstitutional.** In *Chief Lesapo v North West Agricultural Bank* [1999]
+   ZACC 16 the Constitutional Court struck down a statute allowing a creditor to attach and sell a
+   defaulting debtor's property on its own authority: taking property from a debtor **in possession**
+   without a court order is self‑help and infringes **s34 of the Constitution**. All four pledged
+   assets are in Tyron's possession.
+3. **It is an unlawful provision under s90.** A term whose effect is to dispense with s129/s130/s131
+   defeats the purposes of the Act (**s90(2)(a)(i)**) and is caught by the **s90(2)(k)** family. Under
+   **s90(3)** it is void from inception, and under **s90(4)** a court may sever it **or declare the
+   whole agreement unlawful**.
+
+**And the "the NCA isn't mentioned" gap cuts the opposite way to how it first looks.** The words
+"National Credit Act" and "NCA" appear **nowhere** in the Pledge, and the Loan Agreement's cl 1
+prevalence clause does not reach a separate contract. But **NCA s91(a)** provides that a credit
+provider must not require or induce a consumer to enter a **supplementary agreement** containing a
+provision that would be unlawful if it were in a credit agreement. A pledge and cession taken by the
+credit provider from the same consumer as a condition of the credit is the paradigm supplementary
+agreement — so **the NCA reaches this document whether or not it says so**.
+
+That was decided on closely comparable facts in **Absa Bank Ltd v Serfontein** (SCA, 10 February 2025):
+an AOD and power of attorney concluded **separately** from the credit agreement was held to be a
+supplementary agreement, its provisions unlawful under s90(2)(j), (k) and (a)(i), **unseverable** — so
+the whole document fell and the resulting sale was void from the outset. *(Citation to be confirmed —
+see §9.3.)*
+
+**Two things follow.** First, we should not be frightened by cl 5.1 — it will not do what it says.
+Second, and more usefully, **Plane Tree should be more worried about it than we are**: on s90(4) an
+unseverable cluster of unlawful terms in this document (cl 5.1, the cl 6.3 power of attorney, the
+cl 5.2.9 auditor valuation) could take the **entire security package** down with it, leaving them
+unsecured. That is the argument to make — it is in their own interest to fix.
 
 **Fix — non‑negotiable, and cheap for them to give:** insert into the Pledge:
 
@@ -340,8 +451,8 @@ the security document purports to authorise self‑help enforcement against a na
 > between this Agreement and the National Credit Act, or clauses 1 or 19 of the Loan Facility
 > Agreement, the National Credit Act and those clauses shall prevail."*
 
-That single sentence neutralises a large part of the enforcement risk in this document.
-
+That single sentence, plus making enforcement expressly subject to s129/s130/s131, removes most of the
+risk in this document — for both sides.
 ### 🔴 5.4 Perfection on demand — they can take the operating equipment at any time *(cl 4.13, 4.14, 6.2)*
 cl 4.13 obliges us, **immediately upon request** and with **no reference to default**, to procure
 physical or constructive delivery, control, attornment, endorsement of documents and release
@@ -356,25 +467,46 @@ default.
 **Fix:** make every perfection obligation exercisable **only after an Event of Default that is
 continuing**. Before that, we deliver copies of documents, not possession.
 
-### 🟠 5.5 The pledge over "inventory from time to time" *(cl 1.1.10.5)*
-An all‑present‑and‑future stock pledge without delivery. Under South African law a pledge of movables
-generally requires delivery to be perfected — a promise to pledge future stock does not by itself
-create real security. This cuts both ways: it is weak security for them (which is why cl 4.13 is so
-aggressive), and it means **they will keep pressing for delivery**. Expect this to be where the
-pressure comes from. Consider offering a **special notarial bond** over the four identified assets
-instead — it gives them registrable security without stripping us of possession, and it is the
-conventional answer to exactly this problem.
+### 🟠 5.5 The pledge over "inventory from time to time" *(cl 1.1.10.5)* — and over everything else
+Under South African law a pledge of movables requires **delivery** to be perfected, and
+***constitutum possessorium* is not permitted**: in *Vasco Dry Cleaners v Twycross* 1979 (1) SA 603 (A)
+the Appellate Division held that a "pledge" where the article remains with the pledgor creates **no
+real security right** at all.
+
+That is true here not just of the inventory but of **all four identified assets**, which stay in
+Tyron's possession. Plane Tree therefore has, today, a personal right only. **This is why cl 4.13 is
+drafted so aggressively — the delivery demand is the whole security.** Expect that to be where the
+pressure comes from, and expect it early.
+
+**The constructive counter‑offer:** a **special notarial bond** over the four identified assets under
+s1(1) of the Security by Means of Movable Property Act 57 of 1993, which deems specified movables
+pledged **notwithstanding non‑delivery** once registered. It gives them registrable, real security
+without stripping us of the operating plant — a better outcome for both sides than a perfection fight.
+Two caveats: *Ikea Trading und Design AG v BOE Bank* [2004] ZASCA 27 requires the assets to be
+**"readily recognisable from the bond alone"**, so the VIN/engine/serial descriptions must be exact
+(see the Amarok registration error in §6) — and **fluctuating inventory will not satisfy that test**,
+so stock cannot go into a special notarial bond. Offer the four assets; resist the inventory.
 
 ### 🟠 5.6 They may take our assets into their own name, valued by their own auditor *(cl 5.2.9)*
 Plane Tree may elect to transfer the Secured Property into its own name **as beneficial owner** at
-"fair market value". A clause letting a creditor simply keep the security on default (*pactum
-commissorium*) is void in South African law; this clause tries to escape that by requiring a fair
-value and payment of the surplus. But:
+"fair market value". A *pactum commissorium* — a creditor simply keeping the security on default — is
+void. But a creditor taking the pledge over **at a fair price**, crediting the debtor with that value
+and paying over the surplus, is **valid**: *Mapenduka v Ashington* 1919 AD 343, and the
+"quasi‑conditional sale" recognised in *Graf v Buechel* [2003] ZASCA 29 and applied in
+*Bock v Duburoro Investments* [2003] ZASCA 94.
+
+So the structure is sound in principle. **The load‑bearing element is the fairness of the valuation** —
+which is exactly what was contested in *Bock*. And here:
 - the valuer, failing agreement in **five business days**, is **"the Lender's auditor"**;
 - **we pay that auditor's fees**; and
-- the same auditor is the cl 18 arbiter of what we owe (Loan agreement).
+- the same auditor is the cl 18 arbiter of what we owe.
 
-So the party enforcing chooses the valuer, we fund the valuer, and the valuer's number is final.
+The party enforcing chooses the valuer, we fund the valuer, and the valuer's number is final. On
+*Abstein* reasoning (§4.5) a binding determination authored by the creditor is vulnerable — and if the
+fair‑value safeguard is illusory, the arrangement collapses back into a void *pactum commissorium*.
+That is a risk for **them** as much as us, which makes it a realistic ask.
+
+**Fix:** independent valuer jointly appointed, or nominated by the relevant professional body if the
 **Fix:** independent valuer jointly appointed, or nominated by the relevant professional body if the
 parties cannot agree within 10 business days; costs shared equally; a right for us to obtain and
 submit a counter‑valuation.
@@ -386,10 +518,21 @@ submit a counter‑valuation.
 
 Unlimited in subject matter, unlimited in time, irrevocable, exercisable before any default, and held
 by *any* director. It would let a Plane Tree director sign documents in Tyron's own name.
-**Fix:** limit to (i) exercisable only after an Event of Default that is continuing; (ii) confined to
-specified perfection and transfer documents that we have already refused or failed to sign within 5
-business days of written request; (iii) written notice to us of each exercise.
 
+**This is not merely aggressive — on current SCA authority it is likely unlawful.** In
+**Absa Bank Ltd v Serfontein** (SCA, 10 February 2025) an acknowledgement of debt incorporating a power
+of attorney, giving the bank an irrevocable ability to execute without recourse to court, was held to
+fall within **s90(2)(k)** (authority to take possession / undertaking to sign enforcement documents in
+advance) **and s90(2)(j)** (appointing the credit provider as the consumer's agent otherwise than for
+s102 purposes), with the NCA‑exclusion element contravening s90(2)(a)(i). The provisions were held
+**unseverable**; the agreement was declared unlawful and the resulting sale void from the outset. An
+*in rem suam* power of attorney is by definition irrevocable and in the grantee's own interest, which
+aggravates rather than cures the problem. *(Citation to be confirmed — see §9.3.)*
+
+**Fix:** limit to (i) exercisable only after an Event of Default that is continuing; (ii) confined to
+specified perfection and transfer documents we have already failed to sign within 5 business days of
+written request; (iii) written notice of each exercise. And put the s90(2)(j)/(k) point to them — a
+compliance‑conscious registered credit provider will drop this rather than defend it.
 ### 🟠 5.8 Warranties that are impossible to keep, backed by an uncapped indemnity *(cl 7.1)*
 
 | Clause | Warranty | Problem |
@@ -572,7 +715,93 @@ advised.
 
 ---
 
-## 9. What is genuinely fine
+## 9. Legal position — authorities relied on, and what is *not* verified
+
+Two research passes were run against South African primary sources. **Read §9.3 before any of this is
+put in a letter to Plane Tree:** the research tooling could not open primary documents directly
+(SAFLII, gov.za and law‑firm sites were all blocked at the network layer), so everything below comes
+from search-index extraction of those sources rather than from reading the judgments and the Gazette.
+It is good enough to negotiate from and to brief our attorney with. It is **not** good enough to cite
+in correspondence without CST Law confirming the citations first.
+
+### 9.1 Interest — why Regulation 40 is the argument, not the rate cap
+
+| Point | Position |
+|---|---|
+| **Reg 42 maximum rates** (agreements from 6 May 2016, GN R1080 GG 39379) | Mortgage RR+12% · **Credit facility RR+14%** · Unsecured RR+21% · Developmental RR+27% · **Other credit agreement RR+17%** · Short‑term 5%/month first loan · Incidental 2%/month |
+| **Repo rate** | **7.00%** (prime 10.50%). Last MPC 23 July 2026 — hold, on a 4–2 split. Previous move 28 May 2026, +25bp from 6.75%. |
+| **Resulting caps** | Credit facility **21.00%** · Other credit agreement **24.00%** |
+| **Reg 40 — capitalisation** | Interest must be **calculated daily** but **added to the deferred amount only once, at the end of the month**. Daily capitalisation is not permitted. |
+| **Nominal or effective?** | **Unresolved.** No NCR circular, guidance note or reported decision found either way. |
+
+**Three things follow, and one is a question for Plane Tree:**
+
+- **Their attorney has applied the *credit facility* cap (RR+14% = 21.00%).** But this is a once‑off
+  R2.4m secured loan repayable in instalments, which looks much more like a **secured loan / "other
+  credit agreement"** (RR+17% = **24.00%**) than a credit facility under s8(3). Either their cap
+  reasoning is wrong, or the agreement is mis‑classified. Worth asking — not to invite a higher rate,
+  but because it tells us how carefully this has been thought through.
+- **At 21.00% the headline sits *exactly* on the credit‑facility cap. There is zero headroom** — and
+  the cap is fixed by the repo rate **at the time credit is granted**, not today's. If drawdown had
+  fallen before 28 May 2026 (repo 6.75%) the cap would have been 20.75% and 21% would already have been
+  over it. Establish the grant date before running any of this arithmetic.
+- **So don't argue the cap — argue Reg 40.** Daily capitalisation is impermissible whatever the rate,
+  and the excess it produces is an amount charged in contravention of **s100(1)(c)**. In *Loan Company
+  (Pty) Ltd v NCR* [2025] ZASCA 40 (8 April 2025) the SCA measured a s100(1)(c)/(d) contravention by
+  what was **actually charged** under the Reg 40 mechanics, not by the stated rate. Tribunal remedies
+  in that line of cases run to declaring agreements **void**, ordering **refunds**, and a s151
+  administrative fine. This argument does not depend on the unresolved nominal/effective question.
+
+### 9.2 Authorities relied on elsewhere in this review
+
+**Charges and fees**
+- *National Credit Regulator v National Consumer Tribunal* [2025] ZASCA 132; 2026 (2) SA 455 (SCA) — s101(1) with s102(1) is a **closed list**; substance over label. *(§3)*
+- *Uys NO v National Credit Regulator* [2025] ZASCA 34 — structuring to avoid the NCA is **not per se unlawful**; simulation needs shared dishonest intent. *(§3 — the counterweight)*
+- *Bayport Securitisation v University of Stellenbosch Law Clinic* [2021] ZASCA 156 (CC leave refused) — **collection costs ≠ litigation costs**; s103(5) does not apply post‑judgment. *(§4.7)*
+- **s103(5)** — statutory *in duplum* is **wider** than the common‑law rule: it caps **all** of s101(1)(b)–(g) in aggregate (initiation, service, interest, credit insurance, default administration **and** collection costs) at the unpaid principal **as at the moment default occurs**. Note the mapping: **(f)** is default administration charges, **(g)** is collection costs.
+
+**Enforcement and unlawful provisions**
+- **s130(3)** — *"despite any provision of law **or contract** to the contrary"*, a court may determine the matter only if s127/s129/s131 were complied with; s130(4) requires adjournment otherwise. *(§5.3)*
+- *Chief Lesapo v North West Agricultural Bank* [1999] ZACC 16; 2000 (1) SA 409 (CC) — seizure from a debtor **in possession** without a court order is self‑help and infringes **s34** of the Constitution. *(§5.3)*
+- *Juglal NO v Shoprite Checkers* 2004 (5) SA 248 (SCA) — *parate executie* clauses not contrary to public policy are valid, **but a court will refuse to give effect to unconscionable implementation**. So the attack is often on execution, not validity.
+- *Absa Bank Ltd v Serfontein* (SCA, 10 Feb 2025) — a separately concluded AOD + irrevocable POA was an unlawful **supplementary agreement** under **s91**; s90(2)(j), (k), (a)(i); **unseverable**; agreement unlawful, downstream sale void *ab initio*. *(§3, §5.3, §5.7 — citation unconfirmed)*
+- **s90(3)/(4)** — an unlawful provision is void from inception; the court may sever it **or declare the whole agreement unlawful**, having regard to the agreement as a whole.
+- *Ex parte Minister of Justice: In re Nedbank v Abstein Distributors* [1995] ZASCA 40; 1995 (3) SA 1 (A) — a **conclusive‑proof clause of which the creditor is the author** is *per se* contrary to public policy and **void**; a ***prima facie*** proof clause leaving rebuttal open survives. *(§4.5, §5.6)*
+- *NCR v Standard Bank* [2019] ZAGPJHC 182; 2019 (5) SA 512 (GJ) — common‑law set‑off is **ousted** for NCA credit agreements by ss 90(2)(n) and 124. So the cl 8.6.2 set‑off waiver is largely inert, and a clause **conferring** set‑off on the credit provider would be unlawful. *(Appellate history not checked.)*
+
+**Cession and pledge**
+- *Grobler v Oosthuizen* [2009] ZASCA 51; 2009 (5) SA 500 (SCA) — the two constructions; **absent clear contrary intention the pledge construction applies**; substance over form, following *National Bank v Cohen's Trustee* 1911 AD 235. *(§5.1)*
+- *Picardi Hotels v Thekweni Properties* [2008] ZASCA 128; 2009 (1) SA 493 (SCA) — a security cession deprives the cedent of the right to recover the ceded debt. *(§5.1)*
+- *First National Bank v Lynn NO* [1995] ZASCA 158; 1996 (2) SA 339 (A) — a cession of future rights takes effect only as the right comes into existence; rights arising after liquidation do not vest in the cessionary.
+- *Vasco Dry Cleaners v Twycross* 1979 (1) SA 603 (A) — ***constitutum possessorium* is not permitted**; a "pledge" where the article stays with the pledgor creates **no real security right**. *(§5.5)*
+- *Ikea Trading und Design AG v BOE Bank* [2004] ZASCA 27; 2005 (2) SA 7 (SCA) — a special notarial bond must describe the property so it is **"readily recognisable from the bond alone"**; fluctuating stock will not qualify. *(§5.5)*
+- *Development Bank of Southern Africa v Van Rensburg NO* [2002] ZASCA 39 — a general notarial bond gives no real right until **perfected** by taking possession; unperfected, the holder has only the s102 Insolvency Act free‑residue preference.
+- *Mapenduka v Ashington* 1919 AD 343 · *Graf v Buechel* [2003] ZASCA 29 · *Bock v Duburoro Investments* [2003] ZASCA 94 — a *pactum commissorium* is void, but taking the pledge over **at a fair price** with the surplus paid over is valid; **the fairness of the valuation is the battleground**. *(§5.6)*
+
+**Reckless credit**
+- **s80(1)(a)** — reckless if no s81(2) assessment was conducted, *"irrespective of what the outcome of such an assessment might have concluded"*. **s82** — must not enter into the agreement before completing it. **Reg 23A** — prescribes documentary verification of income.
+- **s83(2)–(3)** — relief runs to setting aside the consumer's rights and obligations, or suspending the agreement; **s84** — during suspension no payment is due and **no interest, fee or charge may be charged**.
+- **s81(4)** — a complete defence where the consumer failed to answer requests for information fully and truthfully **and** that materially affected the assessment. It requires that requests were actually made; a credit provider that conducted **no** assessment has none to point to. *(§4.13)*
+
+### 9.3 What could NOT be verified — flag these to CST Law
+
+Neither research pass could open a primary document. The following need checking against the Gazette
+and SAFLII before any of it goes into correspondence:
+
+1. **The *Absa Bank Ltd v Serfontein* citation.** The name, date (10 Feb 2025) and holdings come from three independent law‑firm commentaries; the **neutral citation and case number were not found and the judgment was not read**. This is the authority doing the most work in §3, §5.3 and §5.7 — confirm it first.
+2. **Verbatim Regulation 40**, including sub‑regulation numbering. The daily‑calculation / monthly‑capitalisation rule is consistently reported by the Tribunal and the SCA but the primary text was never seen.
+3. **The full s90(2) paragraph letters.** Only (a)(i), (c), (f), (j), (k) and (n) were confirmed; (l), (m) and (o) could not be identified. **Do not cite paragraph letters without checking the Act.**
+4. **Regulation 42 entries for "other credit agreements" (RR+17%) and developmental credit (RR+27%)** — fewer corroborating sources than the mortgage/facility/unsecured entries. And whether Reg 42 has been amended at all since 6 May 2016 could not be confirmed as a negative.
+5. **Whether the Reg 42 cap attaches to the nominal or the effective annual rate** — a genuine gap in the material. Hence the Reg 40 framing in §9.1.
+6. **Exact wording of s101(2), the full s102(1) item list, s84, and the s92(3) binding period.**
+7. **No authority found either way on a valuation by the creditor's own auditor.** The *Abstein* analogy in §5.6 is reasoning, not a holding.
+8. **No authority found on invoicing an associated company to circumvent s100.** The §3 analysis is inferential from s90(2)(a)(i), s100(1), *NCR v NCT* and *Uys*.
+9. **Current initiation and service fee caps for 2026** — sources conflicted. Relevant if Plane Tree tries to reinstate a fee.
+10. **s164** — sources conflict on whether it is "Agents" or "Civil actions and jurisdiction". Do not cite it.
+
+---
+
+## 10. What is genuinely fine
 
 To keep this balanced — the drafting is competent and much of it is unobjectionable:
 
@@ -585,7 +814,7 @@ To keep this balanced — the drafting is competent and much of it is unobjectio
 
 ---
 
-## 10. Approval
+## 11. Approval
 
 ```
 ─────────────────────────────────────────
@@ -605,10 +834,19 @@ REQUIRED HUMAN APPROVAL
     (~R432k) are MODEL OUTPUTS from the agreement's own terms.
     To be confirmed against Plane Tree's own amortisation once they
     complete the Cost of Credit table.
-  - Repo rate and the applicable NCA maximum rate: their attorney
-    asserts repo + 14% = 21%. To be confirmed independently.
+  - Repo rate 7.00% and the applicable NCA maximum rate: their
+    attorney asserts repo + 14% = 21% (the CREDIT FACILITY cap).
+    If this is an "other credit agreement" the cap is repo + 17%
+    = 24%. Classification and grant date both to be confirmed.
   - Unencumbered title to all four pledged assets — NOT VERIFIED.
   - Terms of the Sale of Shares Agreement of 27 Nov 2025 — NOT SEEN.
+• Legal authority: the citations in section 9.2 come from search-
+  index extraction, NOT from reading the judgments — primary
+  sources (SAFLII, gov.za) were unreachable. Section 9.3 lists ten
+  items that must be checked before any of this goes into
+  correspondence. In particular ABSA BANK v SERFONTEIN, which does
+  the most work in sections 3, 5.3 and 5.7, has NO CONFIRMED
+  NEUTRAL CITATION. CST Law to verify before it is cited.
 • This draft is NOT executed, sent, or committed.
 ─────────────────────────────────────────
 ```

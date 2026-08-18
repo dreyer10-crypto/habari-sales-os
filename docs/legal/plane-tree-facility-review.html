@@ -1,0 +1,797 @@
+<title>Plane Tree Facility Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+
+<style>
+:root{
+  --ground:#FBFAF8;
+  --surface:#FFFFFF;
+  --surface-2:#F4F1EC;
+  --ink:#221D19;
+  --ink-2:#453D36;
+  --muted:#6E655D;
+  --rule:#E3DDD6;
+  --rule-2:#CFC6BC;
+  --accent:#A85A2E;
+  --accent-soft:#F2E4DA;
+  --crit:#A32E2E;
+  --crit-soft:#F5E2E0;
+  --press:#96601A;
+  --press-soft:#F6E9D6;
+  --raise:#5A6B44;
+  --raise-soft:#E8EDE0;
+  --shadow:0 1px 2px rgba(34,29,25,.05),0 8px 24px -12px rgba(34,29,25,.14);
+
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#171512;
+    --surface:#1F1C18;
+    --surface-2:#262119;
+    --ink:#EDE7E0;
+    --ink-2:#C9C0B7;
+    --muted:#9C9188;
+    --rule:#332E28;
+    --rule-2:#463F37;
+    --accent:#DC8E5C;
+    --accent-soft:#38261A;
+    --crit:#E28A82;
+    --crit-soft:#3A211F;
+    --press:#D9A45E;
+    --press-soft:#382B18;
+    --raise:#A8BC8A;
+    --raise-soft:#242C1C;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#171512;
+  --surface:#1F1C18;
+  --surface-2:#262119;
+  --ink:#EDE7E0;
+  --ink-2:#C9C0B7;
+  --muted:#9C9188;
+  --rule:#332E28;
+  --rule-2:#463F37;
+  --accent:#DC8E5C;
+  --accent-soft:#38261A;
+  --crit:#E28A82;
+  --crit-soft:#3A211F;
+  --press:#D9A45E;
+  --press-soft:#382B18;
+  --raise:#A8BC8A;
+  --raise-soft:#242C1C;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+
+/* ---------- masthead ---------- */
+.mast{border-bottom:1px solid var(--rule);background:var(--surface)}
+.mast-in{display:flex;flex-direction:column;gap:26px;padding:clamp(34px,6vw,60px) 0 30px}
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+}
+.eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--rule-2)}
+h1{
+  font-family:var(--serif);font-weight:500;font-size:clamp(2.1rem,5.2vw,3.35rem);
+  line-height:1.08;letter-spacing:-.018em;margin:0;text-wrap:balance;max-width:19ch;
+}
+h1 em{font-style:italic;color:var(--accent)}
+.standfirst{
+  font-family:var(--serif);font-size:clamp(1.05rem,2.1vw,1.3rem);line-height:1.52;
+  color:var(--ink-2);max-width:62ch;margin:0;
+}
+
+/* status ribbon */
+.ribbon{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;
+  background:var(--crit-soft);border:1px solid color-mix(in srgb,var(--crit) 26%,transparent);
+  border-radius:3px;padding:13px 16px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--crit);
+}
+.ribbon strong{font-weight:600;letter-spacing:.08em}
+.ribbon span{color:var(--ink-2);letter-spacing:0;font-family:var(--sans);font-size:13.5px}
+
+/* deal facts */
+.facts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+  gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:3px;overflow:hidden;
+}
+.fact{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:5px}
+.fact dt{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);margin:0;
+}
+.fact dd{margin:0;font-size:15px;font-weight:500;line-height:1.35;font-variant-numeric:tabular-nums}
+.fact dd small{display:block;font-weight:400;font-size:12.5px;color:var(--muted);letter-spacing:0}
+
+/* ---------- body layout: marginalia ---------- */
+main{padding:clamp(34px,5vw,58px) 0 90px}
+section{margin:0 0 clamp(44px,6vw,68px)}
+.row{display:grid;grid-template-columns:1fr;gap:8px}
+@media (min-width:1000px){
+  .row{grid-template-columns:168px minmax(0,68ch);gap:34px;align-items:start}
+}
+.gutter{
+  display:flex;flex-wrap:wrap;gap:7px;align-items:flex-start;
+  padding-top:3px;
+}
+@media (min-width:1000px){ .gutter{flex-direction:column;position:sticky;top:22px} }
+.col{min-width:0}
+
+/* section heads */
+.shead{margin:0 0 22px;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.shead .num{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--accent);
+  display:block;margin-bottom:7px;text-transform:uppercase;
+}
+h2{
+  font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,3vw,2rem);
+  line-height:1.16;letter-spacing:-.012em;margin:0;text-wrap:balance;
+}
+h3{
+  font-family:var(--sans);font-weight:600;font-size:1.03rem;line-height:1.38;
+  margin:0 0 9px;letter-spacing:-.005em;text-wrap:balance;
+}
+h4{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+   color:var(--muted);margin:0 0 10px;font-weight:500}
+p{margin:0 0 14px;max-width:68ch}
+p:last-child{margin-bottom:0}
+a{color:var(--accent)}
+
+/* chips */
+.chip{
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;padding:4px 9px;border-radius:2px;border:1px solid transparent;
+}
+.chip::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+.chip.crit{color:var(--crit);background:var(--crit-soft);border-color:color-mix(in srgb,var(--crit) 25%,transparent)}
+.chip.press{color:var(--press);background:var(--press-soft);border-color:color-mix(in srgb,var(--press) 28%,transparent)}
+.chip.raise{color:var(--raise);background:var(--raise-soft);border-color:color-mix(in srgb,var(--raise) 30%,transparent)}
+.chip.ref{color:var(--muted);background:var(--surface-2);border-color:var(--rule);text-transform:none;letter-spacing:.03em}
+.chip.ok{color:var(--raise);background:var(--raise-soft);border-color:color-mix(in srgb,var(--raise) 30%,transparent)}
+
+/* finding blocks */
+.find{
+  background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+  padding:18px 20px;margin:0 0 14px;box-shadow:var(--shadow);
+}
+.find.is-crit{border-left:3px solid var(--crit)}
+.find.is-press{border-left:3px solid var(--press)}
+.find.is-raise{border-left:3px solid var(--raise)}
+.find-head{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:11px}
+.find-head h3{margin:0;flex:1 1 240px}
+
+/* quote */
+blockquote{
+  margin:0 0 14px;padding:13px 18px;background:var(--surface-2);
+  border-left:2px solid var(--accent);border-radius:0 3px 3px 0;
+  font-family:var(--serif);font-size:1rem;line-height:1.55;color:var(--ink-2);
+}
+blockquote p{margin:0 0 9px;max-width:none}
+blockquote p:last-child{margin:0}
+blockquote cite{
+  display:block;margin-top:9px;font-family:var(--mono);font-style:normal;
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+}
+
+/* lists */
+ul,ol{margin:0 0 14px;padding-left:1.15em;max-width:68ch}
+li{margin-bottom:7px;padding-left:.15em}
+li::marker{color:var(--accent)}
+ul.tight li,ol.tight li{margin-bottom:4px}
+
+/* tables */
+.tw{overflow-x:auto;margin:0 0 16px;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-size:14.5px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;background:var(--surface-2);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+td strong{font-weight:600}
+code{
+  font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:1.5px 5px;border-radius:2px;color:var(--ink-2);
+}
+
+/* fix callout */
+.fix{
+  margin:12px 0 0;padding:12px 15px;background:var(--accent-soft);
+  border-radius:3px;font-size:14.5px;line-height:1.55;
+}
+.fix b{
+  display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:6px;font-weight:600;
+}
+.fix p{margin:0 0 8px;max-width:none}
+.fix p:last-child{margin:0}
+.fix ul,.fix ol{margin:0;max-width:none}
+
+/* numbered checklist */
+.checklist{list-style:none;padding:0;margin:0;counter-reset:c;display:grid;gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.checklist li{
+  counter-increment:c;background:var(--surface);margin:0;padding:13px 16px 13px 46px;
+  position:relative;font-size:15px;line-height:1.5;
+}
+.checklist li::before{
+  content:counter(c);position:absolute;left:16px;top:13px;
+  font-family:var(--mono);font-size:11px;font-weight:600;color:var(--accent);
+  width:18px;height:18px;line-height:18px;text-align:center;
+  background:var(--accent-soft);border-radius:2px;
+}
+.checklist li::marker{content:none}
+.checklist li span{display:block;color:var(--muted);font-size:13px;margin-top:2px;font-family:var(--mono);letter-spacing:.02em}
+
+/* email draft */
+.email{
+  background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+  padding:20px 22px;font-family:var(--serif);font-size:1rem;line-height:1.62;color:var(--ink-2);
+  box-shadow:var(--shadow);
+}
+.email p{max-width:none;margin:0 0 13px}
+.email p:last-child{margin:0}
+.email strong{color:var(--ink);font-weight:600}
+.email .meta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:11px;margin-bottom:15px;
+}
+
+/* approval block */
+.approval{
+  background:var(--surface-2);border:1px solid var(--rule-2);border-radius:3px;
+  padding:20px 22px;font-family:var(--mono);font-size:13px;line-height:1.72;
+}
+.approval h4{margin-bottom:14px;color:var(--accent)}
+.approval ul{list-style:none;padding:0;margin:0;max-width:none}
+.approval li{margin-bottom:11px;padding-left:16px;position:relative}
+.approval li::before{content:"—";position:absolute;left:0;color:var(--rule-2)}
+.approval li:last-child{margin-bottom:0}
+.approval b{color:var(--ink);font-weight:600}
+.approval .warn{color:var(--crit)}
+
+footer{border-top:1px solid var(--rule);padding:26px 0 44px;color:var(--muted);font-size:13px}
+footer p{max-width:70ch}
+
+::selection{background:var(--accent-soft);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="mast">
+  <div class="wrap mast-in">
+    <div class="eyebrow">
+      <span>Borrower-side review</span><span class="dot"></span>
+      <span>18 August 2026</span><span class="dot"></span>
+      <span>Plane Tree Capital (Pty) Ltd</span>
+    </div>
+    <h1>Two drafts, and the <em>five clauses</em> that would cost us.</h1>
+    <p class="standfirst">A read of the Loan Facility Agreement and the Agreement of Cession and Pledge circulated for Tyron Bos — what the deal actually costs, which wording creates exposure, and what has to change before anyone signs.</p>
+    <div class="ribbon">
+      <strong>STATUS · DRAFT</strong>
+      <span>Not for execution. Commercial and risk review, not a legal opinion. Requires principal sign-off and attorney review — see the approval block.</span>
+    </div>
+    <dl class="facts">
+      <div class="fact"><dt>Principal</dt><dd>R2 400 000</dd></div>
+      <div class="fact"><dt>Rate</dt><dd>21% p.a.<small>nominal, compounded daily</small></dd></div>
+      <div class="fact"><dt>Effective rate</dt><dd>23.36%<small>what daily compounding gives</small></dd></div>
+      <div class="fact"><dt>Term</dt><dd>12 months<small>from drawdown</small></dd></div>
+      <div class="fact"><dt>Balloon, 31 Aug 2027</dt><dd>≈ R1 632 000<small>modelled — see §2</small></dd></div>
+      <div class="fact"><dt>Borrower</dt><dd>Tyron Bos<small>personal capacity, unlimited recourse</small></dd></div>
+    </dl>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 1 -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip crit">Do not sign as drafted</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">One</span><h2>Bottom line</h2></div>
+      <p>Neither document is unusual for a private credit lender's opening draft. But as written the package is materially one-sided, and contains at least <strong>five provisions that would cause us real harm</strong> — plus two that the lender's own attorney has already conceded, in the margins of his own draft, are non-compliant with the National Credit Act.</p>
+      <p>The three that matter most:</p>
+      <ol>
+        <li><strong>The Sale of Shares proceeds are ceded "out and out" — outright, not as security.</strong> Ownership of that claim transfers on signature. There is no clause returning it when the loan is repaid, and no clause obliging Plane Tree to pay back any surplus. And the risk that is easy to miss: on this construction the claim <strong>falls into Plane Tree's estate if they become insolvent</strong>, leaving Tyron a <em>concurrent</em> creditor for the whole excess. <em>(Pledge cl 4.2, Annexure A.)</em></li>
+        <li><strong>There is no ordinary-course-of-business carve-out anywhere in the security document.</strong> All book debts and the bank account credit balance are ceded, and cl 6.1 then forbids dealing with any of it without written consent. Read literally, Tyron cannot collect a debtor or draw on his own account from day one.</li>
+        <li><strong>This is a personal loan with unlimited recourse.</strong> No company borrower, no cap. Tyron is personally liable for R2.4m plus interest against his vehicle, plant, receivables, bank account and insurance proceeds — and warrants things no person can truthfully warrant for twelve months.</li>
+      </ol>
+      <p>Separately, and most urgently: the covering email asks for <strong>company details for an "AOD/invoice for legal fees."</strong> That request should not be answered with company details. See §3.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="row">
+    <div class="gutter">
+      <span class="chip ref">Loan cl 1</span><span class="chip ref">cl 8.1</span><span class="chip ref">cl 9</span>
+    </div>
+    <div class="col">
+      <div class="shead"><span class="num">Two</span><h2>What this actually costs</h2></div>
+      <p>The Cost of Credit table leaves <strong>total interest</strong> and <strong>total cost of credit</strong> as <code>R[●]</code> — blank. Their comment 10 asks <em>us</em> to supply the figure. Modelled on the agreement's own terms (R2.4m, 21% nominal compounded daily on a 365-day year, payments applied to interest first per cl 8.3):</p>
+      <div class="tw"><table>
+        <thead><tr><th>&nbsp;</th><th class="num">Drawdown 20 Aug 26</th><th class="num">Drawdown 15 Sept 26</th></tr></thead>
+        <tbody>
+          <tr><td>12 × R100 000 instalments</td><td class="num">1 200 000</td><td class="num">1 100 000 <sup>†</sup></td></tr>
+          <tr><td><strong>Balloon due 31 Aug 2027</strong></td><td class="num"><strong>1 632 126</strong></td><td class="num"><strong>1 711 262</strong></td></tr>
+          <tr><td>Total interest</td><td class="num">432 126</td><td class="num">411 262</td></tr>
+          <tr><td><strong>Total repaid</strong></td><td class="num"><strong>2 832 126</strong></td><td class="num"><strong>2 811 262</strong></td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:13.5px;color:var(--muted)"><sup>†</sup> On a September drawdown the first instalment date has already passed — see the third point below.</p>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>The instalment schedule is a disguised balloon</h3><span class="chip crit">Must change</span></div>
+        <p>R100 000 a month barely exceeds the interest accrual of roughly R42–47k. Capital hardly moves. <strong>About 68% of the principal falls due in a single payment on 31 August 2027.</strong> Clause 8.1 reads like an amortising loan. It is not. Our exit plan has to be built around a ~R1.63m bullet, not around twelve instalments.</p>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>"21% compounded daily" is not 21% — but argue it under Regulation 40</h3><span class="chip crit">Must change</span></div>
+        <p>Compounded daily, the effective annual rate is <strong>23.36%</strong>. Their own attorney twice notes, in comments 8 and 19:</p>
+        <blockquote><p>In terms of the national credit act, the maximum interest rate which can be charged is the Repo Rate plus 14%. That is 21% at the moment and we cannot charge 24%.</p><cite>Their comments 8 and 19</cite></blockquote>
+        <p>The temptation is to argue "23.36% exceeds the 21% cap". <strong>Don't</strong> — whether the Regulation 42 cap bites on the nominal or the effective rate is genuinely unresolved. The cleaner point is <strong>Regulation 40</strong>: interest must be <em>calculated</em> daily but may be <em>added to the deferred amount only once a month</em>. Daily capitalisation is not permitted at all, whatever the headline rate. See §8.</p>
+        <div class="fix"><b>Ask for</b><p>Simple interest, or at most monthly capitalisation; and the effective annual rate stated on the face of the agreement alongside the nominal rate.</p></div>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>The payment dates are hard-coded and will break</h3><span class="chip crit">Must change</span></div>
+        <p>Clause 8.1.1 fixes the first R100 000 instalment at <strong>31 August 2026</strong>. But cl 5.1 gives 14 calendar days from signature for suspensive conditions — extendable by Plane Tree "in its sole and absolute discretion" — and cl 6.2 then gives them a further 14 days to pay out. On any realistic timeline <strong>the first instalment falls due before the money arrives</strong>. Clause 14.1.2 makes non-payment on due date an Event of Default, and cl 8.2 then accelerates the whole R2.4m.</p>
+        <div class="fix"><b>Ask for</b><p>Every payment date keyed to the actual Drawdown Date — "the last day of the first calendar month following the Drawdown Date" — never to a fixed calendar date. This is the cheapest and most important single amendment in the package.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip crit">Act on this first</span><span class="chip ref">Loan cl 16</span><span class="chip ref">Pledge cl 9</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">Three</span><h2>The "AOD / invoice for legal fees" request</h2></div>
+      <p>Toivo's email asks us to send <strong>"your company details to be used in the AOD/invoice for legal fees."</strong> Do not send them. Three reasons, in ascending order of seriousness.</p>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>We are probably not liable for these fees at all — and there is binding SCA authority</h3></div>
+        <p>Loan cl 16 and Pledge cl 9 say the Borrower pays all costs of drafting and implementing the agreements. Their own attorney's comment 49 says otherwise, in terms:</p>
+        <blockquote><p>In terms of section 100 of the National Credit Act a credit provider must not charge an amount to the consumer in respect of any fee, charge, commission, expense or other amount payable by the credit provider to any third party… We will need to address this as we cannot charge the consumer the costs for the preparation of this agreement.</p><cite>Their comment 49</cite></blockquote>
+        <p>He is right, and the position hardened last year. In <strong><em>National Credit Regulator v National Consumer Tribunal</em> [2025] ZASCA 132</strong> (the "on-the-road fees" case) the SCA held that <strong>s101(1) read with s102(1) is a closed list</strong> of what a credit provider may require a consumer to pay, and that each charge is examined <strong>on its substance, not its label</strong>. Drafting fees are not on that list. The <strong>initiation fee</strong> is the permitted, capped recovery for originating a credit agreement — and Plane Tree has disclosed it as <strong>NIL</strong>.</p>
+        <p>They may point to legal fees being recoverable as <em>collection costs</em>. Those are fees incurred in <strong>enforcing</strong> the consumer's obligations, not in originating the agreement.</p>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>The company-invoice route is that attorney's own workaround — flagged as improper</h3></div>
+        <p>The same comment continues:</p>
+        <blockquote><p>We can possibly have his company pay these amounts but it is not strictly permitted.</p><cite>Their comment 49, continued</cite></blockquote>
+        <p>The request in Toivo's email is the execution of that workaround. If we supply company details we become a knowing participant in routing a charge around a statutory prohibition — bad for us twice over. We pay money we may not owe, <em>and</em> we create a paper trail showing both parties knew.</p>
+        <div class="fix"><b>In fairness</b><p>This route is not automatically fatal. In <em>Uys NO v NCR</em> [2025] ZASCA 34 the SCA held there is <strong>nothing unlawful in structuring transactions to avoid the NCA</strong>, and a transaction is not simulated merely because it was arranged to avoid regulatory consequences — simulation needs a <em>shared dishonest intention to disguise</em>. If our company genuinely receives a genuine service and genuinely owes the fee, <em>Uys</em> protects it. If it is a pass-through so Tyron bears the cost of drafting his own credit agreement, s100(1) applies. That is a question of fact — which is exactly why we ask rather than assume.</p></div>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>An AOD is a separate, independently enforceable debt — and this exact device has been struck down</h3></div>
+        <p>An Acknowledgement of Debt is typically a liquid document — it can support provisional sentence or summary judgment, often with a consent to judgment attached. Worse, where an AOD contains a <strong>deferral of payment plus interest, fees or charges</strong>, it is likely <strong>itself a credit agreement</strong>, dragging in registration, the closed list and the rate caps.</p>
+        <p>And in <strong><em>Absa Bank Ltd v Serfontein</em></strong> (SCA, 10 February 2025) an AOD concluded <strong>separately</strong> from the credit agreement, incorporating a power of attorney permitting execution without court process, was held to be an unlawful <strong>supplementary agreement</strong> under <strong>s91</strong> — unlawful under s90(2)(j), (k) and (a)(i), <strong>unseverable</strong>, with the agreement declared unlawful and the resulting sale void from the outset. <em>(Citation to be confirmed — see §8.)</em></p>
+        <div class="fix"><b>Note</b><p>The Cost of Credit table records <strong>INITIATION FEE: NIL</strong> and <strong>SERVICE FEE: NIL</strong>. They have contractually agreed to charge us nothing, and are now seeking the same money through a side document. Hold them to the table.</p></div>
+      </div>
+      <p>Don't decline rudely, and don't send details. Ask three questions instead — draft wording in §7.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip crit">Must change</span><span class="chip press">Press hard</span><span class="chip raise">Raise &amp; trade</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">Four</span><h2>Loan Facility Agreement</h2></div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>"Any breach" is an Event of Default — no materiality, no cure period</h3><span class="chip ref">cl 14.1</span></div>
+        <p>Clause 14.1.3 makes <strong>any</strong> breach of <strong>any</strong> term an Event of Default, and there is <strong>no remedy period anywhere in the agreement</strong>. Layered with:</p>
+        <ul class="tight">
+          <li><code>11.1.4</code> — any failure to provide "accurate, complete or timely" information is a <em>material</em> breach;</li>
+          <li><code>14.1.9</code> — "does anything which <strong>may</strong> prejudice the Lender's rights… <strong>or omits to take steps to prevent</strong> such prejudice" — open-ended and subjective;</li>
+          <li><code>14.1.7</code> — "or becomes <strong>financially distressed</strong>", a Companies Act s128 concept with no defined meaning for a natural person.</li>
+        </ul>
+        <div class="fix"><b>Ask for</b><p>A materiality qualifier and a <strong>10 business day written remedy period</strong> for all non-payment breaches (5 for payment). Delete "financially distressed". Narrow or delete 14.1.9.</p></div>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>Warranties we cannot truthfully give for twelve months</h3><span class="chip ref">cl 12.1</span></div>
+        <p>Each is absolute and continuing, and breach is an Event of Default under 14.1.8.</p>
+        <div class="tw"><table>
+          <thead><tr><th>Clause</th><th>Warranty</th><th>Why it is dangerous</th></tr></thead>
+          <tbody>
+            <tr><td><code>12.1.6</code></td><td>Full tax compliance — all returns filed, all amounts paid to SARS</td><td>Any assessment, objection or late return, however small, becomes an untrue representation and accelerates the loan. Qualify to "in all material respects, save as disclosed".</td></tr>
+            <tr><td><code>12.1.3</code></td><td>"not over indebted"</td><td>Drafted to destroy our reckless-credit defence before it can be used — while their comment 31 admits the affordability assessment has not been done. Delete, or reduce to a statement of belief at signature only.</td></tr>
+            <tr><td><code>12.1.7</code></td><td>No security over <strong>any</strong> asset in favour of <strong>any</strong> creditor, whole term</td><td>Blanket negative pledge, no basket, no carve-outs. Freezes all other finance — including asset finance on new equipment — for 12+ months.</td></tr>
+            <tr><td><code>12.1.4</code></td><td>"an experienced businessman… the terms are in <em>plan</em> language"</td><td>Drafted to defeat a plain-language challenge. Low cost to leave, but know what it is doing. (And it says "plan".)</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>Electronic instructions — we carry 100% of the fraud risk</h3><span class="chip ref">cl 15</span></div>
+        <p>Plane Tree will act on an instruction <strong>"without verifying"</strong> that it came from us, and we <strong>indemnify them</strong> for any loss from acting on an instruction that merely <em>"appears to have been issued"</em> by us.</p>
+        <p>In the current business-email-compromise environment that is a live, uncapped exposure: a spoofed email redirecting a payment lands on us in full, even where a callback would have caught it.</p>
+        <div class="fix"><b>Ask for</b><p>Telephonic callback verification to a pre-agreed number for any payment instruction or change of banking details, and the Lender's own negligence carved out of the indemnity.</p></div>
+      </div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>Disputes about what we owe are decided by <em>their</em> accountant</h3><span class="chip press">Press hard</span><span class="chip ref">cl 18</span></div>
+        <p>Any dispute about the debt, the interest or the rate goes to <strong>"the Lender's accountant appointed to the review or audit of its financial statements"</strong>, whose determination is <strong>"final and binding"</strong> and reviewable only for "manifest typographical and/or arithmetical error".</p>
+        <p><strong>That mechanic is probably void.</strong> In <em>Ex parte Minister of Justice: In re Nedbank v Abstein Distributors</em> 1995 (3) SA 1 (A) the Appellate Division held that a <strong>conclusive-proof clause of which the creditor is the author is <em>per se</em> contrary to public policy and void</strong>, because it precludes the debtor from challenging quantum. "The Lender's accountant… final and binding" is the creditor's own instrument producing a binding number. <em>(Distinguish cl 14.4, which says "<strong>prima facie</strong> proof" — that leaves rebuttal open and on Abstein survives.)</em></p>
+        <div class="fix"><b>Ask for</b><p>An independent expert nominated by SAICA if the parties cannot agree; costs shared; both parties entitled to written representations; manifest error generally, not only arithmetic. The certificate should be signed by an independent auditor, and be proof only for interim relief.</p></div>
+      </div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>Suspensive conditions run entirely their way</h3><span class="chip press">Press hard</span><span class="chip ref">cl 5</span></div>
+        <ul class="tight">
+          <li><code>5.1</code> — conditions must satisfy them within 14 days, "or such longer period as the Lender may, <strong>in its sole and absolute discretion</strong>, decide". We stay bound indefinitely while they decide.</li>
+          <li><code>5.4</code> — they may waive any condition <strong>"with or without notice"</strong>. We may not know what agreement we are in.</li>
+          <li><code>5.3</code> — our failure is <strong>"an Event of Default alternatively this Agreement shall not come into force"</strong>. Those are mutually exclusive and they pick. You cannot default on an agreement that never came into force.</li>
+        </ul>
+        <div class="fix"><b>Ask for</b><p>A hard longstop date, either party free to walk away if unfulfilled, waiver on written notice, and <strong>"Event of Default" deleted from cl 5.3</strong> — a failed suspensive condition should make the agreement lapse, nothing more.</p></div>
+      </div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>They can sell our debt to anyone; we can assign nothing</h3><span class="chip press">Press hard</span><span class="chip ref">cl 21.5</span><span class="chip ref">Pledge cl 12.5</span></div>
+        <p>Loan cl 21.5 restricts <strong>our</strong> cession. Nothing restricts theirs — and Pledge cl 12.5 provides that if Plane Tree cedes the loan, the whole security package follows <strong>"without need for notice to or prior consent of the Borrower"</strong>. This facility and every pledge over Tyron's assets could end up with a debt-collection house without us being told.</p>
+      </div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>Surety benefits renounced in a loan where we are the principal debtor</h3><span class="chip press">Press hard</span><span class="chip ref">cl 8.4</span></div>
+        <p>We renounce <strong>excussion, division and cession of actions</strong> — all <em>surety</em> defences. Tyron is the principal debtor. Either this is copy-paste from a suretyship precedent, or it is laying groundwork to treat him as surety for someone else's obligation later. Delete it; if a suretyship is genuinely intended it must be a separate, disclosed document.</p>
+      </div>
+
+      <div class="find is-raise">
+        <div class="find-head"><h3>Three smaller ones worth raising</h3><span class="chip raise">Raise &amp; trade</span></div>
+        <ul class="tight">
+          <li><strong>Attorney-and-own-client costs "irrespective of whether legal action results"</strong> <code>cl 14.3</code> — the clause ignores a line the law draws. <strong>Pre-litigation recovery costs are "collection costs"</strong> (s101(1)(g)), capped and counted toward the s103(5) <em>in duplum</em> ceiling; a pre-agreed cost consent is separately caught by s90(2)(k). <strong>Litigation costs sit outside that machinery</strong> after <em>Bayport Securitisation v University of Stellenbosch Law Clinic</em> [2021] ZASCA 156 — but an attorney-and-own-client stipulation still does not bind a court. Split the clause: pre-litigation costs "limited to the maximum permitted by ss101 and 103 of the NCA"; litigation costs "such costs as a court may award, on taxation".</li>
+          <li><strong>s129 default notices by registered post</strong> <code>cl 13.3</code> — registered post to an unattended address is still deemed delivery, and starts the clock before they may litigate. Ask for email <em>and</em> post, running from the later.</li>
+          <li><strong>Shortfall risk with no control over the sale</strong> <code>cl 1.15</code> — they may sell by "any other commercially reasonable method determined by the Lender", with no valuation and no reserve, and we carry the shortfall. Ask for an independent valuation, a reserve, and 10 days' notice so we can find a buyer ourselves.</li>
+          <li><strong>"Underlying Transaction" is undefined in substance</strong> — yet cl 6.3.4 requires proceeds be applied solely to it, cl 14.1.3 makes any breach a default, and the <em>Pledge</em> uses the same phrase to set the boundary of the security. Schedule the actual transaction.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip crit">Four must-changes here</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">Five</span><h2>Pledge and Cession of Claims</h2></div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>The out-and-out cession of the Sale of Shares proceeds</h3><span class="chip crit">Must change</span><span class="chip ref">cl 4.2</span></div>
+        <p>This is the most damaging clause in the package.</p>
+        <p>Everything else is ceded <em>in securitatem debiti</em> — as security, ownership stays with Tyron. But cl 4.2 alone cedes the De Jongh / Nel share-sale proceeds <strong>"out and out on an outright basis"</strong>: an absolute transfer of the claim, effective from <strong>signature date</strong>, not on default.</p>
+        <ul class="tight">
+          <li>Those proceeds stop being Tyron's asset the moment he signs — before a cent is drawn down.</li>
+          <li><strong>There is no re-cession clause, and that matters more than it looks.</strong> SA law recognises two constructions (<em>Grobler v Oosthuizen</em> [2009] ZASCA 51). Under the <strong>pledge</strong> construction the cedent keeps the reversionary interest and the claim <strong>reverts automatically</strong> on settlement. Under the <strong>out-and-out</strong> construction the cessionary takes full title and the cedent has only a <strong>personal contractual claim</strong> to have it re-ceded. cl 4.9 is enough for the first and useless for the second. Substance can override a label (<em>Cohen's Trustee</em> 1911 AD 235) — but "out and out on an outright basis" is about as clear a contrary intention as can be drafted, so we cannot count on re-characterisation.</li>
+          <li><strong>The risk nobody has flagged: if Plane Tree becomes insolvent, we lose the lot.</strong> On the out-and-out construction the ceded claim <strong>falls into the cessionary's insolvent estate</strong>, and the cedent ranks as a <strong>concurrent creditor</strong> for its re-cession claim. Under the pledge construction it does not. This is the strongest single reason to insist cl 4.2 changes.</li>
+          <li><strong>There is no surplus-accounting clause for this cession.</strong> At common law a cessionary who realises more than the secured debt must refund the excess — but that duty is <strong>default, not peremptory, and can be contracted out of</strong>, and we found no decided case on an out-and-out cession silent on the point. cl 5.3 does oblige them to credit net proceeds, but it sits in the <em>enforcement</em> clause and speaks to realising security after default; the cl 4.2 cession operates from signature date and sits outside it.</li>
+          <li><strong>We also lose standing to sue the De Jonghs.</strong> On <em>Picardi Hotels v Thekweni Properties</em> [2008] ZASCA 128 a security cession deprives the cedent of the right to recover the ceded debt. If Plane Tree is passive and the claim prescribes, Tyron has no direct remedy.</li>
+          <li>cl 4.4 then requires that any payment the De Jonghs make to Tyron be handed over <strong>within 48 hours</strong>, regardless of whether anything is due.</li>
+        </ul>
+        <div class="fix"><b>Ask for — in order of preference</b>
+          <ol class="tight">
+            <li>cl 4.2 changed to a cession <em>in securitatem debiti</em>, on the same footing as cl 4.1; <strong>or</strong></li>
+            <li>if they insist on out-and-out, then all three of: an express <strong>automatic re-cession</strong> on discharge, at their cost within 10 business days; an express obligation to <strong>account for and pay over any surplus</strong> above the debt within 5 business days; and an express statement that the cession secures <strong>only</strong> the Secured Obligations.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>No ordinary-course carve-out — we cannot run the business</h3><span class="chip crit">Must change</span><span class="chip ref">cl 6.1</span></div>
+        <p>The Ceded Claims include all present and future book debts <em>and</em> <strong>"all of the Borrower's claims against the Borrower's bankers for the net proceeds standing to the credit of the Borrower's Account"</strong> — his bank balance. Clause 6.1 then prohibits, without prior written consent:</p>
+        <ul class="tight">
+          <li><code>6.1.2</code> — selling, transferring, <strong>releasing, removing, redirecting</strong> or disposing of any Secured Property;</li>
+          <li><code>6.1.3</code> — any action, <strong>or omission</strong>, that "will, <strong>might</strong> or tends to in any way adversely affect" their interest;</li>
+          <li><code>6.1.6</code> — "<strong>divert, redirect, withdraw, transfer, set off, compromise or otherwise deal with</strong> any payment, proceeds, receivable or other amount" other than per "the payment flow approved by the Lender".</li>
+        </ul>
+        <p>There is no ordinary-course permission anywhere in the document, and <strong>no payment flow has been agreed or attached</strong>. A court would strain to avoid the literal reading. We should never rely on a court straining.</p>
+        <div class="fix"><b>Ask for — non-negotiable</b><p>An express clause permitting the Borrower to collect the Ceded Claims and operate the account in the ordinary course, retaining and applying the proceeds, <strong>until an Event of Default has occurred and is continuing</strong> and written notice invoking the cession has been given. This is standard in every properly drafted security cession; its absence here is conspicuous.</p></div>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>Enforcement "without notice and without any court" — and the NCA is never mentioned</h3><span class="chip crit">Must change</span><span class="chip ref">cl 5.1</span></div>
+        <blockquote><p>…immediately enforceable by the Lender in its discretion <strong>without the need for prior notice to the Borrower or any prior authorisation from any court or arbitrator</strong>.</p><cite>Pledge cl 5.1</cite></blockquote>
+        <p><strong>This clause is unenforceable, and probably void. Three independent reasons:</strong></p>
+        <ol class="tight">
+          <li><strong>NCA s130(3) overrides it by its own terms</strong> — <em>"despite any provision of law <strong>or contract</strong> to the contrary"</em>, a court may determine the matter <strong>only</strong> if satisfied that s127, s129 or s131 were complied with; s130(4) requires adjournment otherwise. No drafting gets around a provision that expressly anticipates contrary drafting.</li>
+          <li><strong>Self-help seizure is unconstitutional.</strong> In <em>Chief Lesapo v North West Agricultural Bank</em> [1999] ZACC 16 the Constitutional Court struck down a statute letting a creditor attach and sell a defaulting debtor's property on its own authority: taking property from a debtor <strong>in possession</strong> without a court order is self-help and infringes <strong>s34 of the Constitution</strong>. All four pledged assets are in Tyron's possession.</li>
+          <li><strong>It is an unlawful provision under s90.</strong> A term dispensing with s129/130/131 defeats the purposes of the Act (s90(2)(a)(i)) and is caught by the s90(2)(k) family. Under s90(3) it is void from inception; under <strong>s90(4)</strong> a court may sever it <strong>or declare the whole agreement unlawful</strong>.</li>
+        </ol>
+        <p><strong>And the "the NCA isn't mentioned" gap cuts the opposite way to how it first looks.</strong> The words "National Credit Act" and "NCA" appear <strong>nowhere</strong> in the Pledge, and the Loan Agreement's cl 1 prevalence clause does not reach a separate contract. But <strong>NCA s91(a)</strong> provides that a credit provider must not induce a consumer to enter a <strong>supplementary agreement</strong> containing a provision that would be unlawful in a credit agreement. A pledge and cession taken from the same consumer as a condition of the credit is the paradigm supplementary agreement — so <strong>the NCA reaches this document whether or not it says so</strong>. That was decided on closely comparable facts in <em>Absa Bank Ltd v Serfontein</em> (SCA, 10 Feb 2025).</p>
+        <div class="fix"><b>The argument to make</b><p>We should not be frightened by cl 5.1 — it will not do what it says. More usefully, <strong>Plane Tree should be more worried about it than we are</strong>: on s90(4) an unseverable cluster of unlawful terms in this document (cl 5.1, the cl 6.3 power of attorney, the cl 5.2.9 auditor valuation) could take the <strong>entire security package</strong> down with it, leaving them unsecured. It is in their own interest to fix.</p></div>
+        <div class="fix"><b>Ask for — cheap for them to give</b><p>One sentence inserted into the Pledge: <em>"This Agreement is subject to the National Credit Act 34 of 2005. To the extent of any conflict between this Agreement and the National Credit Act, or clauses 1 or 19 of the Loan Facility Agreement, the National Credit Act and those clauses shall prevail."</em> That alone neutralises much of the enforcement risk in this document.</p></div>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>Perfection on demand — they can take the operating equipment at any time</h3><span class="chip crit">Must change</span><span class="chip ref">cl 4.13</span><span class="chip ref">cl 4.14</span></div>
+        <p>Clause 4.13 obliges us, <strong>immediately upon request</strong> and <strong>with no reference to default</strong>, to procure delivery, control, attornment, endorsement and release instructions over the Pledged Property. Clause 4.14 requires original NATIS documents on request.</p>
+        <p>The Pledged Property is not idle collateral — it is the Amarok, the 1TPH induction furnace, the CAT 416F backhoe loader, the rock hammer and "its inventory from time to time". That is the operating plant. A perfection demand before any default would stop the business, which would then cause a default.</p>
+        <div class="fix"><b>Ask for</b><p>Every perfection obligation exercisable <strong>only after an Event of Default that is continuing</strong>. Before that, we deliver copies of documents, not possession.</p></div>
+      </div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>They may take our assets into their own name — valued by their own auditor</h3><span class="chip press">Press hard</span><span class="chip ref">cl 5.2.9</span></div>
+        <p>Plane Tree may elect to transfer the Secured Property into its own name <strong>as beneficial owner</strong> at "fair market value". A <em>pactum commissorium</em> — a creditor simply keeping the security on default — is void. But taking the pledge over <strong>at a fair price</strong>, crediting the debtor with that value and paying over the surplus, is <strong>valid</strong>: <em>Mapenduka v Ashington</em> 1919 AD 343, and the "quasi-conditional sale" in <em>Graf v Buechel</em> [2003] ZASCA 29, applied in <em>Bock v Duburoro</em> [2003] ZASCA 94. So the structure is sound in principle — <strong>the load-bearing element is the fairness of the valuation</strong>, exactly what was contested in <em>Bock</em>. And here the valuer, failing agreement in five business days, is <strong>"the Lender's auditor"</strong>; <strong>we pay that auditor's fees</strong>; and the same auditor is the cl 18 arbiter of what we owe. The enforcing party chooses the valuer, we fund the valuer, and the number is final. On <em>Abstein</em> reasoning (§4) a binding determination authored by the creditor is vulnerable — and if the fair-value safeguard is illusory, the whole arrangement collapses back into a void <em>pactum commissorium</em>. That is a risk for <strong>them</strong> as much as us, which makes it a realistic ask.</p>
+        <div class="fix"><b>Ask for</b><p>An independent valuer jointly appointed, or nominated by the relevant professional body if agreement fails within 10 business days; costs shared; and a right for us to submit a counter-valuation.</p></div>
+      </div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>Irrevocable power of attorney to <em>any</em> director of the Lender</h3><span class="chip press">Press hard</span><span class="chip ref">cl 6.3</span></div>
+        <blockquote><p>The Borrower hereby irrevocably appoints <strong>any director of the Lender</strong> as its agent with power of attorney <em>in rem suam</em> to be its lawful attorney and agent, to sign <strong>all such documents and do all such things</strong> as may be necessary to give effect to this Agreement.</p><cite>Pledge cl 6.3</cite></blockquote>
+        <p>Unlimited in subject matter, unlimited in time, irrevocable, exercisable before any default, held by <em>any</em> director. It would let a Plane Tree director sign documents in Tyron's own name.</p>
+        <p><strong>This is not merely aggressive — on current SCA authority it is likely unlawful.</strong> In <em>Absa Bank Ltd v Serfontein</em> (SCA, 10 Feb 2025) an acknowledgement of debt incorporating a power of attorney, giving the bank an irrevocable ability to execute without recourse to court, fell within <strong>s90(2)(k)</strong> and <strong>s90(2)(j)</strong>, with the NCA-exclusion element contravening s90(2)(a)(i). The provisions were <strong>unseverable</strong>; the agreement was declared unlawful and the resulting sale void from the outset. An <em>in rem suam</em> power is by definition irrevocable and in the grantee's own interest, which aggravates rather than cures the problem.</p>
+        <div class="fix"><b>Ask for</b><p>Post-default only; confined to specified perfection documents we have already failed to sign within 5 business days of written request; written notice of each exercise.</p></div>
+      </div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>Warranties that cannot be kept, behind an uncapped indemnity</h3><span class="chip press">Press hard</span><span class="chip ref">cl 7.1</span></div>
+        <div class="tw"><table>
+          <thead><tr><th>Clause</th><th>Warranty</th><th>Problem</th></tr></thead>
+          <tbody>
+            <tr><td><code>7.1.6</code></td><td>Ceded Claims are "valid, enforceable, and <strong>free from dispute</strong>… no existing or threatened claims, set-offs, counterclaims, defences"</td><td>The Ceded Claims include <strong>all future</strong> book debts. Nobody can warrant that no future customer will dispute an invoice. Every disputed invoice is a breach → default → acceleration.</td></tr>
+            <tr><td><code>7.1.1</code> / <code>7.1.2</code></td><td>Sole and lawful owner; nothing previously encumbered</td><td><strong>Verify before signature.</strong> If the Amarok or the CAT is under instalment-sale finance, this is false on day one and exposes Tyron to a misrepresentation claim, not just a breach.</td></tr>
+            <tr><td><code>7.1.8</code></td><td>All Pledged Property "complies and will comply with all applicable laws, licensing… health and safety… storage and transport requirements"</td><td>An absolute, forward-looking regulatory warranty over an 800 kW induction furnace and heavy plant.</td></tr>
+            <tr><td><code>7.1.11</code></td><td>Indemnity for any loss from breach of the above</td><td><strong>Uncapped</strong>, sitting on impossible warranties — potential liability well beyond R2.4m.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Note the internal contradiction: cl 4.7 contemplates that some Secured Property <strong>may already be encumbered</strong> and cedes the reversionary interest, while cl 7.1.2 warrants that <strong>none of it is</strong>. They may rely on whichever suits them.</p>
+      </div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>We must deliver a third party's signature within 7 days</h3><span class="chip press">Press hard</span><span class="chip ref">cl 4.3</span><span class="chip ref">Annexure A</span></div>
+        <p>Clause 4.3 obliges us to <strong>procure</strong> that Mila De Jongh, Megan De Jongh, Liam Daniel De Jongh and Andries Jacobus Nel sign the Annexure A acknowledgement within 7 days. They are not parties to this agreement and may simply refuse. If they do, <strong>we breach the Pledge, which is an Event of Default under the Loan, which accelerates R2.4m.</strong></p>
+        <p>We are being made to guarantee the conduct of people we do not control — and Annexure A also records that "the Borrower shall retain any obligations to the Purchasers". We keep the burden of that share sale and lose the benefit.</p>
+        <div class="fix"><b>Ask for</b><p>"Use <strong>reasonable endeavours</strong> to procure", 20 business days, and an express statement that non-signature by the Purchasers is <strong>not</strong> an Event of Default.</p></div>
+      </div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>No release mechanism on repayment</h3><span class="chip crit">Must change</span></div>
+        <p>There is <strong>no clause</strong> obliging Plane Tree, once the debt is paid, to release the security, cancel the cession, re-cede the claims and return NATIS documents. cl 4.9 runs the agreement "until the Lender confirms in writing" — the trigger sits entirely in their hands, with no deadline and no obligation to act. Long term, this is how a settled facility leaves a lingering encumbrance across an entire estate.</p>
+        <div class="fix"><b>Ask for — non-negotiable</b><p><em>"Within 10 business days of the Secured Obligations being discharged in full, the Lender shall, at its own cost, deliver to the Borrower a written release and cancellation of this Agreement, re-cede all Ceded Claims, release all Pledged Property, and return all documents of title, NATIS documents and other documents delivered to it under this Agreement."</em></p></div>
+      </div>
+
+      <div class="find is-raise">
+        <div class="find-head"><h3>Two more worth raising</h3><span class="chip raise">Raise &amp; trade</span></div>
+        <ul class="tight">
+          <li><strong>The pledge creates no real security at all — over anything.</strong> A pledge of movables requires <strong>delivery</strong>, and <em>constitutum possessorium</em> is not permitted: <em>Vasco Dry Cleaners v Twycross</em> 1979 (1) SA 603 (A) held that a "pledge" where the article stays with the pledgor creates <strong>no real security right</strong>. That is true here of the inventory <em>and</em> all four identified assets, which stay in Tyron's possession. <strong>This is why cl 4.13 is drafted so aggressively — the delivery demand is the whole security.</strong> The constructive counter-offer is a <strong>special notarial bond</strong> over the four identified assets (Act 57 of 1993), which deems them pledged notwithstanding non-delivery. Two caveats: <em>Ikea Trading v BOE Bank</em> [2004] ZASCA 27 requires assets to be <strong>"readily recognisable from the bond alone"</strong>, so the VIN/serial descriptions must be exact — and <strong>fluctuating inventory will not qualify</strong>. Offer the four assets; resist the inventory.</li>
+          <li><strong>No representations outside the document — including negligent ones</strong> <code>cl 12.4</code> — kills any claim based on what Plane Tree told us verbally about flexibility on the balloon or refinance. Ask for fraudulent <em>and reckless</em> misrepresentation to be carved out expressly.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip ref">Before signature</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">Six</span><h2>Errors, blanks and things to verify</h2></div>
+      <h4>Factual errors — these matter, because we warrant their accuracy</h4>
+      <div class="tw"><table>
+        <thead><tr><th>Issue</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td><strong>The Amarok has two different registration numbers.</strong> Loan cl 5.1.4.1.1 and Pledge cl 1.1.10.1 say <code>HKK160K</code>; Annexure B says <code>HT22DTGP</code>. Same VIN. One is wrong — a misdescribed asset weakens the pledge <em>and</em> breaches our accuracy warranty.</td><td>Loan cl 5.1.4.1.1; Pledge cl 1.1.10.1 &amp; Annexure B</td></tr>
+          <tr><td>The furnace is described as <strong>"(brand new)"</strong> but also <strong>"Purchased Jan 2022"</strong>. Four years of depreciation is material to its value as security.</td><td>Annexure B</td></tr>
+          <tr><td><strong>"the Purchasers Nel"</strong> — stray word, appears <strong>three times</strong>.</td><td>Annexure A</td></tr>
+          <tr><td><strong>"the terms of this Agreement are in <em>plan</em> language"</strong> — in the clause designed to defeat a plain-language challenge.</td><td>Loan cl 12.1.4</td></tr>
+          <tr><td><strong>"determined by an the Lender's auditor"</strong> and <strong>"pay such the Lender's auditor's charges"</strong> — broken grammar in the most commercially significant clause of the Pledge.</td><td>Pledge cl 5.2.9</td></tr>
+          <tr><td>Loan cl 6.4 refers to <strong>"any permitted debt expressly allowed in terms of this Agreement"</strong> — but there is <strong>no permitted-debt regime at all</strong>. Either add a schedule (useful to us) or delete.</td><td>Loan cl 6.4</td></tr>
+          <tr><td>Their <strong>comment 37</strong> flags that cl 2.2(c) of the underlying <strong>Sale of Shares Agreement</strong> describes <em>Tyron (the Seller)</em> as selling Naomi Street and Pebble Creek, assuming a typo for "Purchaser". If it is not a typo, the cession describes rights that may not exist as assumed.</td><td>Loan cl 5.1.4.2</td></tr>
+        </tbody>
+      </table></div>
+
+      <h4>Blanks that must be completed before signature</h4>
+      <ul class="tight">
+        <li>Borrower's residential address, email address and bank account — both documents and both domicilium tables</li>
+        <li><strong>TOTAL INTEREST, FEES AND CHARGES</strong> — <code>R[●]</code></li>
+        <li><strong>TOTAL COST OF CREDIT</strong> — <code>R[●]</code></li>
+        <li>Lender's complaints telephone number and complaints email — Loan cl 1.9</li>
+        <li><strong>"Address at which asset is stored" — blank for all four assets</strong>, Annexure B. Not cosmetic: Loan cl 1.10 records the s97(2) duty to notify exactly this, so the schedule meant to record it leaves us non-compliant from day one.</li>
+      </ul>
+      <p><strong>Do not sign while the Cost of Credit table reads <code>R[●]</code>.</strong> A disclosure document with its two headline numbers blank is not a disclosure — and their comment 7 concedes the pre-agreement statement and quotation position is unresolved.</p>
+
+      <h4>Verify before Tyron signs anything</h4>
+      <ol class="checklist">
+        <li>Is the Amarok subject to existing bank or instalment-sale finance? <span>If so, Pledge cl 7.1.1 and 7.1.2 are false on signature</span></li>
+        <li>Same for the CAT 416F and the rock hammer — obtain settlement letters or confirmation of unencumbered title <span>All four assets</span></li>
+        <li>Was the furnace bought subject to reservation of ownership or supplier credit? <span>Same warranty problem</span></li>
+        <li>Obtain and read the signed Sale of Shares Agreement of 27 November 2025 <span>We are ceding its proceeds outright, unseen</span></li>
+        <li>Confirm the De Jonghs and Nel will actually sign Annexure A <span>Before we contract to procure it in 7 days</span></li>
+        <li>Confirm any existing SARS position <span>Before warranting full tax compliance</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip crit">7 must-haves</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">Seven</span><h2>Position, and what to send back</h2></div>
+
+      <h4>Must have — do not sign without these</h4>
+      <ol class="checklist">
+        <li>Payment dates keyed to the <strong>Drawdown Date</strong>, not fixed calendar dates <span>Loan cl 8.1</span></li>
+        <li><strong>Materiality qualifier and 10 business day cure period</strong> on all non-payment defaults <span>Loan cl 14.1</span></li>
+        <li>Pledge cl 4.2 changed to <em>in securitatem debiti</em> — or express re-cession, surplus-accounting and a cap <span>Pledge cl 4.2</span></li>
+        <li>An express <strong>ordinary-course carve-out</strong> for book debts and the bank account until a default is continuing <span>Pledge cl 6.1</span></li>
+        <li>A clause making the Pledge <strong>subject to the NCA</strong>, with the NCA and Loan cl 1 and 19 prevailing <span>Pledge cl 5.1</span></li>
+        <li>A <strong>release and re-cession clause</strong> on discharge, within 10 business days, at their cost <span>Pledge — new clause</span></li>
+        <li>Interest <strong>not compounded daily</strong>, effective rate on the face of the agreement, Cost of Credit table completed <span>Loan cl 1 and 9</span></li>
+      </ol>
+
+      <p style="margin-top:22px"><strong>Then press on:</strong> post-default-only perfection and power of attorney; independent expert for balances and valuations; warranties qualified by knowledge and materiality with the indemnity capped at the debt; callback verification on electronic instructions; a carve-out to the negative pledge for asset finance; "reasonable endeavours" on Annexure A; a restriction on Plane Tree ceding onward; and a longstop on the suspensive conditions.</p>
+      <p><strong>Trade away:</strong> the plain-language warranty, the contra proferentem exclusion, the counterparts and witness provisions, and most of the interpretation clause. They cost us little and give them the sense of a negotiation.</p>
+
+      <div class="find is-press" style="margin-top:22px">
+        <div class="find-head"><h3>A structural question worth putting on the table</h3></div>
+        <p>Almost every problem above flows from one decision: <strong>this is a personal loan to a natural person for what is plainly a business transaction.</strong> If the copper venture sits in a company, borrowing through that company — with a <em>capped, defined</em> suretyship from Tyron if they insist — would ring-fence the exposure, remove the personal negative pledge over all his assets, and dispose of the s100 legal-fees problem cleanly.</p>
+        <p>But note the trade-off honestly: the NCA protections that apply <em>because</em> the borrower is a natural person — s129 notice, debt review, in duplum, the prescribed rate caps — would fall away for a company above the NCA threshold. <strong>This is a judgement call for Dreyer and our attorney, not one to settle in correspondence with Plane Tree.</strong></p>
+      </div>
+
+      <h4 style="margin-top:30px">Suggested reply to Toivo</h4>
+      <p>Hold the substantive mark-up until our attorney has been through this. Reply now only on the fee request, and to buy time.</p>
+      <div class="email">
+        <div class="meta">Draft · to toivo@plane-tree.com · not sent</div>
+        <p>Hi Toivo,</p>
+        <p>Thanks for sending these through, and for the detail in the drafts.</p>
+        <p>We're working through both agreements with our attorney and will come back to you with a consolidated mark-up rather than piecemeal comments. Realistically that will be with you by <strong>[date]</strong>.</p>
+        <p>Two things in the meantime.</p>
+        <p>First, could you please complete the Cost of Credit table before we go further — <strong>total interest, fees and charges</strong> and <strong>total cost of credit</strong> are both still shown as R[●], and we'd also like the <strong>effective</strong> annual rate stated alongside the nominal 21%, given interest is compounding daily. On our modelling the structure leaves a balloon of roughly <strong>R1.63m falling due on 31 August 2027</strong>, which we'd want reflected clearly on the face of the agreement. Could you also confirm whether a pre-agreement statement and quotation under sections 92 and 93 have been issued.</p>
+        <p>Second, on the AOD and invoice for legal fees — before we provide company details, could you let us know (a) the quantum, (b) the basis on which the Borrower is liable for the Lender's drafting costs given section 100 of the NCA, and (c) why this is being handled through a separate acknowledgement of debt rather than disclosed in the Cost of Credit table, which currently records both the initiation fee and the service fee as nil. We'd prefer to keep everything inside the one agreement.</p>
+        <p>Happy to jump on a call if that's quicker.</p>
+        <p>Kind regards,</p>
+      </div>
+      <div class="fix"><b>What this does</b><p>Puts the s100 problem back on their side of the table without accusing anyone, declines the AOD without saying "no", uses their own nil-fee disclosure against the request, and signals we have modelled the deal properly — which changes the tone of everything that follows.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 authorities -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip press">Verify before citing</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">Eight</span><h2>Authorities — and what is <em>not</em> verified</h2></div>
+      <p>Two research passes were run against South African primary sources. <strong>Read the verification table before any of this goes into a letter to Plane Tree:</strong> the research tooling could not open primary documents directly — SAFLII, gov.za and law-firm sites were all blocked at the network layer — so everything below comes from search-index extraction rather than from reading the judgments and the Gazette. Good enough to negotiate from and to brief our attorney with. <strong>Not</strong> good enough to cite without CST Law confirming first.</p>
+
+      <h4>Interest — why Regulation 40 is the argument</h4>
+      <div class="tw"><table>
+        <thead><tr><th>Point</th><th>Position</th></tr></thead>
+        <tbody>
+          <tr><td>Reg 42 maximum rates<br><span style="color:var(--muted);font-size:13px">agreements from 6 May 2016</span></td><td>Mortgage RR+12% · <strong>Credit facility RR+14%</strong> · Unsecured RR+21% · Developmental RR+27% · <strong>Other credit agreement RR+17%</strong> · Short-term 5%/month first loan · Incidental 2%/month</td></tr>
+          <tr><td>Repo rate</td><td><strong>7.00%</strong> (prime 10.50%). Last MPC 23 July 2026 — hold, on a 4–2 split. Previous move 28 May 2026, +25bp from 6.75%.</td></tr>
+          <tr><td>Resulting caps</td><td>Credit facility <strong>21.00%</strong> · Other credit agreement <strong>24.00%</strong></td></tr>
+          <tr><td>Reg 40 — capitalisation</td><td>Interest <strong>calculated daily</strong> but <strong>added to the deferred amount only once, at the end of the month</strong>. Daily capitalisation is not permitted.</td></tr>
+          <tr><td>Nominal or effective?</td><td><strong>Unresolved.</strong> No NCR circular, guidance note or reported decision found either way.</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="find is-press">
+        <div class="find-head"><h3>Three things follow — and one is a question for Plane Tree</h3></div>
+        <ul class="tight">
+          <li><strong>Their attorney has applied the <em>credit facility</em> cap</strong> (RR+14% = 21.00%). But a once-off R2.4m secured loan repayable in instalments looks much more like a <strong>secured loan / "other credit agreement"</strong> (RR+17% = <strong>24.00%</strong>) than a credit facility under s8(3). Either the cap reasoning is wrong or the agreement is mis-classified. Worth asking — not to invite a higher rate, but because it tells us how carefully this has been thought through.</li>
+          <li><strong>At 21.00% the headline sits exactly on the credit-facility cap — zero headroom.</strong> And the cap is fixed by the repo rate <strong>at the time credit is granted</strong>, not today's. Had drawdown fallen before 28 May 2026 (repo 6.75%) the cap would have been 20.75% and 21% would already have been over it. Establish the grant date before running the arithmetic.</li>
+          <li><strong>So don't argue the cap — argue Reg 40.</strong> Daily capitalisation is impermissible whatever the rate, and the excess is an amount charged in contravention of <strong>s100(1)(c)</strong>. In <em>Loan Company (Pty) Ltd v NCR</em> [2025] ZASCA 40 the SCA measured the contravention by what was <strong>actually charged</strong> under the Reg 40 mechanics, not by the stated rate. Remedies in that line run to declaring agreements <strong>void</strong>, ordering <strong>refunds</strong>, and a s151 fine. This argument does not depend on the unresolved nominal/effective question.</li>
+        </ul>
+      </div>
+
+      <h4>Authorities relied on elsewhere</h4>
+      <div class="tw"><table>
+        <thead><tr><th>Area</th><th>Authority</th><th>Used at</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="4"><strong>Charges<br>&amp; fees</strong></td><td><em>NCR v National Consumer Tribunal</em> [2025] ZASCA 132 — s101(1) with s102(1) is a <strong>closed list</strong>; substance over label</td><td>§3</td></tr>
+          <tr><td><em>Uys NO v NCR</em> [2025] ZASCA 34 — structuring to avoid the NCA is <strong>not per se unlawful</strong>; simulation needs shared dishonest intent</td><td>§3</td></tr>
+          <tr><td><em>Bayport Securitisation v Univ. of Stellenbosch Law Clinic</em> [2021] ZASCA 156 — <strong>collection costs ≠ litigation costs</strong>; s103(5) not post-judgment</td><td>§4</td></tr>
+          <tr><td><strong>s103(5)</strong> — statutory <em>in duplum</em> is wider than common law: caps <strong>all</strong> of s101(1)(b)–(g) in aggregate at the unpaid principal <strong>as at the moment default occurs</strong></td><td>§4</td></tr>
+          <tr><td rowspan="6"><strong>Enforcement<br>&amp; unlawful<br>provisions</strong></td><td><strong>s130(3)</strong> — "despite any provision of law <strong>or contract</strong> to the contrary"; s130(4) requires adjournment</td><td>§5</td></tr>
+          <tr><td><em>Chief Lesapo v North West Agricultural Bank</em> [1999] ZACC 16 — seizure from a debtor in possession without a court order infringes <strong>s34</strong></td><td>§5</td></tr>
+          <tr><td><em>Juglal NO v Shoprite Checkers</em> 2004 (5) SA 248 (SCA) — <em>parate executie</em> valid, but a court refuses effect to <strong>unconscionable implementation</strong></td><td>§5</td></tr>
+          <tr><td><em>Absa Bank Ltd v Serfontein</em> (SCA, 10 Feb 2025) — separate AOD + POA an unlawful <strong>supplementary agreement</strong> under s91; <strong>unseverable</strong>; sale void <em>ab initio</em></td><td>§3, §5</td></tr>
+          <tr><td><em>Nedbank v Abstein Distributors</em> 1995 (3) SA 1 (A) — a <strong>conclusive-proof clause authored by the creditor</strong> is void; <em>prima facie</em> clauses survive</td><td>§4, §5</td></tr>
+          <tr><td><em>NCR v Standard Bank</em> [2019] ZAGPJHC 182 — common-law set-off <strong>ousted</strong> for NCA agreements by ss 90(2)(n) and 124, so cl 8.6.2 is largely inert</td><td>§4</td></tr>
+          <tr><td rowspan="5"><strong>Cession<br>&amp; pledge</strong></td><td><em>Grobler v Oosthuizen</em> [2009] ZASCA 51 — the two constructions; absent clear contrary intention the <strong>pledge</strong> construction applies</td><td>§5</td></tr>
+          <tr><td><em>Picardi Hotels v Thekweni Properties</em> [2008] ZASCA 128 — a security cession deprives the cedent of the right to recover the ceded debt</td><td>§5</td></tr>
+          <tr><td><em>Vasco Dry Cleaners v Twycross</em> 1979 (1) SA 603 (A) — <em>constitutum possessorium</em> not permitted; no delivery, <strong>no real security</strong></td><td>§5</td></tr>
+          <tr><td><em>Ikea Trading v BOE Bank</em> [2004] ZASCA 27 — special notarial bond assets must be <strong>"readily recognisable from the bond alone"</strong></td><td>§5</td></tr>
+          <tr><td><em>Mapenduka v Ashington</em> 1919 AD 343 · <em>Graf v Buechel</em> [2003] ZASCA 29 · <em>Bock v Duburoro</em> [2003] ZASCA 94 — take-over <strong>at a fair price</strong> is valid; the valuation is the battleground</td><td>§5</td></tr>
+          <tr><td rowspan="2"><strong>Reckless<br>credit</strong></td><td><strong>s80(1)(a)</strong> — reckless if no s81(2) assessment, <em>"irrespective of what the outcome might have concluded"</em>; <strong>s83(2)–(3)</strong> relief; <strong>s84</strong> — during suspension <strong>no interest, fee or charge may be charged</strong></td><td>§4</td></tr>
+          <tr><td><strong>s81(4)</strong> defence needs requests for information actually to have been made — a provider that ran <strong>no</strong> assessment has none to point to</td><td>§4</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="find is-crit">
+        <div class="find-head"><h3>What could NOT be verified — flag these to CST Law</h3><span class="chip crit">Before citing</span></div>
+        <ol class="tight">
+          <li><strong>The <em>Absa Bank Ltd v Serfontein</em> citation.</strong> Name, date and holdings come from three independent law-firm commentaries; the <strong>neutral citation and case number were not found and the judgment was not read</strong>. This is the authority doing the most work in §3 and §5 — confirm it first.</li>
+          <li><strong>Verbatim Regulation 40</strong>, including sub-regulation numbering. The daily/monthly rule is consistently reported by the Tribunal and the SCA, but the primary text was never seen.</li>
+          <li><strong>The full s90(2) paragraph letters.</strong> Only (a)(i), (c), (f), (j), (k) and (n) were confirmed; (l), (m) and (o) could not be identified. Do not cite paragraph letters without checking the Act.</li>
+          <li><strong>Reg 42 entries for "other credit agreements" (RR+17%) and developmental credit (RR+27%)</strong> — fewer corroborating sources than the others. Whether Reg 42 has been amended since 6 May 2016 could not be confirmed as a negative.</li>
+          <li><strong>Whether the Reg 42 cap attaches to the nominal or effective rate</strong> — a genuine gap. Hence the Reg 40 framing above.</li>
+          <li><strong>Exact wording of s101(2), the full s102(1) list, s84, and the s92(3) binding period.</strong></li>
+          <li><strong>No authority found either way on a valuation by the creditor's own auditor.</strong> The <em>Abstein</em> analogy is reasoning, not a holding.</li>
+          <li><strong>No authority found on invoicing an associated company to circumvent s100.</strong> The §3 analysis is inferential.</li>
+          <li><strong>Current initiation and service fee caps for 2026</strong> — sources conflicted.</li>
+          <li><strong>s164</strong> — sources conflict on whether it is "Agents" or "Civil actions and jurisdiction". Do not cite it.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip ok">Genuinely fine</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">Nine</span><h2>What is genuinely fine</h2></div>
+      <p>To keep this balanced — the drafting is competent, and much of it is unobjectionable:</p>
+      <ul>
+        <li><strong>Early settlement without penalty</strong> (cl 8.5) and the settlement-amount right (cl 1.12) are real and useful to us.</li>
+        <li>The <strong>NCA disclosure block</strong> (cl 1), debt-counselling and complaints provisions are properly done — and cl 1's statement that it <em>prevails over conflicting provisions</em> is genuinely protective. We just need the same protection extended to the Pledge.</li>
+        <li>The <strong>s129/s130 enforcement procedure</strong> in Loan cl 19.2–19.5 is correctly stated, including the concurrent running of the periods and the reinstatement right at cl 19.7.</li>
+        <li>The payment waterfall (interest → fees → capital) is conventional, even if it is what drives the balloon.</li>
+        <li><strong>Interest is fixed, not linked to prime</strong> — genuinely good for us in a rising-rate environment.</li>
+        <li>Their attorney's margin comments are candid and, in two places, actively unhelpful to his own client. That suggests they are drafting in good faith rather than trying to slip something past us — a reason to negotiate hard, but not adversarially.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- approval -->
+<section>
+  <div class="row">
+    <div class="gutter"><span class="chip crit">Gate</span></div>
+    <div class="col">
+      <div class="shead"><span class="num">Ten</span><h2>Approval required</h2></div>
+      <div class="approval">
+        <h4>Required human approval</h4>
+        <ul>
+          <li><b>Approver:</b> Dreyer Hoffman (principal)</li>
+          <li><b>Adviser sign-off needed:</b> CST Law (HJ Taljaard) — primary legal. Must review before Tyron signs either document, and before any AOD or company details are provided for the legal-fee invoice.<br><span class="warn">Conflict: Labuschagne Attorneys (Niel de Jongh) must NOT be used on this matter — the counterparties to the ceded Sale of Shares Agreement are Mila, Megan and Liam Daniel De Jongh.</span></li>
+          <li><b>Live holds:</b> none of the standing holds apply directly. The Zambian Copper figures-verification gate applies to any IRR or return figure used to justify this cost of funds.</li>
+          <li><b>Figures to verify before use:</b> the balloon at 31 Aug 2027 (~R1.63m) and total cost of credit (~R432k) are <b>model outputs</b> from the agreement's own terms — to be confirmed against Plane Tree's own amortisation once they complete the Cost of Credit table. The repo rate and applicable NCA maximum rate rest on their attorney's assertion that repo + 14% = 21%; to be confirmed independently. Unencumbered title to the four pledged assets: <b>not verified</b>. Sale of Shares Agreement of 27 Nov 2025: <b>not seen</b>.</li>
+          <li><b class="warn">This draft is NOT executed, sent, or committed.</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p>Prepared 18 August 2026 from <code>2026.08.12 — Loan Facility Agreement — Tyron Bos v1.docx</code> and <code>2026.08.13 — Pledge and Cession of Claims v1.docx</code>, including the fourteen margin comments left in the files by the lender's drafter. Commercial and risk review only — not a legal opinion, and not a substitute for sign-off by our own attorney.</p>
+</footer>

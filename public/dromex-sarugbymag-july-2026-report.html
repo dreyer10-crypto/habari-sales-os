@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dromex — SA Rugby Mag · June–July 2026 | Habari Media</title>
+<title>Dromex — SA Rugby Mag · July 2026 | Habari Media</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -9,7 +9,8 @@
   --bg:#0a0d0b;--panel:#121815;--panel-2:#0f1512;--line:rgba(255,255,255,.08);--line-strong:rgba(255,255,255,.14);
   --text:#eef2ec;--muted:#94a098;--faint:#5f6c63;
   --green:#1ca85f;--green-2:#23c46e;--gold:#d4a24c;--cream:#f4ecd8;--client:#E2231A;
-  --s-jun:#199e70;--s-jul:#3987e5;          /* categorical series — validated for CVD on this surface */
+  --series:#199e70;--series-soft:rgba(25,158,112,.16);   /* single series — the July flight */
+  --s-jul:#3987e5;
   --warn:#e0a336;--bad:#e2604a;
   --r:18px;--maxw:1120px;
   --display:"Bricolage Grotesque",Georgia,serif;--body:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -80,7 +81,7 @@ tfoot td{font-weight:700;border-top:1px solid var(--line-strong);color:var(--cre
 .swatch{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:9px;vertical-align:-1px}
 .delta{font-weight:700;font-variant-numeric:tabular-nums}
 .delta.dn{color:var(--bad)}
-.delta.up{color:var(--s-jun)}
+.delta.up{color:var(--series)}
 
 /* ---------- charts ---------- */
 .chart-legend{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px}
@@ -94,6 +95,8 @@ tfoot td{font-weight:700;border-top:1px solid var(--line-strong);color:var(--cre
 .tip .row .lab{display:flex;align-items:center;gap:7px;color:var(--muted)}
 .tip .row .val{font-weight:700;font-variant-numeric:tabular-nums;color:var(--text)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*{min-width:0}
+.panel{min-width:0}
 
 /* ---------- callouts ---------- */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -142,7 +145,6 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 46px}
   .panel,.kpi,.card,.offer,.fx{break-inside:avoid}
 }
 </style>
-
 <div class="topbar"><div class="wrap">
   <div class="brand"><span class="dot"></span>habari<small>Campaign Report</small></div>
   <button class="pbtn" onclick="window.print()">Print / Save PDF</button>
@@ -152,13 +154,13 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 46px}
 
   <!-- ================= HERO ================= -->
   <header class="hero">
-    <span class="flightbadge"><span class="pulse"></span>2 flights complete · 61 days</span>
-    <h1><span class="client">Dromex</span> on<br>SA Rugby Mag.</h1>
-    <p class="sub">Digital display delivery across the June and July 2026 flights on sarugbymag.co.za, with the social extension and a read on what the format mix returned.</p>
+    <span class="flightbadge"><span class="pulse"></span>Flight complete · 31 days</span>
+    <h1><span class="client">Dromex</span><br>July 2026.</h1>
+    <p class="sub">Digital display delivery on sarugbymag.co.za for the July flight, with a read on where the month's impressions and engagement actually came from.</p>
     <div class="meta">
       <div><div class="k">Platform</div><div class="v">SA Rugby Magazine</div></div>
-      <div><div class="k">Flight dates</div><div class="v">1 Jun – 31 Jul 2026</div></div>
-      <div><div class="k">Duration</div><div class="v">61 days</div></div>
+      <div><div class="k">Flight dates</div><div class="v">1 – 31 Jul 2026</div></div>
+      <div><div class="k">Duration</div><div class="v">31 days</div></div>
       <div><div class="k">Placement</div><div class="v">Digital Display · ROS</div></div>
       <div><div class="k">Booked through</div><div class="v">Metamedia</div></div>
     </div>
@@ -172,53 +174,53 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 46px}
   <!-- ================= HEADLINE ================= -->
   <section>
     <div class="eyebrow">Headline</div>
-    <div class="sec-head"><h2>Two flights, combined</h2><span class="tag">1 Jun – 31 Jul 2026</span></div>
+    <div class="sec-head"><h2>July at a glance</h2><span class="tag">1 – 31 July 2026</span></div>
     <div class="kpis">
-      <div class="kpi"><div class="k">Impressions</div><div class="n" id="kImp">—</div><div class="d">across 61 days</div></div>
+      <div class="kpi"><div class="k">Impressions</div><div class="n" id="kImp">—</div><div class="d" id="kImpD">—</div></div>
       <div class="kpi"><div class="k">Clicks</div><div class="n" id="kClk">—</div><div class="d">ad server recorded</div></div>
-      <div class="kpi gold"><div class="k">Blended CTR</div><div class="n" id="kCtr">—</div><div class="d">June 0.154% · July 0.074%</div></div>
-      <div class="kpi gold"><div class="k">Blended CPM</div><div class="n" id="kCpm">—</div><div class="d">R130,000 total spend</div></div>
+      <div class="kpi gold"><div class="k">CTR</div><div class="n" id="kCtr">—</div><div class="d">across the full flight</div></div>
+      <div class="kpi gold"><div class="k">CPM</div><div class="n" id="kCpm">—</div><div class="d" id="kCpmD">—</div></div>
     </div>
   </section>
 
-  <!-- ================= FLIGHT COMPARISON ================= -->
-  <section>
-    <div class="eyebrow">Flight comparison</div>
-    <div class="sec-head"><h2>June against July</h2><span class="tag">Identical spend, both months</span></div>
-    <div class="panel">
-      <div class="tscroll"><table>
-        <thead><tr>
-          <th>Metric</th><th class="num">June 2026</th><th class="num">July 2026</th><th class="num">Change</th>
-        </tr></thead>
-        <tbody id="cmpBody"></tbody>
-      </table></div>
-      <p class="note">June ran on GAM line item 7295013789, July on 7352739255. Spend is identical across both months at R65,000, so every movement in the table is a delivery movement rather than a budget one.</p>
-    </div>
-  </section>
-
-  <!-- ================= DAILY DELIVERY ================= -->
+  <!-- ================= DAILY IMPRESSIONS ================= -->
   <section>
     <div class="eyebrow">Delivery over time</div>
-    <div class="sec-head"><h2>Daily impressions</h2><span class="tag">Both flights aligned to day of month</span></div>
+    <div class="sec-head"><h2>Daily impressions, July 2026</h2><span class="tag">Ad server</span></div>
     <div class="panel">
-      <div class="chart-legend">
-        <span class="li"><span class="sw" style="background:var(--s-jun)"></span>June 2026</span>
-        <span class="li"><span class="sw" style="background:var(--s-jul)"></span>July 2026</span>
-      </div>
       <div class="chartbox" id="cImp"></div>
-      <p class="note">Both flights plotted against day of month so the shapes compare directly. June holds a 20,000–49,000 band throughout; July opens under 8,000 a day for its first five days and never recovers June's ceiling. Highest single day: June 8 at 49,358, against July 11 at 33,776.</p>
+      <p class="note">The flight opened slowly. The first five days averaged 5,966 impressions a day and contributed 6.5% of the month's total. From 6 July delivery settled into a 10,000–34,000 band, averaging 16,450 a day for the balance of the month. The single highest day was 11 July at 33,776.</p>
     </div>
   </section>
 
+  <!-- ================= DAILY CLICKS ================= -->
   <section>
-    <div class="sec-head"><h2>Daily clicks</h2><span class="tag">Same axis, same scale</span></div>
+    <div class="sec-head"><h2>Daily clicks, July 2026</h2><span class="tag">Ad server</span></div>
     <div class="panel">
-      <div class="chart-legend">
-        <span class="li"><span class="sw" style="background:var(--s-jun)"></span>June 2026</span>
-        <span class="li"><span class="sw" style="background:var(--s-jul)"></span>July 2026</span>
-      </div>
       <div class="chartbox" id="cClk"></div>
-      <p class="note">Clicks fell further than impressions did. June returned 1,340 clicks against July's 340 — a 74.6% drop on identical spend, and a steeper fall than the 47.3% decline in impressions, which is what pulled blended CTR down to 0.127%.</p>
+      <p class="note">Engagement follows the same shape. The opening five days returned 3 clicks between them — under 1% of the month's total. Across the remaining 26 days the flight ran at a 0.079% CTR, with the strongest single day on 30 July at 0.126%.</p>
+    </div>
+  </section>
+
+  <!-- ================= SHAPE OF THE MONTH ================= -->
+  <section>
+    <div class="eyebrow">Where the month went</div>
+    <div class="sec-head"><h2>Two halves of one flight</h2><span class="tag">Ramp vs steady state</span></div>
+    <div class="grid2">
+      <div class="panel">
+        <div class="tscroll"><table>
+          <thead><tr><th>Period</th><th class="num">Days</th><th class="num">Impressions</th><th class="num">Per day</th><th class="num">Clicks</th></tr></thead>
+          <tbody id="shapeBody"></tbody>
+        </table></div>
+        <p class="note">The opening ramp is the clearest single loss in the flight. Had the first five days run at the month's steady-state rate, July would have carried roughly 52,000 additional impressions.</p>
+      </div>
+      <div class="panel">
+        <div class="tscroll"><table>
+          <thead><tr><th>Saturday</th><th class="num">Impressions</th><th class="num">Clicks</th><th>Fixture</th></tr></thead>
+          <tbody id="satBody"></tbody>
+        </table></div>
+        <p class="note">Delivery tracks the fixture calendar. The two Test Saturdays with the flight at full pace were the month's first and third biggest days. 4 July fell inside the opening ramp; 25 July had no Test.</p>
+      </div>
     </div>
   </section>
 
@@ -231,30 +233,17 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 46px}
         <thead><tr><th>Creative size</th><th class="num">Impressions</th><th class="num">Share</th><th class="num">Clicks</th><th class="num">CTR</th><th>Read</th></tr></thead>
         <tbody id="fmtBody"></tbody>
       </table></div>
-      <p class="note"><b>Source: Metamedia's own July analysis</b>, covering both publishers / inventory sources rather than SA Rugby Mag in isolation. Flight 2 figures shown. The 728&times;90 returned 6,074 impressions against 7,387 the flight before, which Metamedia attributes to limited leaderboard inventory rather than creative.<br><span style="color:var(--muted)">* Derived, not directly reported. Metamedia states 144 of 156 clicks and 66% of impressions on the 300&times;250; the 300&times;250 impression count, the totals and the 728&times;90 click count follow from that and from the two reported impression figures. The three sizes reconcile to 156 clicks exactly.</span></p>
-    </div>
-  </section>
-
-  <!-- ================= SOCIAL ================= -->
-  <section>
-    <div class="eyebrow">Social extension</div>
-    <div class="sec-head"><h2>Facebook &amp; Instagram</h2><span class="tag">June flight · published 28 Jun</span></div>
-    <div class="panel">
-      <div class="tscroll"><table>
-        <thead><tr><th>Channel</th><th>Format</th><th class="num">Views</th><th class="num">Reach</th><th class="num">Interactions</th><th>Delivery</th></tr></thead>
-        <tbody id="socBody"></tbody>
-      </table></div>
-      <p class="note">Source: Meta Business Suite, &ldquo;#Sponsored | Winter Range&rdquo; creative on the SA Rugby magazine channels. Views and reach are reported by Meta in rounded thousands. A R250 boost on the Facebook Reel carried 31,100 of the 42,300 total views — the cheapest reach on the plan by a wide margin.</p>
+      <p class="note"><b>Source: Metamedia's own July analysis</b>, covering both publishers / inventory sources rather than SA Rugby Mag in isolation. The 728&times;90 returned 6,074 impressions against 7,387 the flight before, which Metamedia attributes to limited leaderboard inventory rather than creative.<br><span style="color:var(--muted)">* Derived, not directly reported. Metamedia states 144 of 156 clicks and 66% of impressions on the 300&times;250; the 300&times;250 impression count, the totals and the 728&times;90 click count follow from that and from the two reported impression figures. The three sizes reconcile to 156 clicks exactly.</span></p>
     </div>
   </section>
 
   <!-- ================= ANALYSIS ================= -->
   <section>
     <div class="eyebrow">Analysis</div>
-    <div class="sec-head"><h2>What the two flights say</h2></div>
+    <div class="sec-head"><h2>What July tells us</h2></div>
     <div class="cards">
-      <div class="card"><div class="big" style="color:var(--s-jun)">0.154%</div><h4>June performed</h4><p>868,344 impressions and 1,340 clicks, full contracted volume delivered, no material under-delivery across the month. Engagement stayed proportionate to delivery from start to finish.</p></div>
-      <div class="card"><div class="big" style="color:var(--bad)">R142.07</div><h4>July cost twice as much</h4><p>The same R65,000 returned 457,536 impressions — a CPM of R142.07 against June's R74.86, and a cost per click of R191.18 against R48.51. The budget did not change; the delivery did.</p></div>
+      <div class="card"><div class="big" style="color:var(--warn)">6.5%</div><h4>The ramp cost real volume</h4><p>The first five days carried 6.5% of impressions and 0.9% of clicks. Getting a flight to full pace on day one is worth roughly 52,000 impressions on a month this size.</p></div>
+      <div class="card"><div class="big" style="color:var(--series)">33,776</div><h4>Fixtures drive the traffic</h4><p>The month's biggest day was a Test Saturday, and the third biggest was the next one. A quiet Saturday with no rugby returned 10,486. The calendar, not the creative, sets the ceiling.</p></div>
       <div class="card"><div class="big" style="color:var(--gold)">92%</div><h4>One unit did the work</h4><p>The 300&times;250 drove 92% of all clicks off 66% of impressions. The 320&times;50 returned 8 clicks on 50,375 impressions, and the 728&times;90 could not secure inventory at volume.</p></div>
     </div>
     <div class="panel" style="margin-top:16px">
@@ -267,8 +256,8 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 46px}
     <div class="eyebrow">Recommendation</div>
     <div class="offer">
       <span class="flightbadge"><span class="pulse"></span>Rugby's Greatest Rivalry · 21 Aug – 20 Sep</span>
-      <h3>Put the whole buy into the unit<br>that is <em>already working</em>.</h3>
-      <p class="lede">One month, one format, four Tests. The All Blacks are here for their first full tour since 1996 and there is no Rugby Championship this year — every Test falls inside a single flight window.</p>
+      <h3>Buy the fixtures, and buy<br>the unit that <em>already works</em>.</h3>
+      <p class="lede">July's two findings point the same way. Delivery peaks on Test days, and the 300&times;250 carries the engagement. The next window puts four Tests inside a single month — the All Blacks are here for their first full tour since 1996, and there is no Rugby Championship this year.</p>
       <div class="fixtures">
         <div class="fx"><div class="d">Sat 22 Aug</div><div class="t">First Test</div><div class="v">Ellis Park, Johannesburg</div></div>
         <div class="fx"><div class="d">Sat 29 Aug</div><div class="t">Second Test</div><div class="v">DHL Stadium, Cape Town</div></div>
@@ -281,7 +270,7 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 46px}
         <div><div class="k">Flight</div><div class="v">21 Aug – 20 Sep<small> &nbsp;31 days</small></div></div>
         <div><div class="k">Rate</div><div class="v">R50,000<small> &nbsp;net of commission, excl. VAT</small></div></div>
       </div>
-      <p class="note" style="margin-top:20px">Against the R65,000 paid in each of June and July. Both months on record show delivery tracking the fixture list — June peaked on a match weekend, and July's single best day was a Test Saturday against a 14,759 daily average. The URC season opens Friday 25 September, the week after this flight closes.</p>
+      <p class="note" style="margin-top:20px">Against the R65,000 carried in July. Live on Friday 21 August, the day before the first whistle, so the flight is at full pace for the opening Test rather than ramping through it. The URC season opens Friday 25 September, the week after this flight closes.</p>
     </div>
   </section>
 
@@ -291,77 +280,68 @@ footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 0 46px}
       <div><div class="k">Prepared by</div><div class="v">Dreyer Hoffman · Sales Manager<br><a href="mailto:dreyer.hoffman@habarimedia.com">dreyer.hoffman@habarimedia.com</a></div></div>
       <div><div class="k">Platform</div><div class="v">SA Rugby Magazine<br><a href="https://www.sarugbymag.co.za">sarugbymag.co.za</a></div></div>
     </div>
-    <p class="src"><b>Sources.</b> June delivery — Google Ad Manager line item 7295013789, 1–30 June 2026. July delivery — Google Ad Manager report &ldquo;DROMEX JULY - SA RUGBY&rdquo;, result ID 10474211363, line item 7352739255, Highbury Media network, generated 6 August 2026. Daily figures independently reconciled against the Metamedia campaign tracker. Format-level breakdown reproduced from Metamedia's own July analysis and covers both publishers / inventory sources. Social delivery — Meta Business Suite insights, SA Rugby magazine channels. Fixture dates per the confirmed 2026 New Zealand tour of South Africa. Rates quoted are net of agency commission and exclude VAT; all bookings subject to a signed booking order and inventory availability.</p>
+    <p class="src"><b>Sources.</b> Delivery — Google Ad Manager report &ldquo;DROMEX JULY - SA RUGBY&rdquo;, result ID 10474211363, line item 7352739255, Highbury Media network, 1–31 July 2026, generated 6 August 2026, currency ZAR, timezone Africa/Johannesburg. Daily figures independently reconciled against the Metamedia campaign tracker. Format-level breakdown reproduced from Metamedia's own July analysis and covers both publishers / inventory sources. Fixture dates per the confirmed 2026 New Zealand tour of South Africa. Rates quoted are net of agency commission and exclude VAT; all bookings subject to a signed booking order and inventory availability.</p>
   </footer>
 </div>
 
 <script>
-/* ============ DATA ============ */
-const JUN=[[34107,58],[28195,46],[30622,65],[21183,39],[21122,33],[33491,58],[49144,89],[49358,93],[28147,57],[22588,35],[20716,32],[20663,26],[20728,40],[39904,48],[27267,44],[31295,45],[28374,35],[20096,25],[16821,17],[34506,24],[32851,32],[33996,60],[22865,32],[23292,33],[22604,33],[21402,30],[20280,23],[42248,83],[46835,70],[23644,35]];
+/* ============ DATA — GAM line item 7352739255, 1-31 July 2026 ============ */
 const JUL=[[4019,0],[5847,1],[4853,1],[7027,0],[8083,1],[13356,7],[12947,11],[13249,11],[12776,5],[11659,10],[33776,20],[24258,20],[17836,8],[13640,10],[17669,11],[20041,15],[16118,19],[23595,12],[21754,15],[17145,12],[15720,18],[13060,11],[13676,14],[13435,15],[10486,9],[10402,9],[11902,12],[15141,15],[13638,11],[17461,22],[22967,15]];
 const SPEND=65000;
 
-const sum=(a,i)=>a.reduce((t,r)=>t+r[i],0);
-const jI=sum(JUN,0), jC=sum(JUN,1), lI=sum(JUL,0), lC=sum(JUL,1);
-const tI=jI+lI, tC=jC+lC, tS=SPEND*2;
-const n=v=>v.toLocaleString('en-ZA');
+const imp=JUL.map(r=>r[0]), clk=JUL.map(r=>r[1]);
+const I=imp.reduce((a,b)=>a+b,0), C=clk.reduce((a,b)=>a+b,0);
+const n=v=>Math.round(v).toLocaleString('en-ZA');
 const R=v=>'R'+v.toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2});
-const pct=(c,i)=>(c/i*100).toFixed(3)+'%';
 
-document.getElementById('kImp').textContent=n(tI);
-document.getElementById('kClk').textContent=n(tC);
-document.getElementById('kCtr').textContent=pct(tC,tI);
-document.getElementById('kCpm').textContent=R(tS/tI*1000);
+document.getElementById('kImp').textContent=n(I);
+document.getElementById('kImpD').textContent=n(I/31)+' a day across 31 days';
+document.getElementById('kClk').textContent=n(C);
+document.getElementById('kCtr').textContent=(C/I*100).toFixed(3)+'%';
+document.getElementById('kCpm').textContent=R(SPEND/I*1000);
+document.getElementById('kCpmD').textContent='R65,000 spend · '+R(SPEND/C)+' per click';
 
-/* ---- flight comparison ---- */
-const chg=(a,b,invert)=>{const d=(b/a-1)*100;const cls=(invert?d<0:d>0)?'up':'dn';return `<span class="delta ${cls}">${d>0?'+':''}${d.toFixed(1)}%</span>`;};
-document.getElementById('cmpBody').innerHTML=[
-  ['Spend','R65,000','R65,000','<span style="color:var(--faint)">no change</span>'],
-  ['Impressions',n(jI),n(lI),chg(jI,lI)],
-  ['Clicks',n(jC),n(lC),chg(jC,lC)],
-  ['CTR',pct(jC,jI),pct(lC,lI),chg(jC/jI,lC/lI)],
-  ['CPM',R(SPEND/jI*1000),R(SPEND/lI*1000),chg(SPEND/jI,SPEND/lI,true)],
-  ['Cost per click',R(SPEND/jC),R(SPEND/lC),chg(SPEND/jC,SPEND/lC,true)],
-  ['Daily average impressions',n(Math.round(jI/30)),n(Math.round(lI/31)),chg(jI/30,lI/31)],
-  ['Impressions per rand',(jI/SPEND).toFixed(1),(lI/SPEND).toFixed(1),chg(jI/SPEND,lI/SPEND)],
-].map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td class="num">${r[3]}</td></tr>`).join('')
-+`<tr style="background:rgba(255,255,255,.02)"><td><b>Two-month total</b></td><td class="num" colspan="2"><b>${n(tI)} impressions · ${n(tC)} clicks</b></td><td class="num"><b>${R(tS/tI*1000)} CPM</b></td></tr>`;
+/* ---- shape of the month ---- */
+const rI=(a,b)=>imp.slice(a,b).reduce((x,y)=>x+y,0), rC=(a,b)=>clk.slice(a,b).reduce((x,y)=>x+y,0);
+document.getElementById('shapeBody').innerHTML=[
+  ['1 – 5 July <span style="color:var(--warn)">· ramp</span>',5,rI(0,5),rC(0,5)],
+  ['6 – 31 July <span style="color:var(--series)">· steady</span>',26,rI(5,31),rC(5,31)],
+].map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${n(r[2])}</td><td class="num">${n(r[2]/r[1])}</td><td class="num">${r[3]}</td></tr>`).join('')
++`<tr style="background:rgba(255,255,255,.02)"><td><b>Full flight</b></td><td class="num"><b>31</b></td><td class="num"><b>${n(I)}</b></td><td class="num"><b>${n(I/31)}</b></td><td class="num"><b>${C}</b></td></tr>`;
+
+/* ---- test saturdays ---- */
+document.getElementById('satBody').innerHTML=[
+  ['Sat 4 July',3,'v England — flight still ramping','warn'],
+  ['Sat 11 July',10,'v Scotland — biggest day of the month','series'],
+  ['Sat 18 July',17,'v Wales — third biggest day','series'],
+  ['Sat 25 July',24,'No Test','faint'],
+].map(r=>`<tr><td><b>${r[0]}</b></td><td class="num">${n(imp[r[1]])}</td><td class="num">${clk[r[1]]}</td><td style="color:var(--${r[3]});font-size:13px">${r[2]}</td></tr>`).join('');
 
 /* ---- format table ---- */
 document.getElementById('fmtBody').innerHTML=[
-  ['300&times;250','var(--s-jun)','109,577*','66.0%','144','0.13%','Strongest unit, most reliably served. 92% of all engagement off two thirds of delivery.'],
+  ['300&times;250','var(--series)','109,577*','66.0%','144','0.13%','Strongest unit, most reliably served. 92% of all engagement off two thirds of delivery.'],
   ['320&times;50','var(--s-jul)','50,375','30.3%','8','0.02%','Volume without engagement. A reach format, not a click driver.'],
   ['728&times;90','var(--gold)','6,074','3.7%','4*','0.07%','Inventory constrained. CTR respectable relative to the volume it managed.'],
 ].map(r=>`<tr><td><span class="swatch" style="background:${r[1]}"></span><b>${r[0]}</b></td><td class="num">${r[2]}</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td><td class="num">${r[5]}</td><td style="color:var(--muted);font-size:13px">${r[6]}</td></tr>`).join('')
 +`<tr style="background:rgba(255,255,255,.02)"><td><b>Total</b></td><td class="num"><b>166,026*</b></td><td class="num"><b>100%</b></td><td class="num"><b>156</b></td><td class="num"><b>0.09%</b></td><td></td></tr>`;
 
-/* ---- social table ---- */
-document.getElementById('socBody').innerHTML=[
-  ['Facebook','Reel — Winter Range','31,100','21,600','24','Boosted · R250'],
-  ['Instagram','Story — Winter Range','7,000','5,600','29','Organic'],
-  ['Facebook','Story — Winter Range','4,200','3,800','17','Organic'],
-].map(r=>`<tr><td><b>${r[0]}</b></td><td style="color:var(--muted)">${r[1]}</td><td class="num">${r[2]}</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td><td style="color:var(--muted);font-size:13px">${r[5]}</td></tr>`).join('')
-+`<tr style="background:rgba(255,255,255,.02)"><td><b>Total</b></td><td style="color:var(--muted)">3 placements</td><td class="num"><b>42,300</b></td><td class="num"><b>31,000</b></td><td class="num"><b>70</b></td><td></td></tr>`;
-
 /* ---- recommendations ---- */
 document.getElementById('recs').innerHTML=[
-  '<b>Consolidate into the 300&times;250.</b> It produced 92% of engagement off 66% of impressions. The 320&times;50 and 728&times;90 together absorbed a third of delivery and returned almost nothing.',
-  '<b>Buy the fixture window, not the calendar month.</b> Both flights peaked on match days — 8 June at 49,358 and 11 July at 33,776. July\'s first five days, with no rugby, ran under 8,000 a day.',
-  '<b>Rotate creative rather than running one execution.</b> A rotating slot puts a different product in front of the same reader each Test week, which a single static creative cannot do across a month.',
-  '<b>Put a modest boost behind the social post.</b> R250 carried 31,100 of 42,300 views in June. It is the highest-leverage line on the plan.',
-  '<b>Set a contracted impression floor.</b> Delivery moved from 868,344 to 457,536 on identical spend across consecutive months. A floor on the booking order removes that variance from the client\'s side.',
+  '<b>Get the flight to full pace on day one.</b> July\'s opening five days ran at 5,966 impressions a day against a 16,450 steady state. At the month\'s own rate that ramp cost roughly 52,000 impressions.',
+  '<b>Consolidate into the 300&times;250.</b> It produced 92% of engagement off 66% of impressions. The 320&times;50 and 728&times;90 together absorbed a third of delivery and returned 12 clicks between them.',
+  '<b>Buy the fixture window, not the calendar month.</b> The two Test Saturdays at full pace were the month\'s first and third biggest days. The Saturday with no rugby returned 10,486.',
+  '<b>Rotate creative rather than running one execution.</b> A rotating slot puts a different product in front of the same reader each fixture week, which a single static creative cannot do across a month.',
+  '<b>Set a contracted impression floor.</b> A floor on the booking order takes delivery variance off the client\'s side of the deal and makes the buy directly comparable month to month.',
 ].map((t,i)=>`<div class="rec"><span class="ix">${i+1}</span><span>${t}</span></div>`).join('');
 
-/* ============ LINE CHART ============ */
-function lineChart(el, series, opts){
+/* ============ SINGLE-SERIES LINE CHART ============ */
+function lineChart(el, data, opts){
   const W=920, H=opts.h||300, P={t:16,r:22,b:30,l:60};
-  const maxD=Math.max(...series.map(s=>s.data.length));
-  const maxV=Math.max(...series.flatMap(s=>s.data));
-  const ticks=5;
+  const N=data.length, maxV=Math.max(...data), ticks=5;
   const raw=maxV/ticks, mag=Math.pow(10,Math.floor(Math.log10(raw))), norm=raw/mag;
   const nice=norm<=1?1:norm<=2?2:norm<=2.5?2.5:norm<=5?5:10;
   const top=nice*mag*ticks;
-  const X=i=>P.l+(W-P.l-P.r)*(i/(maxD-1));
+  const X=i=>P.l+(W-P.l-P.r)*(i/(N-1));
   const Y=v=>H-P.b-(H-P.t-P.b)*(v/top);
   const g=[];
   for(let k=0;k<=ticks;k++){
@@ -370,23 +350,27 @@ function lineChart(el, series, opts){
     g.push(`<text x="${P.l-11}" y="${y+4}" text-anchor="end" fill="#5f6c63" font-size="11.5" font-family="Hanken Grotesk,sans-serif">${opts.fmt(v)}</text>`);
   }
   const xs=[];
-  for(let d=1;d<=maxD;d+=5){ xs.push(`<text x="${X(d-1)}" y="${H-P.b+19}" text-anchor="middle" fill="#5f6c63" font-size="11.5" font-family="Hanken Grotesk,sans-serif">${d}</text>`); }
-  xs.push(`<text x="${(P.l+W-P.r)/2}" y="${H-1}" text-anchor="middle" fill="#5f6c63" font-size="10.5" letter-spacing="1.4" font-family="Hanken Grotesk,sans-serif">DAY OF MONTH</text>`);
+  for(let d=1;d<=N;d+=5) xs.push(`<text x="${X(d-1)}" y="${H-P.b+19}" text-anchor="middle" fill="#5f6c63" font-size="11.5" font-family="Hanken Grotesk,sans-serif">${d}</text>`);
+  xs.push(`<text x="${(P.l+W-P.r)/2}" y="${H-1}" text-anchor="middle" fill="#5f6c63" font-size="10.5" letter-spacing="1.4" font-family="Hanken Grotesk,sans-serif">JULY 2026</text>`);
 
-  const paths=series.map(s=>{
-    const d=s.data.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ');
-    return `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
-  }).join('');
-  const ends=series.map(s=>{
-    const i=s.data.length-1;
-    return `<circle cx="${X(i)}" cy="${Y(s.data[i])}" r="4" fill="${s.color}" stroke="#121815" stroke-width="2"/>`;
-  }).join('');
-  const dots=series.map((s,si)=>s.data.map((v,i)=>`<circle class="hp hp${si}" data-i="${i}" cx="${X(i)}" cy="${Y(v)}" r="0" fill="${s.color}" stroke="#121815" stroke-width="2"/>`).join('')).join('');
+  /* ramp band — the first five days, called out rather than left for the reader to spot */
+  const band=`<rect x="${P.l}" y="${P.t}" width="${X(4)-P.l}" height="${H-P.t-P.b}" fill="rgba(224,163,54,.07)"/>
+    <line x1="${X(4)}" y1="${P.t}" x2="${X(4)}" y2="${H-P.b}" stroke="rgba(224,163,54,.4)" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="${P.l+7}" y="${P.t+14}" fill="#e0a336" font-size="10.5" font-weight="600" letter-spacing="1.1" font-family="Hanken Grotesk,sans-serif">RAMP</text>`;
+
+  const area=`M${X(0)} ${H-P.b} `+data.map((v,i)=>`L${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ')+` L${X(N-1)} ${H-P.b} Z`;
+  const line=data.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ');
+  const pk=data.indexOf(maxV);
+  const dots=data.map((v,i)=>`<circle class="hp" data-i="${i}" cx="${X(i)}" cy="${Y(v)}" r="0" fill="${opts.color}" stroke="#121815" stroke-width="2"/>`).join('');
 
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.aria}">
-    ${g.join('')}${xs.join('')}
+    ${g.join('')}${band}${xs.join('')}
+    <path d="${area}" fill="var(--series-soft)"/>
     <line class="cross" x1="0" y1="${P.t}" x2="0" y2="${H-P.b}" stroke="rgba(255,255,255,.24)" stroke-width="1" opacity="0"/>
-    ${paths}${ends}${dots}
+    <path d="${line}" fill="none" stroke="${opts.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(pk)}" cy="${Y(maxV)}" r="4.5" fill="${opts.color}" stroke="#121815" stroke-width="2"/>
+    <text x="${X(pk)}" y="${Y(maxV)-13}" text-anchor="middle" fill="#eef2ec" font-size="12" font-weight="700" font-family="Hanken Grotesk,sans-serif">${opts.peak}</text>
+    ${dots}
     <rect x="${P.l}" y="${P.t}" width="${W-P.l-P.r}" height="${H-P.t-P.b}" fill="transparent" class="hit"/>
   </svg><div class="tip"></div>`;
 
@@ -395,13 +379,12 @@ function lineChart(el, series, opts){
   function move(ev){
     const r=svg.getBoundingClientRect();
     const cx=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left;
-    const vx=cx/r.width*W;
-    let i=Math.round((vx-P.l)/((W-P.l-P.r)/(maxD-1)));
-    i=Math.max(0,Math.min(maxD-1,i));
+    let i=Math.round((cx/r.width*W-P.l)/((W-P.l-P.r)/(N-1)));
+    i=Math.max(0,Math.min(N-1,i));
     cross.setAttribute('x1',X(i));cross.setAttribute('x2',X(i));cross.setAttribute('opacity','1');
-    pts.forEach(p=>p.setAttribute('r', +p.dataset.i===i?'4.5':'0'));
-    tip.innerHTML=`<div class="th">${opts.label(i)}</div>`+series.map(s=>
-      s.data[i]===undefined?'':`<div class="row"><span class="lab"><span style="width:9px;height:9px;border-radius:2px;background:${s.color};display:inline-block"></span>${s.name}</span><span class="val">${n(s.data[i])}</span></div>`).join('');
+    pts.forEach(p=>p.setAttribute('r',+p.dataset.i===i?'4.5':'0'));
+    tip.innerHTML=`<div class="th">${i+1} July 2026</div>
+      <div class="row"><span class="lab"><span style="width:9px;height:9px;border-radius:2px;background:${opts.color};display:inline-block"></span>${opts.name}</span><span class="val">${n(data[i])}</span></div>`;
     tip.style.opacity='1';
     const px=X(i)/W*r.width;
     tip.style.left=Math.min(Math.max(px-tip.offsetWidth/2,0),r.width-tip.offsetWidth)+'px';
@@ -413,15 +396,11 @@ function lineChart(el, series, opts){
   el.addEventListener('mouseleave',()=>{tip.style.opacity='0';cross.setAttribute('opacity','0');pts.forEach(p=>p.setAttribute('r','0'))});
 }
 
-const CJUN=getComputedStyle(document.documentElement).getPropertyValue('--s-jun').trim();
-const CJUL=getComputedStyle(document.documentElement).getPropertyValue('--s-jul').trim();
-const kfmt=v=>v>=1000?(v/1000)+'k':v;
-
-lineChart(document.getElementById('cImp'),
-  [{name:'June 2026',color:CJUN,data:JUN.map(r=>r[0])},{name:'July 2026',color:CJUL,data:JUL.map(r=>r[0])}],
-  {fmt:kfmt,label:i=>'Day '+(i+1),aria:'Daily ad server impressions for the June and July 2026 flights, plotted by day of month.'});
-
-lineChart(document.getElementById('cClk'),
-  [{name:'June 2026',color:CJUN,data:JUN.map(r=>r[1])},{name:'July 2026',color:CJUL,data:JUL.map(r=>r[1])}],
-  {h:250,fmt:v=>v,label:i=>'Day '+(i+1),aria:'Daily ad server clicks for the June and July 2026 flights, plotted by day of month.'});
+const CS=getComputedStyle(document.documentElement).getPropertyValue('--series').trim();
+lineChart(document.getElementById('cImp'), imp,
+  {color:CS,name:'Impressions',fmt:v=>v>=1000?(v/1000)+'k':v,peak:'33,776 · 11 Jul',
+   aria:'Daily ad server impressions for the July 2026 flight, peaking at 33,776 on 11 July.'});
+lineChart(document.getElementById('cClk'), clk,
+  {color:CS,name:'Clicks',h:250,fmt:v=>v,peak:'22 · 30 Jul',
+   aria:'Daily ad server clicks for the July 2026 flight, peaking at 22 on 30 July.'});
 </script>

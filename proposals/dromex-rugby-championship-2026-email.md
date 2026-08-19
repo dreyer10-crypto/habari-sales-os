@@ -38,11 +38,16 @@ impressions; 728x90 could not secure inventory at 6,074 impressions.
 
 ---
 
-## Subject
+## Version A — long form (report cover note)
+
+Leads with the July findings, then the ask. Use when the report is the point and the
+booking follows from it.
+
+### Subject
 
 Dromex — July report attached, and the four Tests in one flight
 
-## Body
+### Body
 
 Good Day Lara,
 
@@ -117,6 +122,73 @@ Sales Manager
 Habari Media
 tel: +27 21 416 0141 · cell: +27 84 215 3430
 www.habarimedia.com
+
+---
+
+## Version B — short form (the R50,000 special)
+
+Leads with the offer, compresses the July proof to one paragraph. Use when the
+booking is the point. This is the copy-paste version.
+
+### Subject
+
+Dromex — SA Rugby Mag special, R50,000 for the four Tests
+
+### Body
+
+Good Day Lara,
+
+I trust that you are well.
+
+The All Blacks are here for their first full tour since 1996 and there is no
+Rugby Championship this year, so this series is the season. All four Tests fall
+inside one month:
+
+    Saturday 22 August     Ellis Park, Johannesburg
+    Saturday 29 August     DHL Stadium, Cape Town
+    Saturday 5 September   FNB Stadium, Johannesburg
+    Saturday 12 September  M&T Bank Stadium, Baltimore
+
+I would like to put Dromex in front of that for the whole run.
+
+THE SPECIAL
+
+    Rotating 300x250 MPU, ROS across sarugbymag.co.za — multiple Dromex
+    creatives in the one slot, refreshing week by week through the series
+    1 x social media post across the SA Rugby magazine Facebook and
+    Instagram channels, timed to a Test week
+    Flight: Friday 21 August to Sunday 20 September 2026
+    R50,000 for the month, net of agency commission and excl. VAT
+    — against the R65,000 carried in July
+
+Two reasons this is the right shape. Your own July analysis has the 300x250
+taking 144 of the 156 clicks off 66% of the impressions, while the 320x50
+returned 8 clicks on 50,375 impressions and the 728x90 could not get inventory
+— so we are putting the whole buy into the unit that is already working. And
+delivery on this title tracks the fixture list: 11 July against Scotland was
+the biggest day of the month at 33,776 impressions, the Saturday with no Test
+returned 10,486.
+
+Going live on Friday 21 August means we are at full pace for Ellis Park rather
+than ramping through it. Creative from the last flight is still with us, so if
+Dromex is happy to rotate the existing executions we can be live on Friday —
+new material would need to reach me by Thursday 20 August.
+
+May I raise the booking order for Metamedia on behalf of Dromex South Africa?
+
+Kindly let me know if you have any questions.
+
+Looking forward to hearing from you. Have a great day!
+
+Warm regards,
+
+Dreyer Hoffman
+Sales Manager
+Habari Media
+tel: +27 21 416 0141 · cell: +27 84 215 3430
+www.habarimedia.com
+
+Attach `public/dromex-sarugbymag-july-2026-report.html`.
 
 ---
 
